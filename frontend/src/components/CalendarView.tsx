@@ -4,6 +4,11 @@ import CalendarGrid from "./CalendarGrid";
 import CalendarSide from "./CalendarSide";
 
 export default function CalendarView() {
+  const monthNames = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+];
+
   // Estado temporal: mes y año
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -44,6 +49,7 @@ export default function CalendarView() {
     <div className="flex justify-center flex-row">
       <div className="w-3/5 mt-8 bg-white rounded-2xl shadow-lg p-6 mx-4">
         <CalendarHeader
+          monthNames={monthNames}
           month={currentMonth}
           year={currentYear}
           onPrev={handlePrevMonth}
@@ -52,7 +58,7 @@ export default function CalendarView() {
         <CalendarGrid selectedDate={selectedDate} month={currentMonth} year={currentYear} tasks={tasksSimuladas} daySelectFunction={(dateKey:string) => setSelectedDate(dateKey)} />
       </div>
       <div className="w-1/5 p-4 mt-8 bg-white rounded-2xl shadow-lg p-6 mx-4">
-        <CalendarSide selectedDate={selectedDate} tasks={tasksSimuladas[selectedDate || ""] || []} />
+        <CalendarSide monthNames={monthNames} selectedDate={selectedDate} tasks={tasksSimuladas[selectedDate || ""] || []} />
       </div>
     </div>
   );

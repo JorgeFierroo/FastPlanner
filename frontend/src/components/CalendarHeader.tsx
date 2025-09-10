@@ -1,16 +1,13 @@
-const monthNames = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-];
 
 type CalendarHeaderProps = {    // Definición de tipos para los props
+    monthNames: string[];
     month: number;
     year: number;
     onPrev: () => void;
     onNext: () => void;
 };
 
-export default function CalendarHeader({ month, year, onPrev, onNext }: CalendarHeaderProps) {  // Saca tales datos de los props
+export default function CalendarHeader({ monthNames, month, year, onPrev, onNext }: CalendarHeaderProps) {  // Saca tales datos de los props
   return (
     <div className="flex flex-col md:flex-row items-center justify-between p-4 mb-4">
 

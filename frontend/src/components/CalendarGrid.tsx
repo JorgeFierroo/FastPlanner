@@ -1,5 +1,4 @@
 import DayCell from "./DayCell";
-import { useState } from "react";
 
 type CalendarGridProps = {
     selectedDate: string | null; // Fecha seleccionada (opcional)
