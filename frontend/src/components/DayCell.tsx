@@ -1,17 +1,19 @@
 type DayCellProps = {
     dayNumber: number | null; // null para días fuera del mes
     isToday?: boolean; // Opcional: si es el día actual
+    isSelected?: boolean; // Opcional: si es el día seleccionado
     clickFunction?: () => void; // Opcional: función al hacer click
     tasks?: string[]; // Opcional: lista de tareas para el día
 };
 
-export default function DayCell({ dayNumber, isToday, clickFunction, tasks = [] }: DayCellProps) {
+
+
+export default function DayCell({ dayNumber, isToday, isSelected, clickFunction, tasks = [] }: DayCellProps) {
   return (
     <div
-      className={`h-32 flex flex-col border rounded hover:bg-gray-100 hover:cursor-pointer ${
-        dayNumber ? "bg-white" : "bg-gray-50"
-      } ${isToday ? "border-blue-500 border-2" : ""
-      }`}   // Cambia el fondo si es un día válido y resalta si es hoy
+      className={`h-32 flex flex-col border rounded hover:bg-gray-100 hover:cursor-pointer 
+      ${!dayNumber ? "bg-gray-50" : isSelected ? "bg-blue-100 hover:bg-blue-200" : "bg-white"}
+      ${isToday ? "border-blue-500 border-2" : ""}`}
       onClick={dayNumber ? clickFunction : undefined} // Placeholder para futura funcionalidad
     >
       {dayNumber && <span className="font-bold text-sm p-2">{dayNumber}</span>} {/* operacion and para no mostrar null */}

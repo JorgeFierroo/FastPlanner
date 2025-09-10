@@ -2,12 +2,18 @@ import DayCell from "./DayCell";
 import { useState } from "react";
 
 type CalendarGridProps = {
+    selectedDate: string | null; // Fecha seleccionada (opcional)
     month: number;  // 0=enero, 1=febrero, ..., 11=diciembre
     year: number;
+    tasks: Record<string, string[]>; // Mapa de fechas a tareas
+    daySelectFunction: (dateKey: string) => void; // Función para seleccionar un día
 };
 
-export default function CalendarGrid({ month, year }: CalendarGridProps) {
+export default function CalendarGrid({ selectedDate, month, year, tasks, daySelectFunction }: CalendarGridProps) {
+
+  // Formato para seleccionar fechas
   
+
   // Obtener dia 1 y tamaño del mes
   const daysInMonth = new Date(year, month + 1, 0).getDate(); // Último día del mes
   var startDay = new Date(year, month, 1).getDay(); // Día de la semana del 1er día (0=dom, 1=lun,...6=sáb)
@@ -16,13 +22,6 @@ export default function CalendarGrid({ month, year }: CalendarGridProps) {
   // Arreglo con los espacios en blanco antes del primer día y los días del mes
   const days = []; // arreglo que contiene números o null
 
-  // Tareas simuladas (temporal)
-  const [tasksSimuladas] = useState<{ [key: string]: string[]}>({
-    "2025-8-15": ["Tarea 1", "Tarea 2"],
-    "2025-8-20": ["Tarea 3"],
-    "2025-9-5": ["Tarea 4", "Tarea 5", "Tarea 6"],
-    "2025-9-18": ["AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"]
-  });
 
   // Crea celdas del calendario
   for (let i = 1; i < startDay; i++) {
@@ -30,37 +29,21 @@ export default function CalendarGrid({ month, year }: CalendarGridProps) {
       key={`empty-${i}`} 
       dayNumber={null} 
       isToday={false} 
+      isSelected={false}
       clickFunction={undefined} />); // Espacios en blanco
   }
 
   for (let i = 1; i <= daysInMonth; i++) {
-    const date = `${year}-${month + 1}-${i}`;
-    const taskList = tasksSimuladas[date] || [];
+    const date = `${year}-${String(month + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
+    const taskList = tasks[date] || [];
+    const today = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
     days.push(<DayCell 
       key={`day-${i}`} 
       dayNumber={i} 
-      isToday={false} 
-      clickFunction={() => dayClickFunction(i)}
+      isToday={today === date} 
+      isSelected={selectedDate === date}  // True o false
+      clickFunction={() => daySelectFunction(date)}
       tasks={taskList} />); // Días del mes
-    console.log(date, taskList);
-  }
-
-  const dayClickFunction = (day: number) => {
-    const date = `${year}-${month + 1}-${day}`;
-    const taskList = tasksSimuladas[date] || [];
-    alert(`Día clickeado: ${date}\nTareas: ${taskList.join(", ")}`); // Placeholder para futura funcionalidad
-  };
-
-
-  // Marcar el día actual
-  const today = new Date();
-  if (today.getMonth() === month && today.getFullYear() === year) {
-    for (let i = 0; i < days.length; i++) {
-      if (days[i].key === `day-${today.getDate()}`) {
-        days[i] = <DayCell key={`day-${today.getDate()}`} dayNumber={today.getDate()} isToday={true} clickFunction={() => dayClickFunction(today.getDate())} />;
-        break;
-      }
-    }
   }
 
   return (
