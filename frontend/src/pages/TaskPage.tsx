@@ -3,7 +3,7 @@ import TaskList from "../components/TaskList";
 
 type List = {
     id: number
-    tittle: string
+    title: string
 };
 
 function TaskPage() {
@@ -12,7 +12,7 @@ function TaskPage() {
 
     const addList = () => {
         if (!newList.trim()) return;
-        setLists([...lists, { id:Date.now(), tittle: newList}]);
+        setLists([...lists, { id:Date.now(), title: newList}]);
         setNewList("");
     };
 
@@ -26,14 +26,14 @@ function TaskPage() {
                     placeholder="Nueva lista"
                     className="border p-2 rounded w-64"
                 />
-                <button onClick= {addList} className="bg-blue-500 text-white p-2 rounded">
+                <button onClick= {addList} className="bg-blue-500 text-white px rounded">
                     Agregar Lista
                 </button>
             </div>
 
-            <div className= "felx gap-6">
+            <div className= "flex gap-5 grid grid-cols-4">
                 {lists.map((list) => (
-                    <TaskList key={list.id} tittle={list.tittle} />
+                    <TaskList key={list.id} title={list.title} />
                 ))}
             </div>
         </div>
