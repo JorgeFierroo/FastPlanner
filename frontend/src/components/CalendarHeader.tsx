@@ -1,3 +1,5 @@
+import Legend from "./StatusColorsLegend";
+
 
 type CalendarHeaderProps = {    // Definición de tipos para los props
     monthNames: string[];
@@ -15,6 +17,9 @@ export default function CalendarHeader({ monthNames, month, year, onPrev, onNext
       <div>
         <h1 className="text-3xl font-bold text-center mb-2">Vista de calendario</h1>
       </div>
+
+      {/* Leyenda de colores */}
+      <Legend />
 
       {/* Controles del calendario */}
       <div className="w-1/4 ml-auto flex items-center justify-between mb-4">

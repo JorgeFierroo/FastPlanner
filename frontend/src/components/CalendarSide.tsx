@@ -1,7 +1,9 @@
+import { StatusColors } from "./StatusColors";
+
 type CalendarSideProps = {
     monthNames: string[];
     selectedDate: string | null; // Fecha seleccionada
-    tasks: string[]; // Tareas para la fecha seleccionada
+    tasks: { id: number; title: string; status: string }[]; // Tareas para la fecha seleccionada
 };
 
 
@@ -24,7 +26,9 @@ export default function CalendarSide({ monthNames, selectedDate, tasks }: Calend
                     <p className="text-gray-500">Hay {tasks.length} tarjeta{tasks.length > 1 ? "s" : ""} para esta fecha:</p>
                     <ul className="list-disc list-inside space-y-2">
                         {tasks.map((task, idx) => (
-                            <li key={idx} className="bg-blue-200 rounded px-2 py-1">{task}</li>
+                            <li key={idx} className={" rounded px-2 py-1 truncate "
+                                + (StatusColors.find(sc => sc.label === task.status)?.color || " bg-gray-200")
+                            }>{task.title}</li>
                         ))}
                     </ul>
                 </div>

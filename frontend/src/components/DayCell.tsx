@@ -1,9 +1,11 @@
+import { StatusColors } from "./StatusColors";
+
 type DayCellProps = {
     dayNumber: number | null; // null para días fuera del mes
     isToday?: boolean; // Opcional: si es el día actual
     isSelected?: boolean; // Opcional: si es el día seleccionado
     clickFunction?: () => void; // Opcional: función al hacer click
-    tasks?: string[]; // Opcional: lista de tareas para el día
+    tasks?: { id: number; title: string; status: string }[]; // Opcional: lista de tareas para el día
 };
 
 
@@ -23,10 +25,11 @@ export default function DayCell({ dayNumber, isToday, isSelected, clickFunction,
         {tasks.slice(0, 2).map((task, idx) => (
           <div
             key={idx}
-            className="text-s bg-blue-200 rounded px-1 truncate"
-            title={task} // tooltip si el texto es largo
+            className={"text-s rounded px-1 truncate "
+              + (StatusColors.find(sc => sc.label === task.status)?.color || " bg-gray-200")} // Color según el estado
+            title={task.title} // tooltip si el texto es largo
           >
-            {task}
+            {task.title}
           </div>
         ))}
         {tasks.length > 2 && (
