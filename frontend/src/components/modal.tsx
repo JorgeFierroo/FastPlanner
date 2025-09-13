@@ -1,5 +1,4 @@
-import { on } from "events";
-import { useState } from "react";
+import React from 'react';
 
 type Props = {
     isOpen: boolean;
