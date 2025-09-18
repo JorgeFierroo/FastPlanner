@@ -1,14 +1,49 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 model User {
-  id    String @id @default(cuid())
-  email String @unique
-  name  String
+  id       Int      @id @default(autoincrement())
+  name     String
+  email    String   @unique
+  password String
+  role     Role     @default(COLLABORATOR)
+  boards   Board[]  @relation("UserBoards")
+}
+
+model Board {
+  id       Int      @id @default(autoincrement())
+  title    String
+  ownerId  Int
+  owner    User     @relation("UserBoards", fields: [ownerId], references: [id])
+  lists    List[]
+}
+
+model List {
+  id       Int      @id @default(autoincrement())
+  title    String
+  boardId  Int
+  board    Board    @relation(fields: [boardId], references: [id])
+  tasks    Task[]
+}
+
+model Task {
+  id       Int      @id @default(autoincrement())
+  title    String
+  desc     String?
+  status   String   @default("todo") // todo, in_progress, done
+  dueDate  DateTime?
+  listId   Int
+  list     List     @relation(fields: [listId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  COLLABORATOR
 }
