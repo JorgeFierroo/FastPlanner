@@ -8,6 +8,7 @@ type Task = {
     description?: string;
     responsible?: string;
     status?: "Pendiente" | "En-progreso" | "Completada";
+    priority?: "Baja" | "Media" | "Alta";
 };
 
 type Props = {
@@ -17,6 +18,11 @@ type Props = {
 function TaskList({ title }: Props) {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [isModalOpen, setModalOpen] = useState(false);
+    const [order, setOrder] = useState<"asc" | "desc">("asc");
+    const [statusFilter, setStatusFilter] = useState("all");
+    const [responsibleFilter, setResponsibleFilter] = useState("");
+    const [priorityFilter, setPriorityFilter] = useState("all");
+    const [search, setSearch] = useState("");
     const [isEditing, setIsEditing] = useState<Task | null>(null);
 
     const [formData, setFormData] = useState({
@@ -24,6 +30,7 @@ function TaskList({ title }: Props) {
         description:"",
         responsible:"",
         status: "Pendiente",
+        priority: "",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement >) => {
@@ -33,7 +40,7 @@ function TaskList({ title }: Props) {
 
     const openNewTaskModal = () => {
         setIsEditing(null);
-        setFormData({ title:"",description:"", responsible:"", status:"Pendiente"});
+        setFormData({ title:"",description:"", responsible:"", status:"Pendiente", priority:""});
         setModalOpen(true);
     };
 
@@ -44,6 +51,7 @@ function TaskList({ title }: Props) {
             description: task.description ||"", 
             responsible: task.responsible ||"", 
             status: task.status ||"Pendiente",
+            priority: task.priority ||"",
         });
         setModalOpen(true);
     };
@@ -53,7 +61,9 @@ function TaskList({ title }: Props) {
 
         if (isEditing){
             setTasks(tasks.map((t) => 
-                t.id === isEditing.id ? { ...t, ...formData, status: formData.status as "Pendiente" | "En-progreso" | "Completada"} : t
+                t.id === isEditing.id ? { ...t, ...formData, status: formData.status as "Pendiente" | "En-progreso" | "Completada", 
+                priority: formData.priority as "Baja" | "Media" | "Alta" | undefined
+                } : t
             ));
         } else {
             const newTask: Task ={
@@ -62,25 +72,84 @@ function TaskList({ title }: Props) {
                 description: formData.description,
                 responsible: formData.responsible,
                 status: formData.status as "Pendiente" | "En-progreso" | "Completada",
+                priority: formData.priority as "Baja" | "Media" | "Alta" | undefined,
             };
             setTasks([...tasks, newTask]);
         }
 
-        setFormData({ title:"",description:"", responsible:"", status:"Pendiente"});
+        setFormData({ title:"",description:"", responsible:"", status:"Pendiente", priority:""});
         setIsEditing(null)
         setModalOpen(false);
     };
 
     const delteTask = (id: number) => {
         setTasks(tasks.filter((t) => t.id !== id));
-    }
+    };
+
+    const filteredTasks = tasks
+        .filter((task)=>
+            statusFilter === "all" ? true: task.status === statusFilter
+        )
+        .filter((task)=>
+            responsibleFilter === "" ? true: task.responsible === responsibleFilter
+        )
+        .filter((task)=>
+            task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+            (task.description?.toLocaleLowerCase().includes(search.toLocaleLowerCase())?? false)
+        )
+        .filter((tasks)=>
+            priorityFilter ==="all" ? true: tasks.priority === priorityFilter
+        )
+        .sort((a,b)=>
+            order === "asc" ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
+        );
 
     return(
         <div className= "bg-gray-200 p-4 rounded w-64 shadow">
             <h2 className="text-lg font-bold mb-3">{title}</h2>
 
+            <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label className="block font-medium">Estatus:</label>
+                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                        <option value={"all"}>Todos</option>
+                        <option value={"Pendiente"}>Pendientes</option>
+                        <option value={"En-progreso"}>En Progreso</option>
+                        <option value={"Completada"}>Completadas</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="block font-medium">Prioridad:</label>
+                    <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)}>
+                        <option value={"all"}>Todos</option>
+                        <option value={"Baja"}>Baja</option>
+                        <option value={"Media"}>Media</option>
+                        <option value={"Alta"}>Alta</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="block font-medium">Responsable:</label>
+                    <select value={responsibleFilter} onChange={(e)=> setResponsibleFilter(e.target.value)}>
+                        <option value="">Todos</option>
+                        {Array.from(new Set(tasks.map((t)=> t.responsible).filter(Boolean))).map(
+                            (responsible) => (
+                                <option key={responsible} value={responsible}>{responsible}</option>
+                            )
+                        )}
+                    </select>
+                </div>
+
+                <select value={order} onChange={(e) => setOrder(e.target.value as "asc"|"desc")} className="border rounded p-1">
+                    <option value={"asc"}>A-Z</option>
+                    <option value={"desc"}>Z-A</option>
+                </select>
+                
+            </div>
+            <input type="text" placeholder="Buscar.." value={search} onChange={(e)=> setSearch(e.target.value)}
+                className="border rounded p-1 py-2"/>
+
             <div className="space-y-2">
-                {tasks.map((task) => (
+                {filteredTasks.map((task) => (
                     <div key={task.id}>
                         <TaskCard task={task} />
                         <button onClick={() => editTaskModal(task)} className="my-2 bg-blue-200 text-blue-500 hover:bg-blue-300 hover:text-blue-700 rounded">
@@ -133,6 +202,18 @@ function TaskList({ title }: Props) {
                     <option value={"Pendiente"}>Pendiente</option>
                     <option value={"En-progreso"}>En progreso</option>
                     <option value={"Completada"}>Completada</option>
+                </select>
+
+                <select
+                    name="priority"
+                    value={formData.priority}
+                    onChange={handleChange}
+                    className="border p-2 rounded w-full mb-4"
+                >
+                    <option value={""}>Prioridad</option>
+                    <option value={"Baja"}>Baja</option>
+                    <option value={"Media"}>Media</option>
+                    <option value={"Alta"}>Alta</option>
                 </select>
                 
 
