@@ -1,7 +1,7 @@
 import { useState } from "react";
-import CalendarHeader from "./CalendarHeader";
-import CalendarGrid from "./CalendarGrid";
-import CalendarSide from "./CalendarSide";
+import CalendarHeader from "./CalendarView/CalendarHeader";
+import CalendarGrid from "./CalendarView/CalendarGrid";
+import CalendarSide from "./CalendarView/CalendarSide";
 
 export default function CalendarView() {
   const monthNames = [

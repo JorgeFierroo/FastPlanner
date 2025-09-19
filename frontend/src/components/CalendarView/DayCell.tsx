@@ -1,4 +1,4 @@
-import { StatusColors } from "./StatusColors";
+import { StatusColors } from "../StatusColors";
 
 type DayCellProps = {
     dayNumber: number | null; // null para días fuera del mes

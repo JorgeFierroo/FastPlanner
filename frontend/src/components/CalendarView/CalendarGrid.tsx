@@ -9,8 +9,6 @@ type CalendarGridProps = {
 };
 
 export default function CalendarGrid({ selectedDate, month, year, tasks, daySelectFunction }: CalendarGridProps) {
-
-  // Formato para seleccionar fechas
   
 
   // Obtener dia 1 y tamaño del mes
@@ -19,7 +17,7 @@ export default function CalendarGrid({ selectedDate, month, year, tasks, daySele
   if (startDay === 0) startDay = 7; // Ajuste para que domingo=7
 
   // Arreglo con los espacios en blanco antes del primer día y los días del mes
-  const days = []; // arreglo que contiene números o null
+  const days = []; // arreglo que contiene daycells con key = números o null
 
 
   // Crea celdas del calendario

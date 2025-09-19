@@ -1,4 +1,4 @@
-import { StatusColors } from "./StatusColors";
+import { StatusColors } from "../StatusColors";
 
 type CalendarSideProps = {
     monthNames: string[];
