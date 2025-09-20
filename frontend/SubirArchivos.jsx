@@ -1,9 +1,25 @@
-import React, { useState } from "react";
-import "./estilos.css"; // Usa el CSS que ya te pasé
+import React, { useState, useEffect } from "react";
+import "./estilos.css";
 
-export default function SubirArchivos() {
+// Simulación de almacenamiento global (ej: reemplazar por API o backend real)
+const storageAdjuntos = {};
+
+export default function SubirArchivos({ taskId }) {
   const [archivos, setArchivos] = useState([]);
   const [subiendo, setSubiendo] = useState(false);
+
+  // Cargar archivos de la tarea al montar
+  useEffect(() => {
+    if (storageAdjuntos[taskId]) {
+      setArchivos(storageAdjuntos[taskId]);
+    }
+  }, [taskId]);
+
+  // Guardar archivos asociados a la tarea
+  const actualizarStorage = (nuevos) => {
+    storageAdjuntos[taskId] = nuevos;
+    setArchivos(nuevos);
+  };
 
   // Maneja selección de archivos desde input
   const handleFileChange = async (e) => {
@@ -31,29 +47,31 @@ export default function SubirArchivos() {
   // Simula subida al servidor
   const subirArchivos = async (nuevos) => {
     setSubiendo(true);
-
-    // Aquí iría la lógica real de subida con fetch/axios
-    await new Promise((res) => setTimeout(res, 1000));
-
-    setArchivos((prev) => [...prev, ...nuevos]);
+    await new Promise((res) => setTimeout(res, 1000)); // simulación de delay
+    actualizarStorage([...archivos, ...nuevos]);
     setSubiendo(false);
   };
 
   // Eliminar archivo de la lista
   const eliminarArchivo = (index) => {
-    setArchivos((prev) => prev.filter((_, i) => i !== index));
+    const nuevos = archivos.filter((_, i) => i !== index);
+    actualizarStorage(nuevos);
   };
 
   return (
     <div className="postit-container">
-      <div className="postit" role="region" aria-label="Subir archivos de la tarea">
-        <div className="pin">!</div>
+      <div
+        className="postit"
+        role="region"
+        aria-label={`Adjuntos de la tarea ${taskId}`}
+      >
+        <div className="pin">📎</div>
         <div className="title">Adjuntos</div>
 
         <label
           className="file-drop"
           tabIndex="0"
-          htmlFor="adjunto-file"
+          htmlFor={`adjunto-file-${taskId}`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -66,7 +84,7 @@ export default function SubirArchivos() {
             <div className="sub">Haz click o arrastra aquí</div>
           </div>
           <input
-            id="adjunto-file"
+            id={`adjunto-file-${taskId}`}
             type="file"
             multiple
             onChange={handleFileChange}
@@ -74,7 +92,7 @@ export default function SubirArchivos() {
           />
         </label>
 
-        <div className="attachments" id="lista-adjuntos">
+        <div className="attachments" id={`lista-adjuntos-${taskId}`}>
           {archivos.length === 0 ? (
             <div className="empty">No hay archivos adjuntos</div>
           ) : (
