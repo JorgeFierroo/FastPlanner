@@ -50,7 +50,7 @@ export default function CalendarView() {
 
   return (
     <div className="flex justify-center flex-row">
-      <div className="w-3/5 mt-8 bg-white rounded-2xl shadow-lg p-6 mx-4">
+      <div className="w-3/5 mt-0 bg-white rounded-2xl shadow-lg p-6 mx-4">
         <CalendarHeader
           monthNames={monthNames}
           month={currentMonth}
@@ -60,7 +60,7 @@ export default function CalendarView() {
         />
         <CalendarGrid selectedDate={selectedDate} month={currentMonth} year={currentYear} tasks={mockTasks} daySelectFunction={(dateKey:string) => setSelectedDate(dateKey)} />
       </div>
-      <div className="w-1/5 p-4 mt-8 bg-white rounded-2xl shadow-lg p-6 mx-4">
+      <div className="w-1/5 p-4 mt-0 bg-white rounded-2xl shadow-lg p-6 mx-4">
         <CalendarSide monthNames={monthNames} selectedDate={selectedDate} tasks={mockTasks[selectedDate || ""] || []} />
       </div>
     </div>

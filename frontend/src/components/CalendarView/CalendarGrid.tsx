@@ -27,7 +27,9 @@ export default function CalendarGrid({ selectedDate, month, year, tasks, daySele
       dayNumber={null} 
       isToday={false} 
       isSelected={false}
-      clickFunction={undefined} />); // Espacios en blanco
+      clickFunction={undefined}
+      mode="month" />); // Espacios en blanco
+      
   }
 
   for (let i = 1; i <= daysInMonth; i++) {
@@ -40,7 +42,8 @@ export default function CalendarGrid({ selectedDate, month, year, tasks, daySele
       isToday={today === date} 
       isSelected={selectedDate === date}  // True o false
       clickFunction={() => daySelectFunction(date)}
-      tasks={taskList} />); // Días del mes
+      tasks={taskList}
+      mode="month" />); // Días del mes
   }
 
   return (

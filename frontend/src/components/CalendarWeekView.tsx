@@ -1,5 +1,7 @@
 import { useState } from "react";
 import CalendarWeekGrid from "./CalendarWeekView/CalendarWeekGrid";
+import CalendarWeekHeader from "./CalendarWeekView/CalendarWeekHeader";
+import CalendarSide from "./CalendarView/CalendarSide";
 
 export default function CalendarWeekView() {
     const monthNames = [
@@ -16,6 +18,22 @@ export default function CalendarWeekView() {
     const startDay = new Date(currentYear, currentMonth, 1).getDay() || 7; // Domingo=0, ajustar a 7
     const currentWeek = Math.ceil((currentDate.getDate() + startDay - 1) / 7);
     const [currentWeekState, setCurrentWeekState] = useState(currentWeek);
+
+    // Fecha seleccionada
+    const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+
+    // Tareas simuladas (temporal)
+    const [mockTasks] = useState<{ [key: string]: { id: number; title: string; status: string }[]}>({
+        "2025-08-15": [{id: 1, title:"tarea 1", status: "pendiente"},
+                    {id: 2, title:"tarea 2", status: "completada"}],
+        "2025-08-20": [{id: 3, title:"tarea 3", status: "pendiente"}],
+        "2025-09-05": [{id: 4, title:"tarea 4", status: "pendiente"}, 
+                    {id: 5, title:"tarea 5", status: "completada"},
+                    {id: 6, title:"tarea 6", status: "en progreso"}],
+        "2025-09-18": [{id: 7, title:"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", status: "pendiente"}],
+        "2025-09-25": [{id: 8, title:"BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB", status: "sin empezar"}]
+    });
 
 
     // Funciones para cambiar mes y semana
@@ -76,35 +94,26 @@ export default function CalendarWeekView() {
 
     return (
         <div className="flex justify-center flex-row">
-            <div className="w-3/5 mt-8 bg-white rounded-2xl shadow-lg p-6 mx-4">
-                <div className="flex flex-col md:flex-row items-center justify-between p-4 mb-4">
-
-                    {/* Título de la vista */}
-                    <div>
-                        <h1 className="text-3xl font-bold text-center mb-2">Vista semanal</h1>
-                    </div>
-                    {/* semana, mes y año actual */}
-                    <h2 className="text-xl font-semibold">
-                        Semana {currentWeekState}, {monthNames[currentMonth]} {currentYear}
-                    </h2>
-                    {/* Controles del calendario */}
-                    <div className="w-1/4 ml-auto flex items-center justify-between mb-4">
-                        <button onClick={handlePrevWeek} className="text-gray-600 hover:text-gray-800">
-                            <span className="material-icons">&lt;</span>
-                        </button>
-                        <button onClick={handleNextWeek} className="text-gray-600 hover:text-gray-800">
-                            <span className="material-icons">&gt;</span>
-                        </button>
-                    </div>
-                </div>
-                <CalendarWeekGrid 
-                    selectedDate={null}
+            <div className="w-3/5 mt-0 bg-white rounded-2xl shadow-lg p-6 mx-4">
+                <CalendarWeekHeader
+                    monthNames={monthNames}
                     week={currentWeekState}
                     month={currentMonth}
                     year={currentYear}
-                    tasks={{}}
-                    daySelectFunction={() => {}}
+                    onPrev={handlePrevWeek}
+                    onNext={handleNextWeek}
                 />
+                <CalendarWeekGrid 
+                    selectedDate={selectedDate}
+                    week={currentWeekState}
+                    month={currentMonth}
+                    year={currentYear}
+                    tasks={mockTasks}
+                    daySelectFunction={(datekey:string) => {setSelectedDate(datekey)}}
+                />
+            </div>
+            <div className="w-1/5 p-4 mt-0 bg-white rounded-2xl shadow-lg p-6 mx-4">
+                <CalendarSide monthNames={monthNames} selectedDate={selectedDate} tasks={mockTasks[selectedDate || ""] || []} />
             </div>
         </div>
     );

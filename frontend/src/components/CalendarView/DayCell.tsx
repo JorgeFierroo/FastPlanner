@@ -6,15 +6,17 @@ type DayCellProps = {
     isSelected?: boolean; // Opcional: si es el día seleccionado
     clickFunction?: () => void; // Opcional: función al hacer click
     tasks?: { id: number; title: string; status: string }[]; // Opcional: lista de tareas para el día
+    mode: "month" | "week"; // Opcional: modo normal o vista semanal
 };
 
 
 
-export default function DayCell({ dayNumber, isToday, isSelected, clickFunction, tasks = [] }: DayCellProps) {
+export default function DayCell({ dayNumber, isToday, isSelected, clickFunction, tasks = [], mode }: DayCellProps) {
   return (
     <div
-      className={`h-32 flex flex-col border rounded hover:bg-gray-100 hover:cursor-pointer 
-      ${!dayNumber ? "bg-gray-50" : isSelected ? "bg-blue-100 hover:bg-blue-200" : "bg-white"}
+      className={`flex flex-col border rounded hover:cursor-pointer 
+      ${mode === "month" ? "h-32" : "h-96"}
+      ${!dayNumber ? "bg-gray-50" : isSelected ? "bg-blue-100 hover:bg-blue-200" : "bg-white hover:bg-gray-100"}
       ${isToday ? "border-blue-500 border-2" : ""}`}
       onClick={dayNumber ? clickFunction : undefined} // Placeholder para futura funcionalidad
     >
@@ -22,7 +24,7 @@ export default function DayCell({ dayNumber, isToday, isSelected, clickFunction,
 
       {/* Mostrar tareas si las hay */}
         <div className="mt-1 space-y-1 overflow-hidden">
-        {tasks.slice(0, 2).map((task, idx) => (
+        {tasks.slice(0, mode === "month" ? 2 : 10).map((task, idx) => (
           <div
             key={idx}
             className={"text-s rounded px-1 truncate "
@@ -32,8 +34,8 @@ export default function DayCell({ dayNumber, isToday, isSelected, clickFunction,
             {task.title}
           </div>
         ))}
-        {tasks.length > 2 && (
-          <div className="text-[12px] text-gray-500">+{tasks.length - 2} más</div>
+        {tasks.length > (mode === "month" ? 2 : 10) && (
+          <div className="text-[12px] text-gray-500">+{tasks.length - (mode === "month" ? 2 : 10)} más</div>
         )}
       </div>
 
