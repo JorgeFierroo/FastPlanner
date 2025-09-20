@@ -24,6 +24,7 @@ function TaskList({ title }: Props) {
     const [priorityFilter, setPriorityFilter] = useState("all");
     const [search, setSearch] = useState("");
     const [isEditing, setIsEditing] = useState<Task | null>(null);
+    const [confirmDelete, setConfirmDelete] = useState<number|null>(null)
 
     const [formData, setFormData] = useState({
         title: "",
@@ -82,8 +83,11 @@ function TaskList({ title }: Props) {
         setModalOpen(false);
     };
 
-    const delteTask = (id: number) => {
-        setTasks(tasks.filter((t) => t.id !== id));
+    const delteTask = () => {
+        if (confirmDelete !== null) {
+            setTasks(tasks.filter((t) => t.id !== confirmDelete));
+            setConfirmDelete(null);
+        }
     };
 
     const filteredTasks = tasks
@@ -155,7 +159,7 @@ function TaskList({ title }: Props) {
                         <button onClick={() => editTaskModal(task)} className="my-2 bg-blue-200 text-blue-500 hover:bg-blue-300 hover:text-blue-700 rounded">
                             Editar
                         </button>
-                        <button onClick={() => delteTask(task.id)} className="mx-2 my-2 bg-red-200 text-red-500 hover:bg-red-300 hover:text-red-700 rounded">
+                        <button onClick={() => setConfirmDelete(task.id)} className="mx-2 my-2 bg-red-200 text-red-500 hover:bg-red-300 hover:text-red-700 rounded">
                             Eliminar
                         </button>
                     </div>
@@ -220,6 +224,16 @@ function TaskList({ title }: Props) {
                 <button onClick={saveEditedTask} className="bg-blue-200 text-black p-2 rounded hover:bg-green-300 w-full">
                     {isEditing ? "Actualizar":"Guardar"}
                 </button>
+            </Modal>
+
+            <Modal isOpen={confirmDelete !== null} onClose={()=> setConfirmDelete(null)}>
+                <h2 className="mt-6">¿Esta seguro que desea eliminar esta tarea?</h2>
+                <p>Esta accion es irreversible. Presione "X" si desea cancelar</p>
+                <div className="flex justify-items">
+                    <button onClick={delteTask} className="bg-red-200 text-black p-2 rounded hover:bg-red-300 my-4 w-full">
+                        Eliminar
+                    </button>
+                </div>
             </Modal>
         </div>
     );
