@@ -7,18 +7,19 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        sans: ["Montserrat", "sans-serif"], // tipografía global
       },
       colors: {
         primary: {
-          DEFAULT: "#2563eb", // azul principal
-          dark: "#1e40af",    // azul oscuro
-          light: "#60a5fa",   // azul claro
+          DEFAULT: "#00BFFF", // celeste
+          dark: "#009ACD",    // celeste más oscuro
+          light: "#87CEFA",   // celeste claro
         },
-        secondary: {
-          DEFAULT: "#f97316", // naranja
-          dark: "#c2410c",
-          light: "#fdba74",
+        neutral: {
+          black: "#000000",   // negro
+          white: "#FFFFFF",   // blanco
+          gray: "#F5F5F5",    // gris claro
+          darkgray: "#2E2E2E" // gris oscuro para contrastes
         },
       },
     },
