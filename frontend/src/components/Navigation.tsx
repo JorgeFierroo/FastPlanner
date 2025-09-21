@@ -17,6 +17,9 @@ const Navigation: React.FC = () => {
         <Link to="/profile" className="text-white">
           Perfil
         </Link>
+        <Link to="/tasks" className="text-white">
+          Tareas
+        </Link>
       </div>
     </nav>
   );
