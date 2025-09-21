@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Projects from './pages/Projects';
 import Profile from './pages/Profile';
 import HomePage from './pages/HomePage';
+import TestCalendar from './pages/TestCalendar';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/TestCalendar" element={<TestCalendar />} />
         </Routes>
       </div>
     </Router>
