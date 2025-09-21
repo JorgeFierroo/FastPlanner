@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import TaskPage from "./pages/TaskPage";
 import HomePage from "./pages/HomePage";
 import Tabla from "./pages/Tabla";
+import TestCalendar from "./pages/TestCalendar";
 import { KanbanBoard } from "./components/KanbanBoard";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/tasks" element={<   TaskPage    />} />
           <Route path="/Tabla" element={<   Tabla       />} /> 
           <Route path="/KanbanBoard" element={<   KanbanBoard       />} /> 
+          <Route path="/TestCalendar" element={<   TestCalendar       />} /> 
         </Routes>
       </Layout>
     </Router>
