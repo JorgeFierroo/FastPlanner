@@ -17,6 +17,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/tasks" element={<TaskPage />} />
         </Routes>
       </Layout>
     </Router>
