@@ -49,7 +49,7 @@ const tareas = [
   },
 ];
 
-export default function TablaKanban() {
+export default function Tabla() {
   return (
     <div className="p-6 bg-white rounded-2xl shadow-lg">
       <h2 className="text-2xl font-bold mb-4">Vista de Tabla</h2>

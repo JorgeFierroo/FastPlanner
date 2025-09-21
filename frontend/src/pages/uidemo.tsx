@@ -36,4 +36,12 @@ const UiDemo: React.FC = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="
+        title="Ejemplo de Modal"
+      >
+        <p>Este es el contenido dentro del modal 😎</p>
+      </Modal>
+    </div>
+  );
+};
+
+export default UiDemo;

@@ -1,31 +1,25 @@
 import React from "react";
-import Button from "./button";
+import Button from "./Button";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title?: string;
-  children: React.ReactNode;
+  title: string;
+  children?: React.ReactNode; // children opcional
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
-      <div className="bg-neutral-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          {title && <h2 className="text-lg font-semibold">{title}</h2>}
-          <button onClick={onClose} className="text-neutral-darkgray hover:text-neutral-black">✕</button>
-        </div>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+        <h2 className="text-xl font-bold mb-4">{title}</h2>
 
-        {/* Content */}
-        <div className="mb-4">{children}</div>
+        {children && <div>{children}</div>} {/* solo renderiza si existe */}
 
-        {/* Footer */}
-        <div className="flex justify-end">
-          <Button variant="primary" onClick={onClose}>Cerrar</Button>
+        <div className="mt-4 text-right">
+          <Button onClick={onClose}>Cerrar</Button>
         </div>
       </div>
     </div>

@@ -31,7 +31,7 @@ function TaskPage() {
                 </button>
             </div>
 
-            <div className= "flex gap-5 grid grid-cols-4">
+            <div className= "flex gap-5 grid-cols-4">
                 {lists.map((list) => (
                     <TaskList key={list.id} title={list.title} />
                 ))}
