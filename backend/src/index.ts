@@ -1,19 +1,18 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-
-dotenv.config();
+// src/index.ts
+import express from "express";
+import cors from "cors";
+import userRoutes from "./routes/user.routes";
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.json({ message: 'API funcionando' });
-});
+// Montamos las rutas de usuario
+app.use("/users", userRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Servidor en puerto ${PORT}`);
+// Levantamos el servidor
+app.listen(3000, () => {
+  console.log("🚀 Servidor corriendo en http://localhost:3001");
 });

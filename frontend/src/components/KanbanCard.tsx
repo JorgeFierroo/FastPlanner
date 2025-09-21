@@ -1,0 +1,40 @@
+import { useDraggable } from "@dnd-kit/core"
+
+type KanbanCardProps = {
+  id: number
+  title: string
+  description: string
+  label?: string
+  columnId: string
+}
+
+export function KanbanCard({ id, title, description, label, columnId }: KanbanCardProps) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id,
+    data: { columnId },
+  })
+
+  const style = transform
+    ? { transform: `translate(${transform.x}px, ${transform.y}px)` }
+    : undefined
+
+  return (
+    <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      style={style}
+      className={`rounded-xl border bg-white p-4 shadow-sm transition cursor-grab ${
+        isDragging ? "opacity-50 border-dashed" : "hover:shadow-md"
+      }`}
+    >
+      <div className="font-semibold text-gray-800">{title}</div>
+      <p className="text-sm text-gray-500 mt-1">{description}</p>
+      {label && (
+        <span className="inline-block mt-3 text-xs font-medium px-2 py-1 rounded bg-gray-200 text-gray-700">
+          {label}
+        </span>
+      )}
+    </div>
+  )
+}
