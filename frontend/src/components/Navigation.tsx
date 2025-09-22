@@ -1,31 +1,52 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const Navigation: React.FC = () => {
+  const location = useLocation();
+
+  const links = [
+    { path: "/", label: "Inicio" },
+    { path: "/projects", label: "Proyectos" },
+    { path: "/profile", label: "Perfil" },
+    { path: "/auth", label: "Auth" },
+    { path: "/login", label: "Login" },
+    { path: "/Tabla", label: "Tabla"},
+    { path: "/KanbanBoard", label: "Kanban"}
+  ];
+
   return (
-    <nav className="bg-gray-800 p-4">
-      <div className="flex justify-between items-center">
-        <div className="flex space-x-4">
-          <Link to="/" className="text-white font-bold text-lg">
+    <header className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+      <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
+        {/* Logo */}
+        <div className="flex items-center space-x-2">
+          <img
+            src="/logo192.png"
+            alt="Logo"
+            className="w-8 h-8"
+          />
+          <span className="text-xl font-semibold text-gray-800">
             FastPlanner
-          </Link>
+          </span>
         </div>
-        <div className="flex space-x-4">
-          <Link 
-            to="/auth" 
-            className="text-white hover:text-gray-300 transition-colors"
-          >
-            Iniciar Sesión / Registro
-          </Link>
-          <Link to="/projects" className="text-white hover:text-gray-300 transition-colors">
-            Proyectos
-          </Link>
-          <Link to="/profile" className="text-white hover:text-gray-300 transition-colors">
-            Perfil
-          </Link>
+
+        {/* Links */}
+        <div className="flex space-x-6">
+          {links.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              className={`${
+                location.pathname === link.path
+                  ? "text-blue-600 font-medium"
+                  : "text-gray-600 hover:text-blue-500"
+              } transition-colors`}
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 };
 
