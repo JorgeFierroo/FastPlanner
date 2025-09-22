@@ -17,7 +17,7 @@ function TaskPage() {
     };
 
     return(
-        <div className="p-6">
+        <div className="p-6 bg-blue-50 min-h-screen">
             <h1 className="text-2xl font-bold mb-4">Tareas</h1>
             <div className="flex gap-2 mb-6">
                 <input
