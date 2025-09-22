@@ -10,6 +10,7 @@ import HomePage from "./pages/HomePage";
 import Tabla from "./pages/Tabla";
 import TestCalendar from "./pages/TestCalendar";
 import { KanbanBoard } from "./components/KanbanBoard";
+import Vistas from "./pages/Vistas";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/Tabla" element={<   Tabla       />} /> 
           <Route path="/KanbanBoard" element={<   KanbanBoard       />} /> 
           <Route path="/TestCalendar" element={<   TestCalendar       />} /> 
+          <Route path="/Vistas" element={<   Vistas       />} />
         </Routes>
       </Layout>
     </Router>
