@@ -23,9 +23,6 @@ function App() {
           <Route path="/projects" element={<Projects    />} />
           <Route path="/profile" element={< Profile     />} />
           <Route path="/tasks" element={<   TaskPage    />} />
-          <Route path="/Tabla" element={<   Tabla       />} /> 
-          <Route path="/KanbanBoard" element={<   KanbanBoard       />} /> 
-          <Route path="/TestCalendar" element={<   TestCalendar       />} /> 
           <Route path="/Vistas" element={<   Vistas       />} />
         </Routes>
       </Layout>
