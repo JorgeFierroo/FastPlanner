@@ -1,6 +1,14 @@
 import { useState } from "react"
-import { DndContext, closestCenter } from "@dnd-kit/core"
-import { arrayMove, SortableContext, rectSortingStrategy } from "@dnd-kit/sortable"
+import {
+  DndContext,
+  closestCenter,
+  DragEndEvent,
+} from "@dnd-kit/core"
+import {
+  arrayMove,
+  SortableContext,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable"
 import { KanbanList } from "./KanbanList"
 
 type Task = {
@@ -40,27 +48,35 @@ const initialData: Column[] = [
 export function KanbanBoard() {
   const [columns, setColumns] = useState(initialData)
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
     if (!over) return
-
     if (active.id === over.id) return
 
-    setColumns(cols =>
-      cols.map(col => {
-        const cardIndex = col.cards.findIndex(card => card.id === active.id)
-        if (cardIndex > -1) {
-          // Sacamos la card de la columna actual
-          const [movedCard] = col.cards.splice(cardIndex, 1)
-          // Buscamos en qué columna soltarla
-          const targetCol = cols.find(c => c.id === over.data.current?.columnId)
-          if (targetCol) {
-            targetCol.cards.push(movedCard)
-          }
+    setColumns(cols => {
+      const newCols = cols.map(col => ({ ...col, cards: [...col.cards] }))
+
+      let movingCard: Task | null = null
+      let sourceColId = ""
+
+      // Encontrar la tarjeta a mover y la columna origen
+      newCols.forEach(col => {
+        const index = col.cards.findIndex(card => card.id === active.id)
+        if (index > -1) {
+          movingCard = col.cards.splice(index, 1)[0]
+          sourceColId = col.id
         }
-        return col
       })
-    )
+
+      if (!movingCard) return newCols
+
+      // Columna destino
+      const targetColId = over.data.current?.columnId || sourceColId
+      const targetCol = newCols.find(c => c.id === targetColId)
+      if (targetCol) targetCol.cards.push(movingCard)
+
+      return newCols
+    })
   }
 
   return (
