@@ -32,11 +32,7 @@
     "@types/express": "^5.0.3",
     "@types/node": "^24.3.0",
     "nodemon": "^3.1.10",
-<<<<<<< HEAD
-    "prisma": "^6.15.0",
-=======
     "prisma": "^6.16.2",
->>>>>>> main
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }

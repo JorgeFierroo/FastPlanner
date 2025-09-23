@@ -14,27 +14,6 @@ const Navigation: React.FC = () => {
   ];
 
   return (
-<<<<<<< HEAD
-    <nav className="bg-gray-800 p-4">
-      <div className="flex space-x-4">
-        <Link to="/login" className="text-white">
-          Login
-        </Link>
-        <Link to="/register" className="text-white">
-          Registro
-        </Link>
-        <Link to="/projects" className="text-white">
-          Proyectos
-        </Link>
-        <Link to="/profile" className="text-white">
-          Perfil
-        </Link>
-        <Link to="/TestCalendar" className="text-white">
-          Test Calendar
-        </Link>
-      </div>
-    </nav>
-=======
     <header className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
         {/* Logo */}
@@ -67,7 +46,6 @@ const Navigation: React.FC = () => {
         </div>
       </nav>
     </header>
->>>>>>> main
   );
 };
 
