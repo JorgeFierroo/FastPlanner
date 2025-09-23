@@ -1,4 +1,5 @@
-import { useDraggable } from "@dnd-kit/core"
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 
 type KanbanCardProps = {
   id: number
@@ -9,20 +10,21 @@ type KanbanCardProps = {
 }
 
 export function KanbanCard({ id, title, description, label, columnId }: KanbanCardProps) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
     data: { columnId },
   })
 
-  const style = transform
-    ? { transform: `translate(${transform.x}px, ${transform.y}px)` }
-    : undefined
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
 
   return (
     <div
       ref={setNodeRef}
-      {...listeners}
       {...attributes}
+      {...listeners}
       style={style}
       className={`rounded-xl border bg-white p-4 shadow-sm transition cursor-grab ${
         isDragging ? "opacity-50 border-dashed" : "hover:shadow-md"
