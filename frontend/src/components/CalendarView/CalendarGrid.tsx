@@ -4,12 +4,12 @@ type CalendarGridProps = {
     selectedDate: string | null; // Fecha seleccionada (opcional)
     month: number;  // 0=enero, 1=febrero, ..., 11=diciembre
     year: number;
-    tasks: Record<string, { id: number; title: string; status: string }[]>; // Mapa de fechas a tareas
+    tasks: { id: number; title: string; status: string; date: string }[]; // Mapa de fechas a tareas
     daySelectFunction: (dateKey: string) => void; // Función para seleccionar un día
+    handleTaskDrop: (taskId: number, newDate: string) => void; // Función para manejar drop de tarea
 };
 
-export default function CalendarGrid({ selectedDate, month, year, tasks, daySelectFunction }: CalendarGridProps) {
-  
+export default function CalendarGrid({ selectedDate, month, year, tasks, daySelectFunction, handleTaskDrop }: CalendarGridProps) {
 
   // Obtener dia 1 y tamaño del mes
   const daysInMonth = new Date(year, month + 1, 0).getDate(); // Último día del mes
@@ -22,28 +22,30 @@ export default function CalendarGrid({ selectedDate, month, year, tasks, daySele
 
   // Crea celdas del calendario
   for (let i = 1; i < startDay; i++) {
-    days.push(<DayCell 
-      key={`empty-${i}`} 
+    days.push(<DayCell
       dayNumber={null} 
       isToday={false} 
       isSelected={false}
       clickFunction={undefined}
-      mode="month" />); // Espacios en blanco
+      mode="month"
+      dateKey={null}
+      onTaskDrop={handleTaskDrop} />); // Espacios en blanco
       
   }
 
   for (let i = 1; i <= daysInMonth; i++) {
     const date = `${year}-${String(month + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
-    const taskList = tasks[date] || [];
+    const taskList = tasks.filter(task => task.date === date);
     const today = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
     days.push(<DayCell 
-      key={`day-${i}`} 
       dayNumber={i} 
       isToday={today === date} 
       isSelected={selectedDate === date}  // True o false
       clickFunction={() => daySelectFunction(date)}
       tasks={taskList}
-      mode="month" />); // Días del mes
+      mode="month"
+      dateKey={date}
+      onTaskDrop={handleTaskDrop} />); // Días del mes
   }
 
   return (

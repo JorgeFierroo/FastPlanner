@@ -3,7 +3,12 @@ import CalendarWeekGrid from "./CalendarWeekView/CalendarWeekGrid";
 import CalendarWeekHeader from "./CalendarWeekView/CalendarWeekHeader";
 import CalendarSide from "./CalendarView/CalendarSide";
 
-export default function CalendarWeekView() {
+type CalendarWeekViewProps = {
+    mockTasks?: { id: number; title: string; status: string; date: string }[];
+    handleTaskDrop: (taskId: number, newDate: string) => void; // Función para manejar drop de tarea
+};
+
+export default function CalendarWeekView({ mockTasks = [], handleTaskDrop }: CalendarWeekViewProps) {
     const monthNames = [
         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
         "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -22,18 +27,6 @@ export default function CalendarWeekView() {
     // Fecha seleccionada
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
-
-    // Tareas simuladas (temporal)
-    const [mockTasks] = useState<{ [key: string]: { id: number; title: string; status: string }[]}>({
-        "2025-08-15": [{id: 1, title:"tarea 1", status: "pendiente"},
-                    {id: 2, title:"tarea 2", status: "completada"}],
-        "2025-08-20": [{id: 3, title:"tarea 3", status: "pendiente"}],
-        "2025-09-05": [{id: 4, title:"tarea 4", status: "pendiente"}, 
-                    {id: 5, title:"tarea 5", status: "completada"},
-                    {id: 6, title:"tarea 6", status: "en progreso"}],
-        "2025-09-18": [{id: 7, title:"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", status: "pendiente"}],
-        "2025-09-25": [{id: 8, title:"BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB", status: "sin empezar"}]
-    });
 
 
     // Funciones para cambiar mes y semana
@@ -110,10 +103,11 @@ export default function CalendarWeekView() {
                     year={currentYear}
                     tasks={mockTasks}
                     daySelectFunction={(datekey:string) => {setSelectedDate(datekey)}}
+                    handleTaskDrop={handleTaskDrop}
                 />
             </div>
             <div className="w-1/5 p-4 mt-0 bg-white rounded-2xl shadow-lg p-6 mx-4">
-                <CalendarSide monthNames={monthNames} selectedDate={selectedDate} tasks={mockTasks[selectedDate || ""] || []} />
+                <CalendarSide monthNames={monthNames} selectedDate={selectedDate} tasks={mockTasks.filter(task => task.date === selectedDate)} />
             </div>
         </div>
     );

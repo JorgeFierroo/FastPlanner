@@ -3,7 +3,12 @@ import CalendarHeader from "./CalendarView/CalendarHeader";
 import CalendarGrid from "./CalendarView/CalendarGrid";
 import CalendarSide from "./CalendarView/CalendarSide";
 
-export default function CalendarView() {
+type CalendarViewProps = {
+  mockTasks?: { id: number; title: string; status: string; date: string }[]; // Arreglo de tareas simuladas
+  handleTaskDrop: (taskId: number, newDate: string) => void; // Función para manejar drop de tarea
+};
+
+export default function CalendarView({ mockTasks = [], handleTaskDrop }: CalendarViewProps) {
   const monthNames = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -35,19 +40,6 @@ export default function CalendarView() {
     }
   };
 
-
-  // Tareas simuladas (temporal)
-  const [mockTasks] = useState<{ [key: string]: { id: number; title: string; status: string }[]}>({
-    "2025-08-15": [{id: 1, title:"tarea 1", status: "pendiente"},
-                   {id: 2, title:"tarea 2", status: "completada"}],
-    "2025-08-20": [{id: 3, title:"tarea 3", status: "pendiente"}],
-    "2025-09-05": [{id: 4, title:"tarea 4", status: "pendiente"}, 
-                   {id: 5, title:"tarea 5", status: "completada"},
-                   {id: 6, title:"tarea 6", status: "en progreso"}],
-    "2025-09-18": [{id: 7, title:"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", status: "pendiente"}],
-    "2025-09-25": [{id: 8, title:"BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB", status: "sin empezar"}]
-  });
-
   return (
     <div className="flex justify-center flex-row">
       <div className="w-3/5 mt-0 bg-white rounded-2xl shadow-lg p-6 mx-4">
@@ -58,10 +50,10 @@ export default function CalendarView() {
           onPrev={handlePrevMonth}
           onNext={handleNextMonth}
         />
-        <CalendarGrid selectedDate={selectedDate} month={currentMonth} year={currentYear} tasks={mockTasks} daySelectFunction={(dateKey:string) => setSelectedDate(dateKey)} />
+        <CalendarGrid selectedDate={selectedDate} month={currentMonth} year={currentYear} tasks={mockTasks} daySelectFunction={(dateKey:string) => setSelectedDate(dateKey)} handleTaskDrop={handleTaskDrop} />
       </div>
       <div className="w-1/5 p-4 mt-0 bg-white rounded-2xl shadow-lg p-6 mx-4">
-        <CalendarSide monthNames={monthNames} selectedDate={selectedDate} tasks={mockTasks[selectedDate || ""] || []} />
+        <CalendarSide monthNames={monthNames} selectedDate={selectedDate} tasks={mockTasks.filter(task => task.date === selectedDate)} />
       </div>
     </div>
   );
