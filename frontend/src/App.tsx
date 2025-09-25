@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Projects from "./pages/Projects";
 import Profile from "./pages/Profile";
 import HomePage from "./pages/HomePage";
+import TaskPage from "./pages/TaskPage";
 
 function App() {
   return (
