@@ -8,8 +8,10 @@ const Navigation: React.FC = () => {
     { path: "/", label: "Inicio" },
     { path: "/projects", label: "Proyectos" },
     { path: "/profile", label: "Perfil" },
-    { path: "/login", label: "Login" },
+    { path: "/auth", label: "Autenticación" },
     { path: "/tasks", label: "Tareas" },
+    { path: "/Tabla", label: "Tabla"},
+    { path: "/KanbanBoard", label: "Kanban"},
     { path: "/Vistas", label: "Vistas"}
   ];
 
