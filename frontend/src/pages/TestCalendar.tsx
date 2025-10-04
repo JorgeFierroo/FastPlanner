@@ -13,7 +13,7 @@ const TestCalendar: React.FC = () => {
     const [mockTasks, setMockTasks] = useState<
       { id: number; title: string; status: string; date: string }[]
     >([
-      { id: 1, title: "tarea 1", status: "pendiente", date: "2025-08-15" },
+      { id: 1, title: "tarea 1 lorem ipsum dolor sit amet afmawkfnawkfnawkfnawk fa fw f afa", status: "pendiente", date: "2025-08-15" },
       { id: 2, title: "tarea 2", status: "completada", date: "2025-08-15" },
       { id: 3, title: "tarea 3", status: "pendiente", date: "2025-08-20" },
       { id: 4, title: "tarea 4", status: "pendiente", date: "2025-09-05" },

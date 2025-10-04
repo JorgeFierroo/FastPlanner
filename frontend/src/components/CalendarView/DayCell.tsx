@@ -41,8 +41,10 @@ export default function DayCell({ dayNumber, isToday, isSelected, clickFunction,
         {tasks.slice(0, mode === "month" ? 2 : 10).map((task, idx) => (
           <div
             key={task.id}
-            className={"text-s rounded px-1 truncate "
-              + (StatusColors.find(sc => sc.label === task.status)?.color || " bg-gray-200")} // Color según el estado
+            className={"text-s rounded-full text-center px-1 truncate border-2 "
+              + (StatusColors.find(sc => sc.label === task.status)?.color || " bg-gray-200") // Color según el estado
+              + " "
+              + (StatusColors.find(sc => sc.label === task.status)?.border || "border-gray-300 border-2")}
             title={task.title} // tooltip si el texto es largo
             draggable={true} // Hacer la tarea draggable
             onDragStart={(e) => {
@@ -56,7 +58,7 @@ export default function DayCell({ dayNumber, isToday, isSelected, clickFunction,
         ))}
 
         {tasks.length > (mode === "month" ? 2 : 10) && (
-          <div className="text-[12px] text-gray-500">+{tasks.length - (mode === "month" ? 2 : 10)} más</div>
+          <div className="text-[12px] text-gray-500 text-center">+{tasks.length - (mode === "month" ? 2 : 10)} más</div>
         )}
       </div>
 

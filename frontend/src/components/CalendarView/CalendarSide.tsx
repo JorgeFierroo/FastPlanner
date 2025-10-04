@@ -23,11 +23,13 @@ export default function CalendarSide({ monthNames, selectedDate, tasks }: Calend
                 <p className="text-gray-500">No hay tarjetas para esta fecha.</p>
             ) : (
                 <div>
-                    <p className="text-gray-500">Hay {tasks.length} tarjeta{tasks.length > 1 ? "s" : ""} para esta fecha:</p>
-                    <ul className="list-disc list-inside space-y-2">
+                    <p className="text-gray-500 mb-2">Hay {tasks.length} tarjeta{tasks.length > 1 ? "s" : ""} para esta fecha:</p>
+                    <ul className="list-none list-inside space-y-2">
                         {tasks.map((task, idx) => (
-                            <li key={idx} className={" rounded px-2 py-1 truncate "
-                                + (StatusColors.find(sc => sc.label === task.status)?.color || " bg-gray-200")
+                            <li key={idx} className={"rounded-full text-center px-2 py-1 truncate w-56 border-4 hover:cursor-pointer "
+                                + (StatusColors.find(sc => sc.label === task.status)?.color || "bg-gray-200")
+                                + " "
+                                + (StatusColors.find(sc => sc.label === task.status)?.border || "border-gray-300")
                             }>{task.title}</li>
                         ))}
                     </ul>
