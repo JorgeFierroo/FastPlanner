@@ -1,11 +1,52 @@
-import React from 'react';
+import { useState } from "react";
 
-const Register: React.FC = () => {
+export default function Register() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSumbit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
+    // Llamar a la API en cuanto este
+    console.log("Registro:", email, password);
+  };
+
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold text-center mb-6">Registro</h1>
+    <div className="flex-justify-center items-center h-screen bg-gray-100">
+      <form onSubmit={handleSumbit} className="rounded">
+        <h2 className="font-bold text_center">Registrarse</h2>
+        <input 
+          type="email"
+          placeholder="Ingrese su correo"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="border rounded"
+        />
+        <input 
+          type="password"
+          placeholder="Ingrese su contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="border rounded" 
+        />
+        <input 
+          type="password"
+          placeholder="Confirme su contraseña"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          className="border rounded"
+        />
+        <button 
+          type="submit" 
+          className="border rounded bg-green-100 hover:bg-green-200"
+        >
+          Registrarse
+        </button>
+      </form>
     </div>
   );
-};
-
-export default Register;
+}
