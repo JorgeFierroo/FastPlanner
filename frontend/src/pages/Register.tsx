@@ -16,33 +16,33 @@ export default function Register() {
   };
 
   return (
-    <div className="flex-justify-center items-center h-screen bg-gray-100">
-      <form onSubmit={handleSumbit} className="rounded">
-        <h2 className="font-bold text_center">Registrarse</h2>
+    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <form onSubmit={handleSumbit} className="rounded bg-white shadow-md w-96 p-8">
+        <h2 className="font-bold text-center mb-6">Registrarse</h2>
         <input 
           type="email"
           placeholder="Ingrese su correo"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border rounded"
+          className="border rounded w-full mb-4 p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
         />
         <input 
           type="password"
           placeholder="Ingrese su contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border rounded" 
+          className="border rounded w-full mb-4 p-2 focus:outline-none focus:ring-2 focus:ring-blue-200" 
         />
         <input 
           type="password"
           placeholder="Confirme su contraseña"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="border rounded"
+          className="border rounded w-full mb-4 p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
         />
         <button 
           type="submit" 
-          className="border rounded bg-green-100 hover:bg-green-200"
+          className="border rounded bg-green-100 hover:bg-green-200 w-full p-2 transition"
         >
           Registrarse
         </button>
