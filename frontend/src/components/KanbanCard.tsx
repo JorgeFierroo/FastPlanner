@@ -1,24 +1,32 @@
-import { useSortable } from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 type KanbanCardProps = {
-  id: number
-  title: string
-  description: string
-  label?: string
-  columnId: string
-}
+  id: number;
+  title: string;
+  description: string;
+  label?: string;
+  columnId: string;
+  onDeleteCard: (columnId: string, cardId: number) => void;
+};
 
-export function KanbanCard({ id, title, description, label, columnId }: KanbanCardProps) {
+export function KanbanCard({
+  id,
+  title,
+  description,
+  label,
+  columnId,
+  onDeleteCard,
+}: KanbanCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
     data: { columnId },
-  })
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-  }
+  };
 
   return (
     <div
@@ -30,7 +38,15 @@ export function KanbanCard({ id, title, description, label, columnId }: KanbanCa
         isDragging ? "opacity-50 border-dashed" : "hover:shadow-md"
       }`}
     >
-      <div className="font-semibold text-gray-800">{title}</div>
+      <div className="flex justify-between items-center">
+        <div className="font-semibold text-gray-800">{title}</div>
+        <button
+          onClick={() => onDeleteCard(columnId, id)}
+          className="text-red-400 hover:text-red-600 text-sm"
+        >
+          ✕
+        </button>
+      </div>
       <p className="text-sm text-gray-500 mt-1">{description}</p>
       {label && (
         <span className="inline-block mt-3 text-xs font-medium px-2 py-1 rounded bg-gray-200 text-gray-700">
@@ -38,5 +54,5 @@ export function KanbanCard({ id, title, description, label, columnId }: KanbanCa
         </span>
       )}
     </div>
-  )
+  );
 }
