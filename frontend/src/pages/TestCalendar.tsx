@@ -11,16 +11,16 @@ const TestCalendar: React.FC = () => {
   }
   // Tareas simuladas (temporal)
     const [mockTasks, setMockTasks] = useState<
-      { id: number; title: string; status: string; date: string }[]
+      { id: number; title: string; description: string; creador: string; status: string; prioridad: string; date: string }[]
     >([
-      { id: 1, title: "tarea 1 lorem ipsum dolor sit amet afmawkfnawkfnawkfnawk fa fw f afa", status: "pendiente", date: "2025-08-15" },
-      { id: 2, title: "tarea 2", status: "completada", date: "2025-08-15" },
-      { id: 3, title: "tarea 3", status: "pendiente", date: "2025-08-20" },
-      { id: 4, title: "tarea 4", status: "pendiente", date: "2025-09-05" },
-      { id: 5, title: "tarea 5", status: "completada", date: "2025-09-05" },
-      { id: 6, title: "tarea 6", status: "en progreso", date: "2025-09-05" },
-      { id: 7, title: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", status: "pendiente", date: "2025-09-18" },
-      { id: 8, title: "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB", status: "sin empezar", date: "2025-09-25" }
+      { id: 1, title: "tarea 1 lorem ipsum dolor sit amet afmawkfnawkfnawkfnawk fa fw f afa", description: "Descripción de la tarea 1", creador: "Creador 1", status: "pendiente", prioridad: "alta", date: "2025-08-15" },
+      { id: 2, title: "tarea 2", description: "Descripción de la tarea 2", creador: "Creador 2", status: "completada", prioridad: "media", date: "2025-08-15" },
+      { id: 3, title: "tarea 3", description: "Descripción de la tarea 3", creador: "Creador 3", status: "pendiente", prioridad: "baja", date: "2025-08-20" },
+      { id: 4, title: "tarea 4", description: "Descripción de la tarea 4", creador: "Creador 4", status: "pendiente", prioridad: "alta", date: "2025-09-05" },
+      { id: 5, title: "tarea 5", description: "Descripción de la tarea 5", creador: "Creador 5", status: "completada", prioridad: "media", date: "2025-09-05" },
+      { id: 6, title: "tarea 6", description: "Descripción de la tarea 6", creador: "Creador 6", status: "en progreso", prioridad: "baja", date: "2025-09-05" },
+      { id: 7, title: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", description: "Descripción de la tarea 7", creador: "Creador 7", status: "pendiente", prioridad: "alta", date: "2025-09-18" },
+      { id: 8, title: "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB", description: "Descripción de la tarea 8", creador: "Creador 8", status: "sin empezar", prioridad: "media", date: "2025-09-25" }
     ]);
 
   const handleTaskDrop = (taskId: number, newDate: string) => {

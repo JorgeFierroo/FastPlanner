@@ -4,7 +4,7 @@ import CalendarWeekHeader from "./CalendarWeekView/CalendarWeekHeader";
 import CalendarSide from "./CalendarView/CalendarSide";
 
 type CalendarWeekViewProps = {
-    mockTasks?: { id: number; title: string; status: string; date: string }[];
+    mockTasks?: { id: number; title: string; description: string; creador: string; status: string; prioridad: string; date: string }[];
     handleTaskDrop: (taskId: number, newDate: string) => void; // Función para manejar drop de tarea
 };
 

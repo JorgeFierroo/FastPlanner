@@ -4,7 +4,7 @@ type CalendarGridProps = {
     selectedDate: string | null; // Fecha seleccionada (opcional)
     month: number;  // 0=enero, 1=febrero, ..., 11=diciembre
     year: number;
-    tasks: { id: number; title: string; status: string; date: string }[]; // Mapa de fechas a tareas
+    tasks: { id: number; title: string; description: string; creador: string; status: string; prioridad: string; date: string }[]; // Mapa de fechas a tareas
     daySelectFunction: (dateKey: string) => void; // Función para seleccionar un día
     handleTaskDrop: (taskId: number, newDate: string) => void; // Función para manejar drop de tarea
 };

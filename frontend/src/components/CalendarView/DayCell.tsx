@@ -5,7 +5,7 @@ type DayCellProps = {
     isToday?: boolean; // Opcional: si es el día actual
     isSelected?: boolean; // Opcional: si es el día seleccionado
     clickFunction?: () => void; // Opcional: función al hacer click
-    tasks?: { id: number; title: string; status: string }[]; // Opcional: lista de tareas para el día
+    tasks?: { id: number; title: string; description: string; creador: string; status: string; prioridad: string; date: string }[]; // Opcional: lista de tareas para el día
     mode: "month" | "week"; // Opcional: modo normal o vista semanal
     dateKey: string | null; // clave de fecha en formato "YYYY-MM-DD"
     onTaskDrop: (taskId: number, newDate: string) => void; // función para manejar drop de tarea

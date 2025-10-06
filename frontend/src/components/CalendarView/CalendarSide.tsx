@@ -5,7 +5,7 @@ import { useState } from "react";
 type CalendarSideProps = {
     monthNames: string[];
     selectedDate: string | null; // Fecha seleccionada
-    tasks: { id: number; title: string; status: string }[]; // Tareas para la fecha seleccionada
+    tasks: { id: number; title: string; description: string; creador: string; status: string; prioridad: string; date: string }[]; // Tareas para la fecha seleccionada
 };
 
 
@@ -13,7 +13,7 @@ export default function CalendarSide({ monthNames, selectedDate, tasks }: Calend
     let titleDate: string
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedTask, setSelectedTask] = useState<{ id: number; title: string; status: string } | null>(null);
+    const [selectedTask, setSelectedTask] = useState<{ id: number; title: string; description: string; creador: string; status: string; prioridad: string; date: string } | null>(null);
     const modalClose = () => {
         setIsModalOpen(false);
         setSelectedTask(null);
@@ -28,7 +28,7 @@ export default function CalendarSide({ monthNames, selectedDate, tasks }: Calend
     }
     return (
         <div>
-            <TaskModal isOpen={isModalOpen} taskInfo={selectedTask ? { id: selectedTask.id, title: selectedTask.title, status: selectedTask.status, date: selectedDate! } : undefined} onClose={modalClose} />
+            <TaskModal isOpen={isModalOpen} taskInfo={selectedTask ? selectedTask : undefined} onClose={modalClose} />
             <h1 className="text-2xl font-bold mb-4">{titleDate}</h1>
             {tasks.length === 0 ? (
                 <p className="text-gray-500">No hay tarjetas para esta fecha.</p>
