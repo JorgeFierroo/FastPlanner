@@ -1,4 +1,6 @@
 import { StatusColors } from "../StatusColors";
+import TaskModal from "../taskModal";
+import { useState } from "react";
 
 type CalendarSideProps = {
     monthNames: string[];
@@ -9,6 +11,14 @@ type CalendarSideProps = {
 
 export default function CalendarSide({ monthNames, selectedDate, tasks }: CalendarSideProps) {
     let titleDate: string
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedTask, setSelectedTask] = useState<{ id: number; title: string; status: string } | null>(null);
+    const modalClose = () => {
+        setIsModalOpen(false);
+        setSelectedTask(null);
+    }
+
     if (!selectedDate) {
         titleDate = "Selecciona una fecha";
     }
@@ -18,6 +28,7 @@ export default function CalendarSide({ monthNames, selectedDate, tasks }: Calend
     }
     return (
         <div>
+            <TaskModal isOpen={isModalOpen} taskInfo={selectedTask ? { id: selectedTask.id, title: selectedTask.title, status: selectedTask.status, date: selectedDate! } : undefined} onClose={modalClose} />
             <h1 className="text-2xl font-bold mb-4">{titleDate}</h1>
             {tasks.length === 0 ? (
                 <p className="text-gray-500">No hay tarjetas para esta fecha.</p>
@@ -30,7 +41,11 @@ export default function CalendarSide({ monthNames, selectedDate, tasks }: Calend
                                 + (StatusColors.find(sc => sc.label === task.status)?.color || "bg-gray-200")
                                 + " "
                                 + (StatusColors.find(sc => sc.label === task.status)?.border || "border-gray-300")
-                            }>{task.title}</li>
+                            } 
+                            onClick={() => {
+                                setSelectedTask(task);
+                                setIsModalOpen(true);
+                            }}>{task.title}</li>
                         ))}
                     </ul>
                 </div>
