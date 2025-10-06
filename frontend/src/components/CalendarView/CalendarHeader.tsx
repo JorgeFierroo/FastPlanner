@@ -1,4 +1,5 @@
 import Legend from "./StatusColorsLegend";
+import React from "react";
 
 
 type CalendarHeaderProps = {    // Definición de tipos para los props
@@ -10,6 +11,39 @@ type CalendarHeaderProps = {    // Definición de tipos para los props
 };
 
 export default function CalendarHeader({ monthNames, month, year, onPrev, onNext }: CalendarHeaderProps) {  // Saca tales datos de los props
+  const timerRef = React.useRef<NodeJS.Timeout | null>(null);
+  const [currentDragOver, setCurrentDragOver] = React.useState<"prev" | "next" | null>(null);
+
+  // Funciones para manejar drag and drop en los botones de cambiar mes
+  const handleDragEnter = (action: "prev" | "next") => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    timerRef.current = setInterval(() => {
+      console.log("interval triggered");
+      if (action === "prev") {
+        onPrev();
+      } else {
+        onNext();
+      }
+    }, 500);
+  };
+  const handleDragLeave = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+      setCurrentDragOver(null);
+    }
+  };
+  const handleDrop = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+      setCurrentDragOver(null);
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row items-center justify-between p-4 mb-4">
 
@@ -25,7 +59,11 @@ export default function CalendarHeader({ monthNames, month, year, onPrev, onNext
       <div className="w-1/4 ml-auto flex items-center justify-between mb-4">
         <button 
           onClick={onPrev} 
-          className="px-3 py-1 rounded-lg bg-white hover:bg-gray-300 border text-lg"
+          onDragEnter={() => handleDragEnter("prev")}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={`px-3 py-1 rounded-lg bg-white hover:bg-gray-300 border text-lg
+            ${currentDragOver === "prev" ? " bg-gray-300" : ""}`} // Cambia el fondo si está en drag over
         >
           &lt;
         </button>
@@ -34,7 +72,11 @@ export default function CalendarHeader({ monthNames, month, year, onPrev, onNext
         </h2>
         <button 
           onClick={onNext} 
-          className="px-3 py-1 rounded-lg bg-white hover:bg-gray-300 border text-lg"
+          onDragEnter={() => handleDragEnter("next")}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={`px-3 py-1 rounded-lg bg-white hover:bg-gray-300 border text-lg
+            ${currentDragOver === "next" ? " bg-gray-300" : ""}`} // Cambia el fondo si está en drag over
         >
           &gt;
         </button>
