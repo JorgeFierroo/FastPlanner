@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Auth from './pages/Auth';
+import ForgotPassword from './pages/ForgotPassword';
 import Projects from "./pages/Projects";
 import Profile from "./pages/Profile";
 import TaskPage from "./pages/TaskPage";
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/tasks" element={<TaskPage />} />
