@@ -1,41 +1,64 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { Rocket, LayoutDashboard, Table2, Calendar } from "lucide-react";
 
-export default function HomePage() {
+export default function Inicio() {
+  const tecnologias = [
+    { nombre: "React.js", rol: "Interfaz dinámica", color: "bg-blue-100" },
+    { nombre: "TailwindCSS", rol: "Diseño responsivo", color: "bg-cyan-100" },
+    { nombre: "FastAPI", rol: "API backend", color: "bg-green-100" },
+    { nombre: "SQLite", rol: "Base de datos ligera", color: "bg-yellow-100" },
+    { nombre: "Lucide React", rol: "Sistema de iconos", color: "bg-pink-100" },
+    { nombre: "React DnD", rol: "Gestión de drag & drop", color: "bg-purple-100" },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 p-8 text-center">
-      <h1 className="text-4xl font-bold mb-4 text-gray-800">
-        Sistema Kanban Colaborativo
-      </h1>
-      <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-        Gestiona tus tareas, proyectos y equipos de manera visual y eficiente. 
-        Desarrollado con tecnologías modernas como React, Tailwind y FastAPI.
-      </p>
-
-      <div className="flex justify-center gap-4 mb-10">
-        <Button>Ver Tablero Kanban</Button>
-        <Button variant="outline">Ver Tabla de Tareas</Button>
-        <Button variant="secondary">Calendario</Button>
-      </div>
-
-      <section className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        {[
-          { nombre: "React.js", rol: "Frontend", color: "bg-blue-100" },
-          { nombre: "TailwindCSS", rol: "Estilos", color: "bg-cyan-100" },
-          { nombre: "FastAPI", rol: "Backend", color: "bg-green-100" },
-          { nombre: "SQLite", rol: "Base de datos", color: "bg-yellow-100" },
-          { nombre: "Lucide React", rol: "Iconos", color: "bg-pink-100" },
-          { nombre: "React-DnD", rol: "Arrastrar y soltar", color: "bg-purple-100" },
-        ].map((t, i) => (
-          <div
-            key={i}
-            className={`p-6 rounded-2xl shadow ${t.color}`}
-          >
-            <h3 className="font-semibold text-lg">{t.nombre}</h3>
-            <p className="text-sm text-gray-600">{t.rol}</p>
+    <main className="min-h-screen bg-gradient-to-b from-white to-gray-100 py-10 px-6 text-center">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex flex-col items-center mb-10">
+          <div className="flex items-center gap-3 mb-4">
+            <Rocket className="w-10 h-10 text-blue-600" />
+            <h1 className="text-4xl font-extrabold text-gray-800">
+              Panel de Inicio — Sistema Kanban
+            </h1>
           </div>
-        ))}
-      </section>
-    </div>
+          <p className="text-gray-600 max-w-2xl">
+            Organiza tus proyectos y tareas de forma visual, intuitiva y colaborativa.
+            Este sistema combina <span className="font-semibold">React</span> con 
+            <span className="font-semibold"> FastAPI</span> para lograr eficiencia, 
+            escalabilidad y una interfaz moderna.
+          </p>
+        </div>
+
+        <div className="flex justify-center gap-4 mb-12 flex-wrap">
+          <Button className="flex items-center gap-2">
+            <LayoutDashboard className="w-4 h-4" /> Tablero Kanban
+          </Button>
+          <Button variant="outline" className="flex items-center gap-2">
+            <Table2 className="w-4 h-4" /> Tabla de Tareas
+          </Button>
+          <Button variant="secondary" className="flex items-center gap-2">
+            <Calendar className="w-4 h-4" /> Calendario
+          </Button>
+        </div>
+
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800">Tecnologías Utilizadas</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {tecnologias.map((t, i) => (
+            <div
+              key={i}
+              className={`rounded-xl shadow-md p-6 transition transform hover:scale-105 hover:shadow-lg ${t.color}`}
+            >
+              <h3 className="font-bold text-lg mb-2">{t.nombre}</h3>
+              <p className="text-sm text-gray-700">{t.rol}</p>
+            </div>
+          ))}
+        </div>
+
+        <footer className="mt-16 text-sm text-gray-500">
+          © 2025 Sistema Kanban — Proyecto Académico desarrollado con React + FastAPI
+        </footer>
+      </div>
+    </main>
   );
 }
