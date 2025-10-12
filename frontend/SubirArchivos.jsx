@@ -7,8 +7,9 @@ const almacenamiento = {};
 export default function SubirArchivos({ taskId }) {
   const [archivos, setArchivos] = useState([]);
   const [subiendo, setSubiendo] = useState(false);
-  const [editando, setEditando] = useState(null); // índice del archivo que se está editando
+  const [editando, setEditando] = useState(null);
   const [nuevoNombre, setNuevoNombre] = useState("");
+  const [preview, setPreview] = useState(null); // archivo actualmente en vista previa
 
   // Cargar archivos al montar el componente
   useEffect(() => {
@@ -17,17 +18,21 @@ export default function SubirArchivos({ taskId }) {
     }
   }, [taskId]);
 
-  // Guardar cambios en el almacenamiento simulado
+  // Guardar cambios en almacenamiento
   const actualizarStorage = (nuevos) => {
     almacenamiento[taskId] = nuevos;
     setArchivos(nuevos);
   };
 
-  // Subir archivos desde input o drag & drop
+  // Subir archivos nuevos
   const subirArchivos = async (nuevos) => {
     setSubiendo(true);
-    await new Promise((res) => setTimeout(res, 800)); // Simula delay
-    actualizarStorage([...archivos, ...nuevos]);
+    await new Promise((res) => setTimeout(res, 800));
+    const nuevosConUrl = nuevos.map((file) => ({
+      file,
+      url: URL.createObjectURL(file),
+    }));
+    actualizarStorage([...archivos, ...nuevosConUrl]);
     setSubiendo(false);
   };
 
@@ -46,16 +51,18 @@ export default function SubirArchivos({ taskId }) {
   const guardarNuevoNombre = (index) => {
     if (!nuevoNombre.trim()) return;
     const nuevos = [...archivos];
-    const file = nuevos[index];
-    const extension = file.name.split(".").pop();
-    const blobNuevo = new File([file], `${nuevoNombre}.${extension}`, { type: file.type });
-    nuevos[index] = blobNuevo;
+    const fileData = nuevos[index].file;
+    const extension = fileData.name.split(".").pop();
+    const nuevoArchivo = new File([fileData], `${nuevoNombre}.${extension}`, {
+      type: fileData.type,
+    });
+    nuevos[index] = { file: nuevoArchivo, url: nuevos[index].url };
     actualizarStorage(nuevos);
     setEditando(null);
     setNuevoNombre("");
   };
 
-  // Manejadores de drag & drop
+  // Manejadores drag & drop
   const handleDrop = async (e) => {
     e.preventDefault();
     const nuevos = Array.from(e.dataTransfer.files);
@@ -73,6 +80,16 @@ export default function SubirArchivos({ taskId }) {
   const handleFileChange = async (e) => {
     const nuevos = Array.from(e.target.files);
     await subirArchivos(nuevos);
+  };
+
+  // Mostrar vista previa del archivo seleccionado
+  const abrirPreview = (archivo) => {
+    setPreview(archivo);
+  };
+
+  // Cerrar vista previa
+  const cerrarPreview = () => {
+    setPreview(null);
   };
 
   return (
@@ -111,10 +128,14 @@ export default function SubirArchivos({ taskId }) {
           {archivos.length === 0 ? (
             <div className="empty">No hay archivos adjuntos</div>
           ) : (
-            archivos.map((file, index) => (
+            archivos.map((item, index) => (
               <div className="attachment" key={index}>
-                <div className="file-icon">
-                  {file.name.split(".").pop().toUpperCase()}
+                <div
+                  className="file-icon cursor-pointer"
+                  onClick={() => abrirPreview(item)}
+                  title="Haz clic para previsualizar"
+                >
+                  {item.file.name.split(".").pop().toUpperCase()}
                 </div>
 
                 {/* Renombrar archivo */}
@@ -139,15 +160,17 @@ export default function SubirArchivos({ taskId }) {
                     className="name"
                     onDoubleClick={() => {
                       setEditando(index);
-                      setNuevoNombre(file.name.replace(/\.[^/.]+$/, ""));
+                      setNuevoNombre(item.file.name.replace(/\.[^/.]+$/, ""));
                     }}
                     title="Doble clic para renombrar"
                   >
-                    {file.name}
+                    {item.file.name}
                   </div>
                 )}
 
-                <div className="meta">{(file.size / 1024).toFixed(1)} KB</div>
+                <div className="meta">
+                  {(item.file.size / 1024).toFixed(1)} KB
+                </div>
 
                 <div className="actions">
                   <button
@@ -170,6 +193,41 @@ export default function SubirArchivos({ taskId }) {
           </button>
         )}
       </div>
+
+      {/* Modal de previsualización */}
+      {preview && (
+        <div className="preview-modal" onClick={cerrarPreview}>
+          <div className="preview-content" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold mb-3">{preview.file.name}</h3>
+
+            {preview.file.type.startsWith("image/") ? (
+              <img
+                src={preview.url}
+                alt="preview"
+                className="max-h-[70vh] mx-auto rounded-lg"
+              />
+            ) : preview.file.type === "application/pdf" ? (
+              <iframe
+                src={preview.url}
+                className="w-full h-[70vh] rounded-lg"
+                title="Vista previa PDF"
+              />
+            ) : preview.file.type.startsWith("text/") ? (
+              <iframe
+                src={preview.url}
+                className="w-full h-[50vh] rounded-lg bg-white"
+                title="Texto"
+              />
+            ) : (
+              <p className="text-gray-600">No se puede previsualizar este tipo de archivo.</p>
+            )}
+
+            <button className="close-preview mt-4" onClick={cerrarPreview}>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
