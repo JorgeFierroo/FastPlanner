@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ProjectCard from "../components/ProjectCard";
 
 const projects = [
@@ -6,20 +6,60 @@ const projects = [
     title: "FastPlanner MVP",
     description: "Primera versión funcional del sistema de gestión de proyectos.",
     status: "activo",
+    people: ["Sebas", "Jorge", "Ana"],
+    tasks: [
+      { name: "Diseño UI", assigned: true },
+      { name: "Backend API", assigned: true },
+      { name: "Documentación", assigned: false },
+    ],
+    isFuture: false,
   },
   {
-    title: "Diseño UI",
-    description: "Definir paleta de colores, tipografía y layout base.",
+    title: "hospitrack",
+    description: "Te extraño.",
     status: "completado",
+    people: ["Carlos", "Luis"],
+    tasks: [
+      { name: "Setup DB", assigned: true },
+      { name: "Testing", assigned: true },
+    ],
+    isFuture: false,
   },
   {
-    title: "Integración Backend",
-    description: "Conectar API con base de datos.",
+    title: "Completar el año",
+    description: "bebesitaaaa.",
     status: "pendiente",
+    people: ["Sebas"],
+    tasks: [
+      { name: "Planificación", assigned: false },
+    ],
+    isFuture: true,
+  },
+  {
+    title: "Proyecto X",
+    description: "Descripción del Proyecto X.",
+    status: "activo",
+    people: ["Jorge", "Ana"],
+    tasks: [
+      { name: "Frontend", assigned: true },
+      { name: "Backend", assigned: false },
+    ],
+    isFuture: false,
+  },
+  {
+    title: "Proyecto Y",
+    description: "Descripción del Proyecto Y.",
+    status: "pendiente",
+    people: [],
+    tasks: [
+      { name: "Idea", assigned: false },
+    ],
+    isFuture: true,
   },
 ];
 
 const Projects: React.FC = () => {
+  const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6 text-neutral-black">Proyectos</h1>
@@ -32,6 +72,11 @@ const Projects: React.FC = () => {
             title={p.title}
             description={p.description}
             status={p.status as "activo" | "pendiente" | "completado"}
+            expanded={expandedIdx === i}
+            onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}
+            people={p.people}
+            tasks={p.tasks}
+            isFuture={p.isFuture}
           />
         ))}
       </div>
