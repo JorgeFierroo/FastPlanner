@@ -34,7 +34,7 @@ export function KanbanList({
         <h2 className="font-bold text-lg text-gray-700">{title}</h2>
         <button
           onClick={() => onDeleteList(columnId)}
-          className="text-red-500 hover:text-red-700 text-sm"
+          className="text-blue-500 hover:text-blue-700 text-sm"
         >
           ✕
         </button>
