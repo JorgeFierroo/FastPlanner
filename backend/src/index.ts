@@ -14,5 +14,5 @@ app.use("/users", userRoutes);
 
 // Levantamos el servidor
 app.listen(3000, () => {
-  console.log("🚀 Servidor corriendo en http://localhost:3001");
+  console.log("Servidor corriendo en http://localhost:3001");
 });

@@ -11,6 +11,7 @@ const Sidebar: React.FC = () => {
     { path: "/projects", label: "Proyectos", icon: <Folder size={20} /> },
     { path: "/profile", label: "Perfil", icon: <User size={20} /> },
     { path: "/settings", label: "Ajustes", icon: <Settings size={20} /> },
+
   ];
 
   return (
