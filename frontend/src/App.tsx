@@ -6,7 +6,6 @@ import Projects from "./pages/Projects";
 import Profile from "./pages/Profile";
 import TaskPage from "./pages/TaskPage";
 import HomePage from "./pages/HomePage";
-import TaskPage from "./pages/TaskPage";
 import Tabla from "./pages/Tabla";
 import TestCalendar from "./pages/TestCalendar";
 import { KanbanBoard } from "./components/KanbanBoard";
