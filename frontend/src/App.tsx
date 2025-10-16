@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
+import Welcome from './pages/Welcome';
 import Auth from './pages/Auth';
 import Projects from "./pages/Projects";
 import Profile from "./pages/Profile";
@@ -17,8 +18,9 @@ function App() {
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<Welcome />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/tasks" element={<TaskPage />} />
