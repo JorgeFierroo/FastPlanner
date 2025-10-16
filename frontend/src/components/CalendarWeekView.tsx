@@ -72,7 +72,6 @@ export default function CalendarWeekView({ mockTasks = [], handleTaskDrop }: Cal
 
         // si la semana 5 no tiene 7 días, considerar que el mes tiene 1 semana menos para que no se repita con la semana 1 del mes siguiente
         const daysInLastWeek = daysInMonth - ((weeksInCurrentMonth - 1) * 7 - startDayCurrentMonth + 1);
-        console.log("daysInLastWeek", daysInLastWeek);
         if (daysInLastWeek < 7) {
             weeksInCurrentMonth -= 1;
         }
