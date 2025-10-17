@@ -5,6 +5,7 @@ import Auth from './pages/Auth';
 import Projects from "./pages/Projects";
 import Profile from "./pages/Profile";
 import TaskPage from "./pages/TaskPage";
+import Configurasion from "./pages/Configuracion";
 import HomePage from "./pages/HomePage";
 import Tabla from "./pages/Tabla";
 import TestCalendar from "./pages/TestCalendar";
@@ -20,6 +21,7 @@ function App() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/configuracion" element={<Configurasion />} />
           <Route path="/tasks" element={<TaskPage />} />
           <Route path="/Tabla" element={<Tabla />} />
           <Route path="/KanbanBoard" element={<KanbanBoard />} />
