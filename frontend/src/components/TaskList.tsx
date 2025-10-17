@@ -1,6 +1,7 @@
 import { useState } from "react";
 import TaskCard from "./TaskCard";
 import Modal from "./modal";
+import TaskMenu from "./TaskMenu";
 
 type Task = {
     id: number;
@@ -83,7 +84,7 @@ function TaskList({ title }: Props) {
         setModalOpen(false);
     };
 
-    const delteTask = () => {
+    const deleteTask = () => {
         if (confirmDelete !== null) {
             setTasks(tasks.filter((t) => t.id !== confirmDelete));
             setConfirmDelete(null);
@@ -109,10 +110,14 @@ function TaskList({ title }: Props) {
         );
 
     return(
-        <div className= "bg-gray-200 p-4 rounded w-64 shadow">
+        <div className= "bg-gray-200 p-4 rounded w-64 shadow-lg">
             <h2 className="text-lg font-bold mb-3">{title}</h2>
-
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            
+            <div className="mb-6">
+                <input type="text" placeholder="Buscar.." value={search} onChange={(e)=> setSearch(e.target.value)}
+                className="border rounded p-2 w-full"/>
+            </div>
+            <div className="flex gap-4 flex-wrap mb-6">
                 <div>
                     <label className="block font-medium">Estatus:</label>
                     <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
@@ -147,21 +152,18 @@ function TaskList({ title }: Props) {
                     <option value={"asc"}>A-Z</option>
                     <option value={"desc"}>Z-A</option>
                 </select>
-                
             </div>
-            <input type="text" placeholder="Buscar.." value={search} onChange={(e)=> setSearch(e.target.value)}
-                className="border rounded p-1 py-2"/>
 
             <div className="space-y-2">
                 {filteredTasks.map((task) => (
-                    <div key={task.id}>
+                    <div key={task.id} className="relative">
                         <TaskCard task={task} />
-                        <button onClick={() => editTaskModal(task)} className="my-2 bg-blue-200 text-blue-500 hover:bg-blue-300 hover:text-blue-700 rounded">
-                            Editar
-                        </button>
-                        <button onClick={() => setConfirmDelete(task.id)} className="mx-2 my-2 bg-red-200 text-red-500 hover:bg-red-300 hover:text-red-700 rounded">
-                            Eliminar
-                        </button>
+                        <div className="absolute top-2 right-2">
+                            <TaskMenu
+                                onEdit={()=> editTaskModal(task)}
+                                onDelete={()=> setConfirmDelete(task.id)}
+                            />
+                        </div>
                     </div>
                 ))}
             </div>
@@ -230,7 +232,7 @@ function TaskList({ title }: Props) {
                 <h2 className="mt-6">¿Esta seguro que desea eliminar esta tarea?</h2>
                 <p>Esta accion es irreversible. Presione "X" si desea cancelar</p>
                 <div className="flex justify-items">
-                    <button onClick={delteTask} className="bg-red-200 text-black p-2 rounded hover:bg-red-300 my-4 w-full">
+                    <button onClick={deleteTask} className="bg-red-200 text-black p-2 rounded hover:bg-red-300 my-4 w-full">
                         Eliminar
                     </button>
                 </div>
