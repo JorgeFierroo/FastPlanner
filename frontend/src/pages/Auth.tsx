@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 interface LoginForm {
   email: string;
@@ -244,9 +245,9 @@ const Auth: React.FC = () => {
               </div>
 
               <div className="text-sm">
-                <button type="button" className="font-medium text-green-600 hover:text-green-800 transition-colors">
+                <Link to="/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
                   ¿Olvidaste tu contraseña?
-                </button>
+                </Link>
               </div>
             </div>
 
