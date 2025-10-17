@@ -4,7 +4,7 @@ Aplicación de planificación rápida con React, Node.js y Prisma.
 
 ## 🚀 Instalación y Ejecución
 
-### Prerequisitos
+### Prerrequisitos
 - **Node.js** (versión 16 o superior)
 - **npm** (viene con Node.js)
 
@@ -62,4 +62,4 @@ npm run db:studio         # Abrir Prisma Studio
 
 - **Frontend**: React, TypeScript, Tailwind CSS
 - **Backend**: Node.js, Express.js, TypeScript, Prisma ORM
-- **Base de Datos**: SQLite
+- **Base de Datos**: PostgreSQL
