@@ -2,11 +2,12 @@ import TestCalendar from "./TestCalendar";
 import { KanbanBoard } from "../components/KanbanBoard";
 import Tabla from "./Tabla";
 import ViewModeSelect from "../components/ViewModeSelect";
+import TaskPage from "./TaskPage";
 import { useState } from "react";
 
 export default function Vistas() {
-    const [currentMode, setCurrentMode] = useState<"Tabla" | "Calendario" | "Kanban">("Kanban");
-    const handleModeChange = (mode: "Tabla" | "Calendario" | "Kanban") => {
+    const [currentMode, setCurrentMode] = useState<"Tabla" | "Calendario" | "Kanban" | "Tareas">("Kanban");
+    const handleModeChange = (mode: "Tabla" | "Calendario" | "Kanban" | "Tareas") => {
         setCurrentMode(mode);
     }
 
@@ -16,6 +17,7 @@ export default function Vistas() {
             {currentMode === "Tabla" && <Tabla />}
             {currentMode === "Calendario" && <TestCalendar />}
             {currentMode === "Kanban" && <KanbanBoard />}
+            {currentMode === "Tareas" && <TaskPage />}
         </div>
     );
 }
