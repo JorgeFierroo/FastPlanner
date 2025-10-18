@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 interface LoginForm {
   email: string;
@@ -14,8 +14,17 @@ interface RegisterForm {
 }
 
 const Auth: React.FC = () => {
+  const location = useLocation();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Detectar si viene con parámetro de registro
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    if (searchParams.get('mode') === 'register') {
+      setIsLogin(false);
+    }
+  }, [location]);
 
   // Estados para Login
   const [loginData, setLoginData] = useState<LoginForm>({

@@ -8,6 +8,10 @@ const Welcome: React.FC = () => {
     navigate('/auth');
   };
 
+  const handleRegister = () => {
+    navigate('/auth?mode=register');
+  };
+
   const handleGuestAccess = () => {
     // Navegar a la página principal como invitado
     navigate('/home');
@@ -103,7 +107,7 @@ const Welcome: React.FC = () => {
             </button>
             
             <button
-              onClick={handleLogin}
+              onClick={handleRegister}
               className="group px-10 py-5 bg-white text-indigo-600 text-xl font-semibold rounded-xl border-2 border-indigo-600 shadow-lg hover:bg-indigo-50 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
             >
               <svg className="w-6 h-6 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
