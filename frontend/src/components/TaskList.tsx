@@ -188,7 +188,7 @@ function TaskList({ title }: Props) {
             )}
             
             <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-                <h2 className="text-xl font-bold mb-4">{isEditing ? "Editar Tarea":"Nueva Tarea"}</h2>
+                <h2 className="text-xl font-bold mb-4 my-4">{isEditing ? "Editar Tarea":"Nueva Tarea"}</h2>
 
                 <input 
                     name="title"

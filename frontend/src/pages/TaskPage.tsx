@@ -18,20 +18,20 @@ function TaskPage() {
 
     return(
         <div className="p-6 bg-blue-50 min-h-screen">
-            <h1 className="text-2xl font-bold mb-4">Tareas</h1>
-            <div className="flex gap-2 mb-6">
+            <h1 className="text-3xl font-bold mb-6 text-center text-[#2f0147]">Tareas</h1>
+            <div className="flex flex-col sm:flex-row justify-center gap-2 mb-10">
                 <input
                     value= {newList}
                     onChange={(e) => setNewList(e.target.value)}
                     placeholder="Nueva lista"
-                    className="border p-2 rounded w-64"
+                    className="border p-2 rounded w-full sm:w-64 shadow-sm focus:ring focus:ring-[#610f7f]"
                 />
-                <button onClick= {addList} className="bg-blue-500 text-white px rounded">
+                <button onClick= {addList} className="bg-[#9C528B] hover:bg-[#610f7f] text-white px-4 py-2 rounded shadow transition">
                     Agregar Lista
                 </button>
             </div>
 
-            <div className= "flex gap-5 grid-cols-4">
+            <div className= "grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {lists.map((list) => (
                     <TaskList key={list.id} title={list.title} />
                 ))}
