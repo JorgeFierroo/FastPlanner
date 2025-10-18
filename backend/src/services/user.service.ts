@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export const userService = {
   // Crear un usuario
-  async createUser(data: { name: string; email: string }) {
+  async createUser(data: { name: string; email: string; password: string }) {
     return await prisma.user.create({
       data,
     });
