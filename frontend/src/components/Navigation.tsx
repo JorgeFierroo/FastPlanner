@@ -5,13 +5,7 @@ const Navigation: React.FC = () => {
   const location = useLocation();
 
   const links = [
-    { path: "/", label: "Inicio" },
-    { path: "/projects", label: "Proyectos" },
-    { path: "/profile", label: "Perfil" },
-    { path: "/auth", label: "Autenticación" },
-    { path: "/tasks", label: "Tareas" },
-    { path: "/Tabla", label: "Tabla"},
-    { path: "/KanbanBoard", label: "Kanban"},
+    { path: "/auth", label: "Inicio de sesion" },
     { path: "/Vistas", label: "Vistas"}
   ];
 

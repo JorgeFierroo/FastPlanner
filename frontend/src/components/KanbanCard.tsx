@@ -42,7 +42,7 @@ export function KanbanCard({
         <div className="font-semibold text-gray-800">{title}</div>
         <button
           onClick={() => onDeleteCard(columnId, id)}
-          className="text-red-400 hover:text-red-600 text-sm"
+          className="text-blue-400 hover:text-blue-800 text-sm"
         >
           ✕
         </button>
