@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 interface LoginForm {
@@ -20,6 +20,8 @@ const Auth: React.FC = () => {
   const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   // Detectar si viene con parámetro de registro
   useEffect(() => {
@@ -28,8 +30,6 @@ const Auth: React.FC = () => {
       setIsLogin(false);
     }
   }, [location]);
-  const [apiError, setApiError] = useState<string>('');
-  const [successMessage, setSuccessMessage] = useState<string>('');
 
   // Estados para Login
   const [loginData, setLoginData] = useState<LoginForm>({
@@ -101,7 +101,7 @@ const Auth: React.FC = () => {
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateLoginForm()) {
       return;
     }
@@ -109,11 +109,11 @@ const Auth: React.FC = () => {
     setIsLoading(true);
     setApiError('');
     setSuccessMessage('');
-    
+
     try {
       await login(loginData.email, loginData.password);
       setSuccessMessage('¡Inicio de sesión exitoso!');
-      
+
       // Redirigir a home después de un breve delay
       setTimeout(() => {
         navigate('/home');
@@ -126,7 +126,7 @@ const Auth: React.FC = () => {
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateRegisterForm()) {
       return;
     }
@@ -134,11 +134,11 @@ const Auth: React.FC = () => {
     setIsLoading(true);
     setApiError('');
     setSuccessMessage('');
-    
+
     try {
       await register(registerData.name, registerData.email, registerData.password);
       setSuccessMessage('¡Registro exitoso! Redirigiendo...');
-      
+
       // Redirigir a home después de un breve delay
       setTimeout(() => {
         navigate('/home');
@@ -155,7 +155,7 @@ const Auth: React.FC = () => {
       ...prev,
       [name]: value
     }));
-    
+
     // Limpiar error cuando el usuario empiece a escribir
     if (loginErrors[name as keyof LoginForm]) {
       setLoginErrors(prev => ({
@@ -171,7 +171,7 @@ const Auth: React.FC = () => {
       ...prev,
       [name]: value
     }));
-    
+
     // Limpiar error cuando el usuario empiece a escribir
     if (registerErrors[name as keyof RegisterForm]) {
       setRegisterErrors(prev => ({
@@ -238,7 +238,7 @@ const Auth: React.FC = () => {
             </div>
           </div>
         )}
-        
+
         {isLogin ? (
           // Formulario de Login
           <form className="mt-8 space-y-6" onSubmit={handleLoginSubmit}>
@@ -253,9 +253,8 @@ const Auth: React.FC = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
-                    loginErrors.email ? 'border-red-300' : 'border-green-300'
-                  } placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${loginErrors.email ? 'border-red-300' : 'border-green-300'
+                    } placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                   placeholder="Dirección de email"
                   value={loginData.email}
                   onChange={handleLoginChange}
@@ -264,7 +263,7 @@ const Auth: React.FC = () => {
                   <p className="mt-1 text-sm text-red-600">{loginErrors.email}</p>
                 )}
               </div>
-              
+
               <div>
                 <label htmlFor="login-password" className="sr-only">
                   Contraseña
@@ -275,9 +274,8 @@ const Auth: React.FC = () => {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
-                    loginErrors.password ? 'border-red-300' : 'border-green-300'
-                  } placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${loginErrors.password ? 'border-red-300' : 'border-green-300'
+                    } placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                   placeholder="Contraseña"
                   value={loginData.password}
                   onChange={handleLoginChange}
@@ -342,9 +340,8 @@ const Auth: React.FC = () => {
                   type="text"
                   autoComplete="name"
                   required
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                    registerErrors.name ? 'border-red-300' : 'border-green-300'
-                  } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:z-10 sm:text-sm`}
+                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${registerErrors.name ? 'border-red-300' : 'border-green-300'
+                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:z-10 sm:text-sm`}
                   placeholder="Tu nombre completo"
                   value={registerData.name}
                   onChange={handleRegisterChange}
@@ -364,9 +361,8 @@ const Auth: React.FC = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                    registerErrors.email ? 'border-red-300' : 'border-green-300'
-                  } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:z-10 sm:text-sm`}
+                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${registerErrors.email ? 'border-red-300' : 'border-green-300'
+                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:z-10 sm:text-sm`}
                   placeholder="tu@email.com"
                   value={registerData.email}
                   onChange={handleRegisterChange}
@@ -375,7 +371,7 @@ const Auth: React.FC = () => {
                   <p className="mt-1 text-sm text-red-600">{registerErrors.email}</p>
                 )}
               </div>
-              
+
               <div>
                 <label htmlFor="register-password" className="block text-sm font-medium text-gray-700">
                   Contraseña
@@ -386,9 +382,8 @@ const Auth: React.FC = () => {
                   type="password"
                   autoComplete="new-password"
                   required
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                    registerErrors.password ? 'border-red-300' : 'border-green-300'
-                  } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:z-10 sm:text-sm`}
+                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${registerErrors.password ? 'border-red-300' : 'border-green-300'
+                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:z-10 sm:text-sm`}
                   placeholder="Mínimo 6 caracteres"
                   value={registerData.password}
                   onChange={handleRegisterChange}
@@ -408,9 +403,8 @@ const Auth: React.FC = () => {
                   type="password"
                   autoComplete="new-password"
                   required
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                    registerErrors.confirmPassword ? 'border-red-300' : 'border-green-300'
-                  } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:z-10 sm:text-sm`}
+                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${registerErrors.confirmPassword ? 'border-red-300' : 'border-green-300'
+                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:z-10 sm:text-sm`}
                   placeholder="Repite tu contraseña"
                   value={registerData.confirmPassword}
                   onChange={handleRegisterChange}
