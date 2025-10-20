@@ -164,17 +164,27 @@ const Auth: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-green-100 via-green-200 to-green-300">
-      <div className="max-w-md w-full space-y-8 bg-white/80 backdrop-blur-md rounded-xl p-8 shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 "
+      style={{backgroundColor:`linear-gradient(135deg, #2f0147, #610f7f, #9c528b)`,}}>
+      <div className="max-w-md w-full space-y-8 rounded-xl p-8 shadow-2xl"
+        style={{
+          backgroundColor: "#2f0147e6",
+          backdropFilter: "blur(8px)",
+          border: "1px solid #610f7f",
+        }}>
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-green-900">
+
+          <h2 className="mt-6 text-center text-3xl font-extrabold" style= {{color:"#e2c2c6"}}>
             {isLogin ? 'Iniciar Sesión' : 'Crear cuenta'}
           </h2>
-          <p className="mt-2 text-center text-sm text-green-600">
+          <p className="mt-2 text-center text-sm" style = {{color:"#b9929f"}}>
             {isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}{' '}
             <button
               onClick={switchMode}
-              className="font-medium text-green-600 hover:text-green-800 transition-colors"
+              className="font-medium transition-colors rounded"
+              style={{color:"#9c528b"}}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#e2c2c6")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "transparent")}
             >
               {isLogin ? 'Regístrate aquí' : 'Inicia sesión aquí'}
             </button>
@@ -184,7 +194,7 @@ const Auth: React.FC = () => {
         {isLogin ? (
           // Formulario de Login
           <form className="mt-8 space-y-6" onSubmit={handleLoginSubmit}>
-            <div className="rounded-md shadow-sm -space-y-px">
+            <div className="rounded-md shadow-sm space-y-px">
               <div>
                 <label htmlFor="login-email" className="sr-only">
                   Email
@@ -195,9 +205,12 @@ const Auth: React.FC = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
-                    loginErrors.email ? 'border-red-300' : 'border-green-300'
-                  } placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                  className={"w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 sm:text-sm placeholder-red-900"}
+                  style={{
+                    backgroundColor:"#e2c2c6",
+                    color:"#2f0147",
+                    border: `1px solid ${loginErrors.email ?"#ff6b6b": "#b9929f" }`,
+                  }}
                   placeholder="Dirección de email"
                   value={loginData.email}
                   onChange={handleLoginChange}
@@ -217,9 +230,12 @@ const Auth: React.FC = () => {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
-                    loginErrors.password ? 'border-red-300' : 'border-green-300'
-                  } placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                  className={"w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 sm:text-sm placeholder-red-900"}
+                  style={{
+                    backgroundColor:"#e2c2c6",
+                    color:"#2f0147",
+                    border: `1px solid ${loginErrors.email ?"#ff6b6b": "#b9929f" }`,
+                  }}
                   placeholder="Contraseña"
                   value={loginData.password}
                   onChange={handleLoginChange}
@@ -238,13 +254,16 @@ const Auth: React.FC = () => {
                   type="checkbox"
                   className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                <label htmlFor="remember-me" className="ml-2 block text-sm" style={{color:"#e2c2c6"}}>
                   Recordarme
                 </label>
               </div>
 
               <div className="text-sm">
-                <button type="button" className="font-medium text-green-600 hover:text-green-800 transition-colors">
+                <button type="button" className="font-medium transition-colors rounded"  
+                style={{color:"#e2c2c6"}}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#610f7f")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "transparent")}>
                   ¿Olvidaste tu contraseña?
                 </button>
               </div>
@@ -254,7 +273,10 @@ const Auth: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="group relative w-full flex justify-center py-2 px-4 border transition-colors rounded-md"
+                style={{color:"#610f7f" , backgroundColor:"#e2c2c6", borderColor:"#b9929f"}}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#b9929f")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "#e2c2c6")}
               >
                 {isLoading ? (
                   <div className="flex items-center">
