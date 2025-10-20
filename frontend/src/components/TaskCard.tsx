@@ -32,7 +32,7 @@ function TaskCard({ task }: Props) {
 
     return (
         <div className= "bg-white p-2 rounded shadow border">
-            <h3 className="">{task.title}</h3>
+            <h3 className="rounded" style={{backgroundColor: "#e454", display:"inline-block"}}>{task.title}</h3>
             <p className="text-sm text-black break-words max-h-20 overflow-y-auto">{task.description}</p>
             <p className="text-sm text-blue-500">{task.responsible}</p>
             <span className={`text-xs rounded-full px-2 py-1 ${getStatusColor()}`}>{task.status ?? "Sin estado"}</span>

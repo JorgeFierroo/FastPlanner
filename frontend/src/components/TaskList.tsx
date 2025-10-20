@@ -117,15 +117,15 @@ function TaskList({ title }: Props) {
                 
                 <div className="relative w-full md:w-1/3">
                     <input type="text" 
-                    placeholder="Buscar.." 
+                    placeholder="Buscar..." 
                     value={search} onChange={(e)=> setSearch(e.target.value)}
                     className="border rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-green-400"/>
                 </div>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+            <div className="grid grid-cols-2 gap-2 mb-6">
                 <div>
                     <label className="block font-medium text-sm mb-1">Estatus:</label>
-                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="rounded border p-1">
                         <option value={"all"}>Todos</option>
                         <option value={"Pendiente"}>Pendientes</option>
                         <option value={"En-progreso"}>En Progreso</option>
@@ -134,7 +134,7 @@ function TaskList({ title }: Props) {
                 </div>
                 <div>
                     <label className="block text-sm font-medium mb-1">Prioridad:</label>
-                    <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)}>
+                    <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)} className="rounded border p-1">
                         <option value={"all"}>Todos</option>
                         <option value={"Baja"}>Baja</option>
                         <option value={"Media"}>Media</option>
@@ -143,7 +143,7 @@ function TaskList({ title }: Props) {
                 </div>
                 <div>
                     <label className="block text-sm font-medium mb-1">Responsable:</label>
-                    <select value={responsibleFilter} onChange={(e)=> setResponsibleFilter(e.target.value)}>
+                    <select value={responsibleFilter} onChange={(e)=> setResponsibleFilter(e.target.value)} className="border rounded p-1">
                         <option value="">Todos</option>
                         {Array.from(new Set(tasks.map((t)=> t.responsible).filter(Boolean))).map(
                             (responsible) => (
@@ -164,18 +164,18 @@ function TaskList({ title }: Props) {
                         <option value={"desc"}>Z-A</option>
                     </select>
                 </div>
-                <div className="flex items-end">
-                    <button 
-                    onClick={openNewTaskModal} 
-                    className="mt-4 bg-blue-200 text-black rounded w-full hover:bg-blue-300 p-2">
-                        <PlusCircle className="w-5 h-5 mr-2" />Agregar tarea
-                    </button>
-                </div>
+            </div>
+            <div className="flex justify-center">
+                <button
+                onClick={openNewTaskModal} 
+                className="mt-4 bg-indigo-200 text-black rounded hover:bg-blue-300 p-2 text-sm w-100 my-2">
+                    <PlusCircle className="w-5 h-5 mr-2" />Agregar tarea
+                </button>
             </div>
 
             {filteredTasks.length === 0 ? ( <p className="text-gray-500 text-center py-8">No hay tareas disponibles</p>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                     {filteredTasks.map((task) => (
                         <div key={task.id} className="relative group">
                             <TaskCard task={task}/>
