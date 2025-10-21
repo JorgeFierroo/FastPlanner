@@ -19,32 +19,45 @@ const Sidebar: React.FC = () => {
       className={`h-screen fixed top-12 left-0 bg-white border-r shadow-sm transition-all duration-300 ${
         collapsed ? "w-16" : "w-56"
       }`}
+      style={{backgroundColor:"#2f0147"}}
     >
-      <div className="flex items-center justify-between p-3 border-b">
-        {!collapsed && <span className="font-semibold text-gray-700">Menú</span>}
+      <div 
+        className="flex items-center justify-between p-3 border-b"
+        style={{borderColor: "#610f7f"}}
+      >
+        {!collapsed && <span className="font-semibold" style={{color: "#e2c2c6"}}>Menú</span>}
+
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1 rounded hover:bg-gray-100"
+          className="p-1 rounded transition-colors"
+          style={{color: "#e2c2c6"}}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#610f7f")}
+          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "transparent")}
         >
           {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </button>
       </div>
 
       <nav className="mt-2 flex flex-col space-y-1">
-        {links.map((link) => (
-          <Link
-            key={link.path}
-            to={link.path}
-            className={`flex items-center gap-3 px-3 py-2 text-sm transition-colors ${
-              location.pathname === link.path
-                ? "bg-blue-100 text-blue-600 font-medium"
-                : "text-gray-600 hover:bg-gray-50 hover:text-blue-500"
-            }`}
-          >
-            {link.icon}
-            {!collapsed && <span>{link.label}</span>}
-          </Link>
-        ))}
+        {links.map((link) => {
+          const isActive = location.pathname === link.path;
+          return(
+            <Link
+            key = {link.path}
+            to = {link.path}
+            className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-r-full transition-colors`}
+            style={{
+              backgroundColor: isActive ? "#610f7f" : "transparent",
+              color: isActive ? "#e2c2c6": "#e2c2c6",
+            }}
+            onMouseEnter={(e : React.MouseEvent<HTMLAnchorElement>) => {if (!isActive) e.currentTarget.style.backgroundColor = "#610f7f";}}
+            onMouseLeave={(e : React.MouseEvent<HTMLAnchorElement>) => {if (!isActive) e.currentTarget.style.backgroundColor = "transparent";}}
+            >
+              {link.icon}
+              {!collapsed && <span>{link.label}</span>}
+            </Link>
+          );
+        })}
       </nav>
     </aside>
   );

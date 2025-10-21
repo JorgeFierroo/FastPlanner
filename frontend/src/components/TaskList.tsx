@@ -2,6 +2,7 @@ import { useState } from "react";
 import TaskCard from "./TaskCard";
 import Modal from "./modal";
 import TaskMenu from "./TaskMenu";
+import {PlusCircle } from "lucide-react";
 
 type Task = {
     id: number;
@@ -110,17 +111,21 @@ function TaskList({ title }: Props) {
         );
 
     return(
-        <div className= "bg-gray-200 p-4 rounded w-64 shadow-lg">
-            <h2 className="text-lg font-bold mb-3">{title}</h2>
-            
-            <div className="mb-6">
-                <input type="text" placeholder="Buscar.." value={search} onChange={(e)=> setSearch(e.target.value)}
-                className="border rounded p-2 w-full"/>
+        <div className="w-full max-w-6xl mx-auto bg-white shadow-md rounded-xl p-6">
+            <div className= "flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                <h2 className="text-2xl font-bold">{title}</h2>
+                
+                <div className="relative w-full md:w-1/3">
+                    <input type="text" 
+                    placeholder="Buscar..." 
+                    value={search} onChange={(e)=> setSearch(e.target.value)}
+                    className="border rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-green-400"/>
+                </div>
             </div>
-            <div className="flex gap-4 flex-wrap mb-6">
+            <div className="grid grid-cols-2 gap-2 mb-6">
                 <div>
-                    <label className="block font-medium">Estatus:</label>
-                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                    <label className="block font-medium text-sm mb-1">Estatus:</label>
+                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="rounded border p-1">
                         <option value={"all"}>Todos</option>
                         <option value={"Pendiente"}>Pendientes</option>
                         <option value={"En-progreso"}>En Progreso</option>
@@ -128,8 +133,8 @@ function TaskList({ title }: Props) {
                     </select>
                 </div>
                 <div>
-                    <label className="block font-medium">Prioridad:</label>
-                    <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)}>
+                    <label className="block text-sm font-medium mb-1">Prioridad:</label>
+                    <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)} className="rounded border p-1">
                         <option value={"all"}>Todos</option>
                         <option value={"Baja"}>Baja</option>
                         <option value={"Media"}>Media</option>
@@ -137,8 +142,8 @@ function TaskList({ title }: Props) {
                     </select>
                 </div>
                 <div>
-                    <label className="block font-medium">Responsable:</label>
-                    <select value={responsibleFilter} onChange={(e)=> setResponsibleFilter(e.target.value)}>
+                    <label className="block text-sm font-medium mb-1">Responsable:</label>
+                    <select value={responsibleFilter} onChange={(e)=> setResponsibleFilter(e.target.value)} className="border rounded p-1">
                         <option value="">Todos</option>
                         {Array.from(new Set(tasks.map((t)=> t.responsible).filter(Boolean))).map(
                             (responsible) => (
@@ -148,39 +153,49 @@ function TaskList({ title }: Props) {
                     </select>
                 </div>
 
-                <select value={order} onChange={(e) => setOrder(e.target.value as "asc"|"desc")} className="border rounded p-1">
-                    <option value={"asc"}>A-Z</option>
-                    <option value={"desc"}>Z-A</option>
-                </select>
+                <div>
+                    <label className="block text-sm font-medium mb-1">Orden</label>
+                    <select 
+                    value={order} 
+                    onChange={(e) => setOrder(e.target.value as "asc"|"desc")} 
+                    className="border rounded p-1"
+                    >
+                        <option value={"asc"}>A-Z</option>
+                        <option value={"desc"}>Z-A</option>
+                    </select>
+                </div>
+            </div>
+            <div className="flex justify-center">
+                <button
+                onClick={openNewTaskModal} 
+                className="mt-4 bg-indigo-200 text-black rounded hover:bg-blue-300 p-2 text-sm w-100 my-2">
+                    <PlusCircle className="w-5 h-5 mr-2" />Agregar tarea
+                </button>
             </div>
 
-            <div className="space-y-2">
-                {filteredTasks.map((task) => (
-                    <div key={task.id} className="relative">
-                        <TaskCard task={task} />
-                        <div className="absolute top-2 right-2">
-                            <TaskMenu
-                                onEdit={()=> editTaskModal(task)}
-                                onDelete={()=> setConfirmDelete(task.id)}
-                            />
+            {filteredTasks.length === 0 ? ( <p className="text-gray-500 text-center py-8">No hay tareas disponibles</p>
+            ) : (
+                <div className="grid grid-cols-1 gap-4">
+                    {filteredTasks.map((task) => (
+                        <div key={task.id} className="relative group">
+                            <TaskCard task={task}/>
+                            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition">
+                                <TaskMenu onEdit={() => editTaskModal(task)} onDelete={() => setConfirmDelete(task.id)} />
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
-
-            <button onClick={openNewTaskModal} className="mt-4 bg-blue-200 text-black rounded w-full hover:bg-blue-300 p-2">
-                Agregar tarea
-            </button>
-
+                    ))}
+                </div>                   
+            )}
+            
             <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-                <h2 className="text-lg font-bold mb-4 my-4">{isEditing ? "Editar Tarea":"Nueva Tarea"}</h2>
+                <h2 className="text-xl font-bold mb-4 my-4">{isEditing ? "Editar Tarea":"Nueva Tarea"}</h2>
 
                 <input 
                     name="title"
                     value={formData.title}
                     onChange={handleChange}
                     placeholder="Título de la tarea"
-                    className="border p-2 rounded w-full mb-4"
+                    className="border p-2 rounded w-full mb-3"
                 />
 
                 <textarea
@@ -188,7 +203,7 @@ function TaskList({ title }: Props) {
                     value={formData.description}
                     onChange={handleChange}
                     placeholder="Descripcion de la tarea"
-                    className="border p-2 rounded w-full mb-2"
+                    className="border p-2 rounded w-full mb-3"
                 />
 
                 <input
@@ -196,14 +211,14 @@ function TaskList({ title }: Props) {
                     value={formData.responsible}
                     onChange={handleChange}
                     placeholder="Responsables de la tarea"
-                    className="border p-2 rounded w-full mb-4"
+                    className="border p-2 rounded w-full mb-3"
                 />
 
                 <select
                     name="status"
                     value={formData.status}
                     onChange={handleChange}
-                    className="border p-2 rounded w-full mb-4"
+                    className="border p-2 rounded w-full mb-3"
                 >
                     <option value={"Pendiente"}>Pendiente</option>
                     <option value={"En-progreso"}>En progreso</option>
@@ -214,7 +229,7 @@ function TaskList({ title }: Props) {
                     name="priority"
                     value={formData.priority}
                     onChange={handleChange}
-                    className="border p-2 rounded w-full mb-4"
+                    className="border p-2 rounded w-full mb-3"
                 >
                     <option value={""}>Prioridad</option>
                     <option value={"Baja"}>Baja</option>
@@ -223,19 +238,17 @@ function TaskList({ title }: Props) {
                 </select>
                 
 
-                <button onClick={saveEditedTask} className="bg-blue-200 text-black p-2 rounded hover:bg-green-300 w-full">
+                <button onClick={saveEditedTask} className="bg-green-500 text-white py-2 rounded hover:bg-green-600 w-full transition">
                     {isEditing ? "Actualizar":"Guardar"}
                 </button>
             </Modal>
 
             <Modal isOpen={confirmDelete !== null} onClose={()=> setConfirmDelete(null)}>
-                <h2 className="mt-6">¿Esta seguro que desea eliminar esta tarea?</h2>
-                <p>Esta accion es irreversible. Presione "X" si desea cancelar</p>
-                <div className="flex justify-items">
-                    <button onClick={deleteTask} className="bg-red-200 text-black p-2 rounded hover:bg-red-300 my-4 w-full">
-                        Eliminar
-                    </button>
-                </div>
+                <h2 className="mt-4 text-lg font-semibold">¿Esta seguro que desea eliminar esta tarea?</h2>
+                <p className="text-gray-600 mb-4">Esta accion es irreversible. Presione "X" si desea cancelar</p>
+                <button onClick={deleteTask} className="bg-red-500 text-white py-2 rounded hover:bg-red-600 w-full transition">
+                    Eliminar
+                </button>
             </Modal>
         </div>
     );

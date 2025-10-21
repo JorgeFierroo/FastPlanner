@@ -1,8 +1,10 @@
-import { Calendar, Table, Kanban, CheckSquare } from "lucide-react";
+import { Calendar, Table, Kanban, ListTodo } from "lucide-react";
+
+type ViewMode = "Tabla" | "Calendario" | "Kanban" | "Tareas";
 
 type ViewModeSelectProps = {
-    currentMode: "Tabla" | "Calendario" | "Kanban" | "Tareas";
-    onClick: (mode: "Tabla" | "Calendario" | "Kanban" | "Tareas") => void;
+    currentMode: ViewMode;
+    onClick: (mode: ViewMode) => void;
 };
 
 export default function ViewModeSelect({ currentMode, onClick }: ViewModeSelectProps) {
@@ -31,7 +33,7 @@ export default function ViewModeSelect({ currentMode, onClick }: ViewModeSelectP
                     className={`px-4 rounded-full py-2 w-48 transition-all ${currentMode === "Tareas" ? "bg-white" : "bg-gray-300"}`}
                     onClick={() => onClick("Tareas")}
                 >
-                    <CheckSquare className="w-4 h-4 inline mr-1" /> Tareas
+                    <ListTodo className="w-4 h-4 inline mr-1"/> Tareas
                 </button>
             </div>
         </div>
