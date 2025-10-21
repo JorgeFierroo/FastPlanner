@@ -10,7 +10,7 @@ const Navigation: React.FC = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+    <header className="fixed top-0 left-0 w-full shadow-md z-50" style={{backgroundColor: "#610f7f"}}>
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
         {/* Logo */}
         <div className="flex items-center space-x-2">
@@ -33,7 +33,7 @@ const Navigation: React.FC = () => {
               className={`${
                 location.pathname === link.path
                   ? "text-blue-600 font-medium"
-                  : "text-gray-600 hover:text-blue-500"
+                  : "text-white hover:text-blue-500"
               } transition-colors`}
             >
               {link.label}
