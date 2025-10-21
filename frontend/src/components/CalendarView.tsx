@@ -4,7 +4,7 @@ import CalendarGrid from "./CalendarView/CalendarGrid";
 import CalendarSide from "./CalendarView/CalendarSide";
 
 type CalendarViewProps = {
-  mockTasks?: { id: number; title: string; status: string; date: string }[]; // Arreglo de tareas simuladas
+  mockTasks?: { id: number; title: string; description: string; creador: string; status: string; prioridad: string; date: string }[]; // Arreglo de tareas simuladas
   handleTaskDrop: (taskId: number, newDate: string) => void; // Función para manejar drop de tarea
 };
 

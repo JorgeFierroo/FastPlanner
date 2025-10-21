@@ -5,7 +5,7 @@ type DayCellProps = {
     isToday?: boolean; // Opcional: si es el día actual
     isSelected?: boolean; // Opcional: si es el día seleccionado
     clickFunction?: () => void; // Opcional: función al hacer click
-    tasks?: { id: number; title: string; status: string }[]; // Opcional: lista de tareas para el día
+    tasks?: { id: number; title: string; description: string; creador: string; status: string; prioridad: string; date: string }[]; // Opcional: lista de tareas para el día
     mode: "month" | "week"; // Opcional: modo normal o vista semanal
     dateKey: string | null; // clave de fecha en formato "YYYY-MM-DD"
     onTaskDrop: (taskId: number, newDate: string) => void; // función para manejar drop de tarea
@@ -41,8 +41,10 @@ export default function DayCell({ dayNumber, isToday, isSelected, clickFunction,
         {tasks.slice(0, mode === "month" ? 2 : 10).map((task, idx) => (
           <div
             key={task.id}
-            className={"text-s rounded px-1 truncate "
-              + (StatusColors.find(sc => sc.label === task.status)?.color || " bg-gray-200")} // Color según el estado
+            className={"text-s rounded-full text-center px-1 truncate border-2 "
+              + (StatusColors.find(sc => sc.label === task.status)?.color || " bg-gray-200") // Color según el estado
+              + " "
+              + (StatusColors.find(sc => sc.label === task.status)?.border || "border-gray-300 border-2")}
             title={task.title} // tooltip si el texto es largo
             draggable={true} // Hacer la tarea draggable
             onDragStart={(e) => {
@@ -56,7 +58,7 @@ export default function DayCell({ dayNumber, isToday, isSelected, clickFunction,
         ))}
 
         {tasks.length > (mode === "month" ? 2 : 10) && (
-          <div className="text-[12px] text-gray-500">+{tasks.length - (mode === "month" ? 2 : 10)} más</div>
+          <div className="text-[12px] text-gray-500 text-center">+{tasks.length - (mode === "month" ? 2 : 10)} más</div>
         )}
       </div>
 
