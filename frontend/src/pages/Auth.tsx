@@ -122,9 +122,9 @@ const Auth: React.FC = () => {
       await login(loginData.email, loginData.password);
       setSuccessMessage('¡Inicio de sesión exitoso!');
 
-      // Redirigir a home después de un breve delay
+      // Redirigir a / después de un breve delay
       setTimeout(() => {
-        navigate('/home');
+        navigate('/');
       }, 500);
     } catch (error: any) {
       setApiError(error.message || 'Error al iniciar sesión');
@@ -147,9 +147,9 @@ const Auth: React.FC = () => {
       await register(registerData.name, registerData.email, registerData.password);
       setSuccessMessage('¡Registro exitoso! Redirigiendo...');
 
-      // Redirigir a home después de un breve delay
+      // Redirigir a / después de un breve delay
       setTimeout(() => {
-        navigate('/home');
+        navigate('/');
       }, 500);
     } catch (error: any) {
       setApiError(error.message || 'Error al registrarse');
