@@ -10,6 +10,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function Vistas() {
     const [currentMode, setCurrentMode] = useState<"Tabla" | "Calendario" | "Kanban" | "Tareas">("Kanban");
+    const { isAuthenticated, user, loading } = useAuth();
+    const navigate = useNavigate();
+
     const handleModeChange = (mode: "Tabla" | "Calendario" | "Kanban" | "Tareas") => {
         setCurrentMode(mode);
     }

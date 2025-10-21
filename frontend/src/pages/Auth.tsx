@@ -20,6 +20,14 @@ const Auth: React.FC = () => {
   const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Detectar si viene con parámetro de registro
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    if (searchParams.get('mode') === 'register') {
+      setIsLogin(false);
+    }
+  }, [location]);
   const [apiError, setApiError] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
 
