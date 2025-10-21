@@ -18,13 +18,13 @@ const Welcome: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50 to-purple-50 flex items-center justify-center px-4">
       <div className="max-w-4xl w-full">
         {/* Hero Section */}
         <div className="text-center mb-12">
           {/* Logo o Icon */}
           <div className="mb-6 flex justify-center animate-bounce">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full p-6 shadow-2xl">
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full p-6 shadow-2xl">
               <svg 
                 className="w-20 h-20" 
                 fill="none" 
@@ -42,7 +42,7 @@ const Welcome: React.FC = () => {
           </div>
 
           <h1 className="text-6xl md:text-7xl font-bold text-gray-900 mb-4">
-            Bienvenido a <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">FastPlanner</span>
+            Bienvenido a <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">FastPlanner</span>
           </h1>
           
           <p className="text-2xl text-gray-600 mb-12 max-w-2xl mx-auto">
@@ -55,8 +55,8 @@ const Welcome: React.FC = () => {
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           <div className="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-2xl">
-            <div className="bg-blue-100 rounded-full w-14 h-14 flex items-center justify-center mb-4 mx-auto">
-              <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-purple-100 rounded-full w-14 h-14 flex items-center justify-center mb-4 mx-auto">
+              <svg className="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
