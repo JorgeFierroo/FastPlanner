@@ -15,11 +15,11 @@ const Navigation: React.FC = () => {
         {/* Logo */}
         <div className="flex items-center space-x-2">
           <img
-            src="/logo192.png"
+            src="/definitivo.png"
             alt="Logo"
             className="w-8 h-8"
           />
-          <span className="text-xl font-semibold text-gray-800">
+          <span className="text-xl font-semibold text-white-800" style={{color: "#f4f2f2ff"}}>
             FastPlanner
           </span>
         </div>
