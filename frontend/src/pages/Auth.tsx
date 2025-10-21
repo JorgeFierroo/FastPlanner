@@ -331,7 +331,7 @@ const Auth: React.FC = () => {
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#610f7f")}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "transparent")}>
                   ¿Olvidaste tu contraseña?
-                </Link>
+                </button>
               </div>
             </div>
 

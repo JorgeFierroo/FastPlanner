@@ -3,7 +3,6 @@ import { KanbanBoard } from "../components/KanbanBoard";
 import Tabla from "./Tabla";
 import TaskPage from "./TaskPage";
 import ViewModeSelect from "../components/ViewModeSelect";
-import TaskPage from "./TaskPage";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
