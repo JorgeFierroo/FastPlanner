@@ -22,7 +22,7 @@ const Configuracion: React.FC = () => {
           type="text"
           value={nombreUsuario}
           onChange={(e) => setNombreUsuario(e.target.value)}
-          className="w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-300"
+          className="w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-purple-300"
         />
       </section>
 

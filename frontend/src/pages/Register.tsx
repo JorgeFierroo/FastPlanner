@@ -24,21 +24,21 @@ export default function Register() {
           placeholder="Ingrese su correo"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border rounded w-full mb-4 p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          className="border rounded w-full mb-4 p-2 focus:outline-none focus:ring-2 focus:ring-purple-200"
         />
         <input 
           type="password"
           placeholder="Ingrese su contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border rounded w-full mb-4 p-2 focus:outline-none focus:ring-2 focus:ring-blue-200" 
+          className="border rounded w-full mb-4 p-2 focus:outline-none focus:ring-2 focus:ring-purple-200" 
         />
         <input 
           type="password"
           placeholder="Confirme su contraseña"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="border rounded w-full mb-4 p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          className="border rounded w-full mb-4 p-2 focus:outline-none focus:ring-2 focus:ring-purple-200"
         />
         <button 
           type="submit" 
