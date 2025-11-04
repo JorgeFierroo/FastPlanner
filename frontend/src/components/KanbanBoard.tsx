@@ -26,17 +26,17 @@ export function KanbanBoard() {
     {
       id: "todo",
       title: "Por hacer",
-      cards: tasks.filter(task => task.status === 'todo'),
+      cards: tasks.filter((task: Task) => task.status === 'todo'),
     },
     {
       id: "inProgress", 
       title: "En progreso",
-      cards: tasks.filter(task => task.status === 'inProgress'),
+      cards: tasks.filter((task: Task) => task.status === 'inProgress'),
     },
     {
       id: "done",
       title: "Completado", 
-      cards: tasks.filter(task => task.status === 'done'),
+      cards: tasks.filter((task: Task) => task.status === 'done'),
     },
   ];
 

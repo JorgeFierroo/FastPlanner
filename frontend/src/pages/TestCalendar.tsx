@@ -3,7 +3,7 @@ import CalendarView from "../components/CalendarView";
 import CalendarWeekView from "../components/CalendarWeekView";
 import CalendarModeToggle from "../components/CalendarModeToggle";
 import { useState } from "react";
-import { useTask } from "../context/TaskContext";
+import { useTask, Task } from "../context/TaskContext";
 
 const TestCalendar: React.FC = () => {
   const [isWeeklyView, setIsWeeklyView] = useState(false);
@@ -14,7 +14,7 @@ const TestCalendar: React.FC = () => {
   }
 
   // Mapear tareas del contexto al formato del calendario
-  const mockTasks = tasks.map(task => ({
+  const mockTasks = tasks.map((task: Task) => ({
     id: task.id,
     title: task.title,
     description: task.description,
@@ -28,7 +28,7 @@ const TestCalendar: React.FC = () => {
   const handleTaskDrop = (taskId: number, newDate: string) => {
     console.log(`Tarea ${taskId} movida a ${newDate}`);
     // Encontrar la tarea y mantener su estado actual
-    const task = tasks.find(t => t.id === taskId);
+    const task = tasks.find((t: Task) => t.id === taskId);
     if (task) {
       moveTask(taskId, task.status, newDate);
     }
