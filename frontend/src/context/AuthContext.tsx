@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const checkAuth = async () => {
       const savedToken = localStorage.getItem('token');
-      
+
       if (savedToken) {
         setToken(savedToken);
         try {
@@ -42,7 +42,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           setToken(null);
         }
       }
-      
+
       setLoading(false);
     };
 
@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string) => {
     try {
       const response = await authAPI.login({ email, password });
-      
+
       setUser(response.user);
       setToken(response.token);
       localStorage.setItem('token', response.token);
@@ -64,7 +64,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const register = async (name: string, email: string, password: string) => {
     try {
       const response = await authAPI.register({ name, email, password });
-      
+
       setUser(response.user);
       setToken(response.token);
       localStorage.setItem('token', response.token);

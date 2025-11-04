@@ -3,7 +3,6 @@ import { KanbanBoard } from "../components/KanbanBoard";
 import Tabla from "./Tabla";
 import TaskPage from "./TaskPage";
 import ViewModeSelect from "../components/ViewModeSelect";
-import TaskPage from "./TaskPage";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -43,7 +42,7 @@ export default function Vistas() {
                         Acceso Restringido
                     </h2>
                     <p className="text-gray-600 mb-6">
-                        Necesitas iniciar sesión para ver tus tableros y proyectos.
+                        Necesitas iniciar sesión para ver las vistas integradas de Kanban, Tabla y Calendario.
                     </p>
                     <div className="space-y-3">
                         <button
@@ -68,9 +67,22 @@ export default function Vistas() {
     return (
         <div>
             <div className="mb-4 p-4 bg-white rounded-lg shadow-sm">
-                <p className="text-sm text-gray-600">
-                    Bienvenido, <span className="font-semibold text-indigo-600">{user?.name}</span>
-                </p>
+                <div className="flex justify-between items-center">
+                    <div>
+                        <h2 className="text-xl font-semibold text-gray-800">
+                            Vistas Integradas - Kanban, Tabla y Calendario
+                        </h2>
+                        <p className="text-sm text-gray-600 mt-1">
+                            Las tareas se sincronizan automáticamente entre todas las vistas
+                        </p>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-sm text-gray-600">
+                            Bienvenido, <span className="font-semibold text-indigo-600">{user?.name}</span>
+                        </p>
+                        <p className="text-xs text-gray-500">{user?.email}</p>
+                    </div>
+                </div>
             </div>
             <ViewModeSelect currentMode={currentMode} onClick={handleModeChange} />
             {currentMode === "Tabla" && <Tabla />}

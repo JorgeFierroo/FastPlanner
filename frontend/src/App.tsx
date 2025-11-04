@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { TaskProvider } from "./context/TaskContext";
 import Layout from "./components/Layout";
 import Welcome from './pages/Welcome';
 import Auth from './pages/Auth';
@@ -19,9 +20,10 @@ import PaginaAyuda from "./pages/paginaayuda";
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Layout>
-          <Routes>
+      <TaskProvider>
+        <Router>
+          <Layout>
+            <Routes>
             <Route path="/" element={<Welcome />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/home" element={<HomePage />} />
@@ -32,9 +34,10 @@ function App() {
             <Route path="/KanbanBoard" element={<KanbanBoard />} />
             <Route path="/Vistas" element={<Vistas />} />
             <Route path="/paginaayuda" element={<PaginaAyuda />} />
-          </Routes>
-        </Layout>
-      </Router>
+            </Routes>
+          </Layout>
+        </Router>
+      </TaskProvider>
     </AuthProvider>
   );
 }

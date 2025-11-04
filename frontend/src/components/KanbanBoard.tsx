@@ -9,13 +9,7 @@ import {
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import { KanbanList } from "./KanbanList";
-
-type Task = {
-  id: number;
-  title: string;
-  description: string;
-  label?: string;
-};
+import { useTask, Task } from "../context/TaskContext";
 
 type Column = {
   id: string;
@@ -23,30 +17,28 @@ type Column = {
   cards: Task[];
 };
 
-const initialData: Column[] = [
-  {
-    id: "todo",
-    title: "Por hacer",
-    cards: [
-      { id: 1, title: "Tarea 1", description: "Pendiente de empezar", label: "Baja" },
-      { id: 2, title: "Tarea 2", description: "Revisar requisitos", label: "Media" },
-    ],
-  },
-  {
-    id: "inProgress",
-    title: "En progreso",
-    cards: [{ id: 3, title: "Tarea 3", description: "En desarrollo", label: "Alta" }],
-  },
-  {
-    id: "done",
-    title: "Completado",
-    cards: [{ id: 4, title: "Tarea 4", description: "Completada", label: "Hecho" }],
-  },
-];
-
 export function KanbanBoard() {
-  const [columns, setColumns] = useState(initialData);
+  const { tasks, moveTask, addTask, deleteTask } = useTask();
   const [newListTitle, setNewListTitle] = useState("");
+
+  // Organizar tareas por columnas
+  const columns: Column[] = [
+    {
+      id: "todo",
+      title: "Por hacer",
+      cards: tasks.filter(task => task.status === 'todo'),
+    },
+    {
+      id: "inProgress", 
+      title: "En progreso",
+      cards: tasks.filter(task => task.status === 'inProgress'),
+    },
+    {
+      id: "done",
+      title: "Completado", 
+      cards: tasks.filter(task => task.status === 'done'),
+    },
+  ];
 
   // --- Mover tarjetas entre columnas ---
   const handleDragEnd = (event: DragEndEvent) => {
@@ -54,98 +46,70 @@ export function KanbanBoard() {
     if (!over) return;
     if (active.id === over.id) return;
 
-    setColumns(cols => {
-      const newCols = cols.map(col => ({ ...col, cards: [...col.cards] }));
-      let movingCard: Task | null = null;
-      let sourceColId = "";
-
-      // Buscar y remover tarjeta del origen
-      newCols.forEach(col => {
-        const index = col.cards.findIndex(card => card.id === active.id);
-        if (index > -1) {
-          movingCard = col.cards.splice(index, 1)[0];
-          sourceColId = col.id;
-        }
-      });
-
-      if (!movingCard) return newCols;
-
-      // Insertar en destino
-      const targetColId = over.data.current?.columnId || sourceColId;
-      const targetCol = newCols.find(c => c.id === targetColId);
-      if (targetCol) targetCol.cards.push(movingCard);
-
-      return newCols;
-    });
-  };
-
-  // --- Agregar nueva lista ---
-  const addNewList = () => {
-    if (newListTitle.trim() === "") return;
-    const newColumn: Column = {
-      id: `col-${Date.now()}`,
-      title: newListTitle,
-      cards: [],
-    };
-    setColumns([...columns, newColumn]);
-    setNewListTitle("");
+    const taskId = Number(active.id);
+    const targetColId = over.data.current?.columnId;
+    
+    if (targetColId) {
+      let newStatus: Task['status'];
+      switch (targetColId) {
+        case 'todo':
+          newStatus = 'todo';
+          break;
+        case 'inProgress':
+          newStatus = 'inProgress';
+          break;
+        case 'done':
+          newStatus = 'done';
+          break;
+        default:
+          return;
+      }
+      
+      moveTask(taskId, newStatus);
+    }
   };
 
   // --- Agregar nueva tarjeta ---
   const addNewCard = (columnId: string, title: string, description: string) => {
     if (!title.trim()) return;
 
-    setColumns(cols =>
-      cols.map(col =>
-        col.id === columnId
-          ? {
-              ...col,
-              cards: [
-                ...col.cards,
-                { id: Date.now(), title, description, label: "Nueva" },
-              ],
-            }
-          : col
-      )
-    );
-  };
+    let status: Task['status'];
+    switch (columnId) {
+      case 'todo':
+        status = 'todo';
+        break;
+      case 'inProgress':
+        status = 'inProgress';
+        break;
+      case 'done':
+        status = 'done';
+        break;
+      default:
+        status = 'todo';
+    }
 
-  // --- Eliminar lista ---
-  const deleteList = (columnId: string) => {
-    setColumns(cols => cols.filter(col => col.id !== columnId));
+    addTask({
+      title,
+      description,
+      status,
+      priority: 'media',
+      assignedTo: [],
+      tags: ["Nueva"],
+      dueDate: new Date().toISOString().split('T')[0],
+      createdBy: "Usuario"
+    });
   };
 
   // --- Eliminar tarjeta ---
   const deleteCard = (columnId: string, cardId: number) => {
-    setColumns(cols =>
-      cols.map(col =>
-        col.id === columnId
-          ? { ...col, cards: col.cards.filter(c => c.id !== cardId) }
-          : col
-      )
-    );
+    deleteTask(cardId);
   };
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">Tablero Kanban</h1>
 
-      {/* Crear nueva lista */}
-      <div className="flex gap-2 mb-6">
-        <input
-          type="text"
-          value={newListTitle}
-          onChange={e => setNewListTitle(e.target.value)}
-          placeholder="Nombre de nueva lista..."
-          className="border rounded-lg px-3 py-2 flex-1"
-        />
-        <button
-          onClick={addNewList}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-        >
-          Agregar lista
-        </button>
-      </div>
+
 
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <div className="flex gap-6 overflow-x-auto pb-6">
@@ -160,7 +124,7 @@ export function KanbanBoard() {
                 cards={col.cards}
                 columnId={col.id}
                 onAddCard={addNewCard}
-                onDeleteList={deleteList}
+                onDeleteList={() => {}}
                 onDeleteCard={deleteCard}
               />
             </SortableContext>
