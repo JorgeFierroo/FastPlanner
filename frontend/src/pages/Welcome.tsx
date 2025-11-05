@@ -14,13 +14,15 @@ const Welcome: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center px-4">
+    <div
+      className="min-h-screen flex items-center justify-center px-4 bg-[linear-gradient(to_right,_#180F4F_0%,_#180F4F_50%,_#B84C73_100%)]"
+    >
       <div className="max-w-4xl w-full">
         {/* Hero Section */}
         <div className="text-center mb-12">
           {/* Logo o Icon */}
           <div className="mb-6 flex justify-center animate-bounce">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full p-6 shadow-2xl">
+            <div className="bg-gradient-to-r from-[#180F4F] to-[#B84C73] text-white rounded-full p-6 shadow-2xl">
               <svg 
                 className="w-20 h-20" 
                 fill="none" 
@@ -38,7 +40,7 @@ const Welcome: React.FC = () => {
           </div>
 
           <h1 className="text-6xl md:text-7xl font-bold text-gray-900 mb-4">
-            Bienvenido a <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">FastPlanner</span>
+            Bienvenido a <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#B84C73] to-[#180F4F]">FastPlanner</span>
           </h1>
           
           <p className="text-2xl text-gray-600 mb-12 max-w-2xl mx-auto">
@@ -82,7 +84,7 @@ const Welcome: React.FC = () => {
         </div>
 
         {/* Call to Action Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-t-4 border-indigo-600">
+  <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-t-4 border-[#B84C73]">
           <h2 className="text-4xl font-bold text-center text-gray-900 mb-4">
             Comienza Ahora
           </h2>
@@ -94,7 +96,7 @@ const Welcome: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
             <button
               onClick={handleLogin}
-              className="group px-10 py-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xl font-semibold rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
+              className="group px-10 py-5 bg-gradient-to-r from-[#180F4F] to-[#B84C73] text-white text-xl font-semibold rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
             >
               <svg className="w-6 h-6 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
@@ -104,7 +106,7 @@ const Welcome: React.FC = () => {
             
             <button
               onClick={handleLogin}
-              className="group px-10 py-5 bg-white text-indigo-600 text-xl font-semibold rounded-xl border-2 border-indigo-600 shadow-lg hover:bg-indigo-50 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
+              className="group px-10 py-5 bg-white text-[#B84C73] text-xl font-semibold rounded-xl border-2 border-[#B84C73] shadow-lg hover:bg-[#B84C73]/10 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
             >
               <svg className="w-6 h-6 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />

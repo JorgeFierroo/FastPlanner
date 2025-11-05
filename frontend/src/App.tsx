@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Layout from "./components/Layout";
+import PrivateRoute from "./components/PrivateRoute";
 import Welcome from './pages/Welcome';
 import Auth from './pages/Auth';
 import ForgotPassword from './pages/ForgotPassword';
@@ -22,16 +23,19 @@ function App() {
       <Router>
         <Layout>
           <Routes>
+            {/* Rutas públicas */}
             <Route path="/" element={<Welcome />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/tasks" element={<TaskPage />} />
-            <Route path="/Tabla" element={<Tabla />} />
-            <Route path="/KanbanBoard" element={<KanbanBoard />} />
-            <Route path="/Vistas" element={<Vistas />} />
             <Route path="/paginaayuda" element={<PaginaAyuda />} />
+            
+            {/* Rutas protegidas - requieren autenticación */}
+            <Route path="/home" element={<PrivateRoute><HomePage /></PrivateRoute>} />
+            <Route path="/projects" element={<PrivateRoute><Projects /></PrivateRoute>} />
+            <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+            <Route path="/tasks" element={<PrivateRoute><TaskPage /></PrivateRoute>} />
+            <Route path="/Tabla" element={<PrivateRoute><Tabla /></PrivateRoute>} />
+            <Route path="/KanbanBoard" element={<PrivateRoute><KanbanBoard /></PrivateRoute>} />
+            <Route path="/Vistas" element={<PrivateRoute><Vistas /></PrivateRoute>} />
           </Routes>
         </Layout>
       </Router>
