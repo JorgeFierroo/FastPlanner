@@ -1,5 +1,5 @@
 // src/services/api.ts
-const API_URL = "http://localhost:3001/api";
+const API_URL = "http://localhost:3001";
 
 // Función auxiliar para manejar respuestas
 async function handleResponse(response: Response) {

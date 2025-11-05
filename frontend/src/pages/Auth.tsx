@@ -20,6 +20,14 @@ const Auth: React.FC = () => {
   const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Detectar si viene con parámetro de registro
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    if (searchParams.get('mode') === 'register') {
+      setIsLogin(false);
+    }
+  }, [location]);
   const [apiError, setApiError] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
 
@@ -114,9 +122,9 @@ const Auth: React.FC = () => {
       await login(loginData.email, loginData.password);
       setSuccessMessage('¡Inicio de sesión exitoso!');
 
-      // Redirigir a home después de un breve delay
+      // Redirigir a / después de un breve delay
       setTimeout(() => {
-        navigate('/home');
+        navigate('/');
       }, 500);
     } catch (error: any) {
       setApiError(error.message || 'Error al iniciar sesión');
@@ -139,9 +147,9 @@ const Auth: React.FC = () => {
       await register(registerData.name, registerData.email, registerData.password);
       setSuccessMessage('¡Registro exitoso! Redirigiendo...');
 
-      // Redirigir a home después de un breve delay
+      // Redirigir a / después de un breve delay
       setTimeout(() => {
-        navigate('/home');
+        navigate('/');
       }, 500);
     } catch (error: any) {
       setApiError(error.message || 'Error al registrarse');
@@ -323,7 +331,7 @@ const Auth: React.FC = () => {
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#610f7f")}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "transparent")}>
                   ¿Olvidaste tu contraseña?
-                </Link>
+                </button>
               </div>
             </div>
 
