@@ -11,11 +11,12 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -23,23 +24,28 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Verificar si hay un token guardado al cargar la app
   useEffect(() => {
     const checkAuth = async () => {
-      const savedToken = localStorage.getItem('token');
+      const savedAccess = localStorage.getItem('accessToken');
+      const savedRefresh = localStorage.getItem('refreshToken');
       
-      if (savedToken) {
-        setToken(savedToken);
+      if (savedAccess) {
+        setAccessToken(savedAccess);
+        if (savedRefresh) setRefreshToken(savedRefresh);
         try {
           const response = await authAPI.getCurrentUser();
           setUser(response.user);
         } catch (error) {
           console.error('Token inválido:', error);
-          localStorage.removeItem('token');
-          setToken(null);
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          setAccessToken(null);
+          setRefreshToken(null);
         }
       }
       
@@ -54,8 +60,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const response = await authAPI.login({ email, password });
       
       setUser(response.user);
-      setToken(response.token);
-      localStorage.setItem('token', response.token);
+      setAccessToken(response.accessToken);
+      setRefreshToken(response.refreshToken);
+      localStorage.setItem('accessToken', response.accessToken);
+      if (response.refreshToken) localStorage.setItem('refreshToken', response.refreshToken);
     } catch (error: any) {
       throw new Error(error.message || 'Error al iniciar sesión');
     }
@@ -66,27 +74,40 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const response = await authAPI.register({ name, email, password });
       
       setUser(response.user);
-      setToken(response.token);
-      localStorage.setItem('token', response.token);
+      setAccessToken(response.accessToken);
+      setRefreshToken(response.refreshToken);
+      localStorage.setItem('accessToken', response.accessToken);
+      if (response.refreshToken) localStorage.setItem('refreshToken', response.refreshToken);
     } catch (error: any) {
       throw new Error(error.message || 'Error al registrarse');
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem('token');
+  const logout = async () => {
+    try {
+      if (refreshToken) {
+        await authAPI.logout(refreshToken);
+      }
+    } catch (e) {
+      // Silenciar error de logout para asegurar limpieza local
+    } finally {
+      setUser(null);
+      setAccessToken(null);
+      setRefreshToken(null);
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+    }
   };
 
   const value = {
     user,
-    token,
+    accessToken,
+    refreshToken,
     loading,
     login,
     register,
     logout,
-    isAuthenticated: !!user && !!token,
+    isAuthenticated: !!user && !!accessToken,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

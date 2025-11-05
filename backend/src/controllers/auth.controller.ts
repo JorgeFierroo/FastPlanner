@@ -7,6 +7,7 @@ export const authController = {
   async register(req: Request, res: Response) {
     try {
       const { name, email, password } = req.body;
+      const userAgent = req.get("user-agent");
 
       // Validaciones básicas
       if (!name || !email || !password) {
@@ -21,7 +22,7 @@ export const authController = {
         });
       }
 
-      const result = await authService.register({ name, email, password });
+      const result = await authService.register({ name, email, password }, userAgent);
       
       res.status(201).json({
         message: "Usuario registrado exitosamente",
@@ -39,6 +40,7 @@ export const authController = {
   async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
+      const userAgent = req.get("user-agent");
 
       // Validaciones básicas
       if (!email || !password) {
@@ -47,7 +49,7 @@ export const authController = {
         });
       }
 
-      const result = await authService.login({ email, password });
+      const result = await authService.login({ email, password }, userAgent);
       
       res.json({
         message: "Inicio de sesión exitoso",
@@ -105,6 +107,76 @@ export const authController = {
       res.status(401).json({ 
         error: error.message || "Token inválido",
         valid: false 
+      });
+    }
+  },
+
+  // Renovar access token
+  async refreshToken(req: Request, res: Response) {
+    try {
+      const { refreshToken } = req.body;
+
+      if (!refreshToken) {
+        return res.status(400).json({ 
+          error: "Refresh token no proporcionado" 
+        });
+      }
+
+      const result = await authService.refreshAccessToken(refreshToken);
+      
+      res.json({
+        message: "Token renovado exitosamente",
+        ...result,
+      });
+    } catch (error: any) {
+      console.error("Error al renovar token:", error);
+      res.status(401).json({ 
+        error: error.message || "Error al renovar token" 
+      });
+    }
+  },
+
+  // Logout (revocar refresh token)
+  async logout(req: Request, res: Response) {
+    try {
+      const { refreshToken } = req.body;
+
+      if (!refreshToken) {
+        return res.status(400).json({ 
+          error: "Refresh token no proporcionado" 
+        });
+      }
+
+      const result = await authService.revokeRefreshToken(refreshToken);
+      
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error al cerrar sesión:", error);
+      res.status(500).json({ 
+        error: error.message || "Error al cerrar sesión" 
+      });
+    }
+  },
+
+  // Logout de todos los dispositivos
+  async logoutAll(req: Request, res: Response) {
+    try {
+      const token = req.headers.authorization?.replace("Bearer ", "");
+
+      if (!token) {
+        return res.status(401).json({ 
+          error: "Token no proporcionado" 
+        });
+      }
+
+      const decoded: any = authService.verifyToken(token);
+      const result = await authService.revokeAllUserTokens(decoded.userId);
+      
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error al cerrar todas las sesiones:", error);
+      res.status(500).json({ 
+        error: error.message || "Error al cerrar todas las sesiones" 
       });
     }
   },

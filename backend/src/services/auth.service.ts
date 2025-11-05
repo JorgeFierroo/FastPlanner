@@ -1,13 +1,30 @@
 // src/services/auth.service.ts
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "tu_clave_secreta_super_segura_2024";
+const ACCESS_TOKEN_EXPIRY = "15m"; // Access token expira en 15 minutos
+const REFRESH_TOKEN_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos
+
+// Función auxiliar para generar refresh token
+function generateRefreshToken(): string {
+  return crypto.randomBytes(64).toString("hex");
+}
+
+// Función auxiliar para generar access token
+function generateAccessToken(userId: number, email: string): string {
+  return jwt.sign(
+    { userId, email },
+    JWT_SECRET,
+    { expiresIn: ACCESS_TOKEN_EXPIRY }
+  );
+}
 
 export const authService = {
   // Registrar un nuevo usuario
-  async register(data: { name: string; email: string; password: string }) {
+  async register(data: { name: string; email: string; password: string }, userAgent?: string) {
     try {
       // Verificar si el usuario ya existe
       const existingUser = await prisma.user.findUnique({
@@ -18,35 +35,40 @@ export const authService = {
         throw new Error("El email ya está registrado");
       }
 
-      // Crear el usuario (sin encriptación por ahora)
+      // Crear el usuario
       const user = await prisma.user.create({
         data: {
           name: data.name,
           email: data.email,
-          password: data.password, // Sin encriptar por ahora
+          password: data.password,
         },
         select: {
           id: true,
           name: true,
           email: true,
-          role: true,
         },
       });
 
-      // Generar token JWT
-      const token = jwt.sign(
-        { 
-          userId: user.id, 
-          email: user.email,
-          role: user.role 
+      // Generar tokens
+      const accessToken = generateAccessToken(user.id, user.email);
+      const refreshToken = generateRefreshToken();
+      const refreshTokenExpiry = new Date(Date.now() + REFRESH_TOKEN_EXPIRY);
+
+      // Guardar refresh token en la base de datos
+      await prisma.refreshToken.create({
+        data: {
+          token: refreshToken,
+          userId: user.id,
+          userAgent: userAgent,
+          expiresAt: refreshTokenExpiry,
         },
-        JWT_SECRET,
-        { expiresIn: "7d" } // Token válido por 7 días
-      );
+      });
 
       return {
         user,
-        token,
+        accessToken,
+        refreshToken,
+        expiresIn: ACCESS_TOKEN_EXPIRY,
       };
     } catch (error: any) {
       throw new Error(error.message || "Error al registrar usuario");
@@ -54,7 +76,7 @@ export const authService = {
   },
 
   // Iniciar sesión
-  async login(data: { email: string; password: string }) {
+  async login(data: { email: string; password: string }, userAgent?: string) {
     try {
       // Buscar el usuario por email
       const user = await prisma.user.findUnique({
@@ -65,28 +87,34 @@ export const authService = {
         throw new Error("Credenciales inválidas");
       }
 
-      // Verificar contraseña (sin encriptación por ahora - comparación directa)
+      // Verificar contraseña
       if (user.password !== data.password) {
         throw new Error("Credenciales inválidas");
       }
 
-      // Generar token JWT
-      const token = jwt.sign(
-        { 
-          userId: user.id, 
-          email: user.email,
-          role: user.role 
+      // Generar tokens
+      const accessToken = generateAccessToken(user.id, user.email);
+      const refreshToken = generateRefreshToken();
+      const refreshTokenExpiry = new Date(Date.now() + REFRESH_TOKEN_EXPIRY);
+
+      // Guardar refresh token en la base de datos
+      await prisma.refreshToken.create({
+        data: {
+          token: refreshToken,
+          userId: user.id,
+          userAgent: userAgent,
+          expiresAt: refreshTokenExpiry,
         },
-        JWT_SECRET,
-        { expiresIn: "7d" }
-      );
+      });
 
       // Devolver usuario sin la contraseña
       const { password: _, ...userWithoutPassword } = user;
 
       return {
         user: userWithoutPassword,
-        token,
+        accessToken,
+        refreshToken,
+        expiresIn: ACCESS_TOKEN_EXPIRY,
       };
     } catch (error: any) {
       throw new Error(error.message || "Error al iniciar sesión");
@@ -113,7 +141,6 @@ export const authService = {
           id: true,
           name: true,
           email: true,
-          role: true,
         },
       });
 
@@ -124,6 +151,80 @@ export const authService = {
       return user;
     } catch (error: any) {
       throw new Error(error.message || "Error al obtener usuario");
+    }
+  },
+
+  // Renovar access token usando refresh token
+  async refreshAccessToken(refreshToken: string) {
+    try {
+      // Buscar el refresh token en la base de datos
+      const storedToken = await prisma.refreshToken.findUnique({
+        where: { token: refreshToken },
+        include: { user: true },
+      });
+
+      if (!storedToken) {
+        throw new Error("Refresh token inválido");
+      }
+
+      // Verificar si el token ha expirado
+      if (storedToken.expiresAt < new Date()) {
+        // Eliminar el token expirado
+        await prisma.refreshToken.delete({
+          where: { id: storedToken.id },
+        });
+        throw new Error("Refresh token expirado");
+      }
+
+      // Generar nuevo access token
+      const accessToken = generateAccessToken(storedToken.user.id, storedToken.user.email);
+
+      return {
+        accessToken,
+        expiresIn: ACCESS_TOKEN_EXPIRY,
+      };
+    } catch (error: any) {
+      throw new Error(error.message || "Error al renovar token");
+    }
+  },
+
+  // Revocar refresh token (logout)
+  async revokeRefreshToken(refreshToken: string) {
+    try {
+      await prisma.refreshToken.deleteMany({
+        where: { token: refreshToken },
+      });
+      return { message: "Sesión cerrada exitosamente" };
+    } catch (error: any) {
+      throw new Error(error.message || "Error al cerrar sesión");
+    }
+  },
+
+  // Revocar todos los refresh tokens de un usuario
+  async revokeAllUserTokens(userId: number) {
+    try {
+      await prisma.refreshToken.deleteMany({
+        where: { userId },
+      });
+      return { message: "Todas las sesiones han sido cerradas" };
+    } catch (error: any) {
+      throw new Error(error.message || "Error al cerrar sesiones");
+    }
+  },
+
+  // Limpiar tokens expirados (ejecutar periódicamente)
+  async cleanExpiredTokens() {
+    try {
+      const result = await prisma.refreshToken.deleteMany({
+        where: {
+          expiresAt: {
+            lt: new Date(),
+          },
+        },
+      });
+      return { deletedCount: result.count };
+    } catch (error: any) {
+      throw new Error(error.message || "Error al limpiar tokens expirados");
     }
   },
 };

@@ -9,5 +9,8 @@ router.post("/register", authController.register);
 router.post("/login", authController.login);
 router.get("/me", authController.me);
 router.get("/verify", authController.verifyToken);
+router.post("/refresh", authController.refreshToken);
+router.post("/logout", authController.logout);
+router.post("/logout-all", authController.logoutAll);
 
 export default router;
