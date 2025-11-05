@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 interface LoginForm {
   email: string;
@@ -13,8 +15,21 @@ interface RegisterForm {
 }
 
 const Auth: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
+
+  // Detectar si viene con parámetro de registro
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    if (searchParams.get('mode') === 'register') {
+      setIsLogin(false);
+    }
+  }, [location]);
 
   // Estados para Login
   const [loginData, setLoginData] = useState<LoginForm>({
@@ -86,42 +101,52 @@ const Auth: React.FC = () => {
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateLoginForm()) {
       return;
     }
 
     setIsLoading(true);
-    
-    // TODO: Implementar llamada al backend
-    console.log('Datos de login:', loginData);
-    
-    // Simular carga
-    setTimeout(() => {
+    setApiError('');
+    setSuccessMessage('');
+
+    try {
+      await login(loginData.email, loginData.password);
+      setSuccessMessage('¡Inicio de sesión exitoso!');
+
+      // Redirigir a home después de un breve delay
+      setTimeout(() => {
+        navigate('/home');
+      }, 500);
+    } catch (error: any) {
+      setApiError(error.message || 'Error al iniciar sesión');
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateRegisterForm()) {
       return;
     }
 
     setIsLoading(true);
-    
-    // TODO: Implementar llamada al backend
-    console.log('Datos de registro:', {
-      name: registerData.name,
-      email: registerData.email,
-      password: registerData.password
-    });
-    
-    // Simular carga
-    setTimeout(() => {
+    setApiError('');
+    setSuccessMessage('');
+
+    try {
+      await register(registerData.name, registerData.email, registerData.password);
+      setSuccessMessage('¡Registro exitoso! Redirigiendo...');
+
+      // Redirigir a home después de un breve delay
+      setTimeout(() => {
+        navigate('/home');
+      }, 500);
+    } catch (error: any) {
+      setApiError(error.message || 'Error al registrarse');
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,7 +155,7 @@ const Auth: React.FC = () => {
       ...prev,
       [name]: value
     }));
-    
+
     // Limpiar error cuando el usuario empiece a escribir
     if (loginErrors[name as keyof LoginForm]) {
       setLoginErrors(prev => ({
@@ -146,7 +171,7 @@ const Auth: React.FC = () => {
       ...prev,
       [name]: value
     }));
-    
+
     // Limpiar error cuando el usuario empiece a escribir
     if (registerErrors[name as keyof RegisterForm]) {
       setRegisterErrors(prev => ({
@@ -161,6 +186,8 @@ const Auth: React.FC = () => {
     // Limpiar errores al cambiar de modo
     setLoginErrors({});
     setRegisterErrors({});
+    setApiError('');
+    setSuccessMessage('');
   };
 
   return (
@@ -190,7 +217,38 @@ const Auth: React.FC = () => {
             </button>
           </p>
         </div>
-        
+
+        {/* Mensajes de error y éxito */}
+        {apiError && (
+          <div className="rounded-md bg-red-50 p-4 border border-red-200">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-red-800">{apiError}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {successMessage && (
+          <div className="rounded-md bg-green-50 p-4 border border-green-200">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-green-800">{successMessage}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {isLogin ? (
           // Formulario de Login
           <form className="mt-8 space-y-6" onSubmit={handleLoginSubmit}>
@@ -219,7 +277,7 @@ const Auth: React.FC = () => {
                   <p className="mt-1 text-sm text-red-600">{loginErrors.email}</p>
                 )}
               </div>
-              
+
               <div>
                 <label htmlFor="login-password" className="sr-only">
                   Contraseña
@@ -265,7 +323,7 @@ const Auth: React.FC = () => {
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#610f7f")}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "transparent")}>
                   ¿Olvidaste tu contraseña?
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -345,7 +403,7 @@ const Auth: React.FC = () => {
                   <p className="mt-1 text-sm text-red-600">{registerErrors.email}</p>
                 )}
               </div>
-              
+
               <div>
                 <label htmlFor="register-password" className="block text-sm font-medium" style={{color:"#b9929f"}}>
                   Contraseña
