@@ -121,7 +121,7 @@ const TaskModal = ({ isOpen, taskInfo, onClose }: TaskModalProps) => {
               )}
               {!editingFields.title && (
                 <SquarePen 
-                  className="inline-block ml-2 cursor-pointer hover:text-blue-600" 
+                  className="inline-block ml-2 cursor-pointer hover:text-purple-600" 
                   size={20}
                   onClick={() => toggleEditing('title')}
                 />
@@ -134,7 +134,7 @@ const TaskModal = ({ isOpen, taskInfo, onClose }: TaskModalProps) => {
                   Descripción:
                   {!editingFields.description && (
                     <SquarePen 
-                      className="ml-2 cursor-pointer hover:text-blue-600" 
+                      className="ml-2 cursor-pointer hover:text-purple-600" 
                       size={16}
                       onClick={() => toggleEditing('description')}
                     />
@@ -171,7 +171,7 @@ const TaskModal = ({ isOpen, taskInfo, onClose }: TaskModalProps) => {
                   Estado:
                   {!editingFields.status && (
                     <SquarePen 
-                      className="ml-2 cursor-pointer hover:text-blue-600" 
+                      className="ml-2 cursor-pointer hover:text-purple-600" 
                       size={16}
                       onClick={() => toggleEditing('status')}
                     />
@@ -213,7 +213,7 @@ const TaskModal = ({ isOpen, taskInfo, onClose }: TaskModalProps) => {
                   Prioridad:
                   {!editingFields.priority && (
                     <SquarePen 
-                      className="ml-2 cursor-pointer hover:text-blue-600" 
+                      className="ml-2 cursor-pointer hover:text-purple-600" 
                       size={16}
                       onClick={() => toggleEditing('priority')}
                     />
@@ -254,7 +254,7 @@ const TaskModal = ({ isOpen, taskInfo, onClose }: TaskModalProps) => {
                 <label className="block font-semibold flex items-center">
                   Fecha:
                   <SquarePen 
-                    className="ml-2 cursor-pointer hover:text-blue-600" 
+                    className="ml-2 cursor-pointer hover:text-purple-600" 
                     size={16}
                     onClick={() => toggleEditing('date')}
                   />
