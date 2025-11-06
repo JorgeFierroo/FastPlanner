@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -16,11 +16,18 @@ interface RegisterForm {
 
 const Auth: React.FC = () => {
   const navigate = useNavigate();
-  const { login, register } = useAuth();
+  const { login, register, isAuthenticated } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
+
+  // Redirigir si ya está autenticado
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/home', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   // Estados para Login
   const [loginData, setLoginData] = useState<LoginForm>({
@@ -28,6 +35,7 @@ const Auth: React.FC = () => {
     password: ''
   });
   const [loginErrors, setLoginErrors] = useState<Partial<LoginForm>>({});
+  const [rememberMe, setRememberMe] = useState(false);
 
   // Estados para Register
   const [registerData, setRegisterData] = useState<RegisterForm>({
@@ -102,7 +110,7 @@ const Auth: React.FC = () => {
     setSuccessMessage('');
     
     try {
-      await login(loginData.email, loginData.password);
+      await login(loginData.email.trim().toLowerCase(), loginData.password, rememberMe);
       setSuccessMessage('¡Inicio de sesión exitoso!');
       
       // Redirigir a home después de un breve delay
@@ -110,7 +118,14 @@ const Auth: React.FC = () => {
         navigate('/home');
       }, 500);
     } catch (error: any) {
-      setApiError(error.message || 'Error al iniciar sesión');
+      const msg = (error.message || '').toLowerCase();
+      if (msg.includes('credenciales') || msg.includes('invalid')) {
+        setApiError('Email o contraseña incorrectos');
+      } else if (msg.includes('429')) {
+        setApiError('Demasiados intentos. Intenta de nuevo en unos minutos.');
+      } else {
+        setApiError(error.message || 'Error al iniciar sesión');
+      }
       setIsLoading(false);
     }
   };
@@ -127,7 +142,7 @@ const Auth: React.FC = () => {
     setSuccessMessage('');
     
     try {
-      await register(registerData.name, registerData.email, registerData.password);
+      await register(registerData.name.trim(), registerData.email.trim().toLowerCase(), registerData.password);
       setSuccessMessage('¡Registro exitoso! Redirigiendo...');
       
       // Redirigir a home después de un breve delay
@@ -135,7 +150,14 @@ const Auth: React.FC = () => {
         navigate('/home');
       }, 500);
     } catch (error: any) {
-      setApiError(error.message || 'Error al registrarse');
+      const msg = (error.message || '').toLowerCase();
+      if (msg.includes('email ya está') || msg.includes('unique')) {
+        setApiError('El email ya está registrado');
+      } else if (msg.includes('429')) {
+        setApiError('Demasiadas solicitudes. Intenta más tarde.');
+      } else {
+        setApiError(error.message || 'Error al registrarse');
+      }
       setIsLoading(false);
     }
   };
@@ -285,10 +307,12 @@ const Auth: React.FC = () => {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
                   className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                  Recordarme
+                  Recordarme (30 días)
                 </label>
               </div>
 

@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "tu_clave_secreta_super_segura_2024";
 const ACCESS_TOKEN_EXPIRY = "15m"; // Access token expira en 15 minutos
 const REFRESH_TOKEN_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos
+const REFRESH_TOKEN_EXPIRY_EXTENDED = 30 * 24 * 60 * 60 * 1000; // 30 días si "recordarme"
 
 // Función auxiliar para generar refresh token
 function generateRefreshToken(): string {
@@ -92,10 +93,11 @@ export const authService = {
   },
 
   // Iniciar sesión
-  async login(data: { email: string; password: string }, userAgent?: string) {
+  async login(data: { email: string; password: string; rememberMe?: boolean }, userAgent?: string) {
     try {
       const email = data.email.trim().toLowerCase();
       const plainPassword = data.password;
+      const rememberMe = data.rememberMe || false;
 
       if (!email || !plainPassword) {
         throw new Error("Email y contraseña son requeridos");
@@ -119,7 +121,9 @@ export const authService = {
       // Generar tokens
       const accessToken = generateAccessToken(user.id, user.email);
       const refreshToken = generateRefreshToken();
-      const refreshTokenExpiry = new Date(Date.now() + REFRESH_TOKEN_EXPIRY);
+      // Usar expiración extendida si "recordarme" está activo
+      const expiryTime = rememberMe ? REFRESH_TOKEN_EXPIRY_EXTENDED : REFRESH_TOKEN_EXPIRY;
+      const refreshTokenExpiry = new Date(Date.now() + expiryTime);
 
       // Guardar refresh token en la base de datos
       await prisma.refreshToken.create({
@@ -132,7 +136,7 @@ export const authService = {
       });
 
       // Devolver usuario sin la contraseña
-  const { password: _, ...userWithoutPassword } = user as any;
+      const { password: _, ...userWithoutPassword } = user as any;
 
       return {
         user: userWithoutPassword,

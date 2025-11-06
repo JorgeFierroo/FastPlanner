@@ -16,6 +16,7 @@ import TestCalendar from "./pages/TestCalendar";
 import { KanbanBoard } from "./components/KanbanBoard";
 import Vistas from "./pages/Vistas";
 import PaginaAyuda from "./pages/paginaayuda";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             {/* Rutas públicas */}
             <Route path="/" element={<Welcome />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/paginaayuda" element={<PaginaAyuda />} />
             
             {/* Rutas protegidas - requieren autenticación */}

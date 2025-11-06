@@ -13,8 +13,8 @@ const HomePage: React.FC = () => {
     navigate('/paginaayuda');
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
 

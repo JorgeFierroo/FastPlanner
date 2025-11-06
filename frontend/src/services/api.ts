@@ -79,7 +79,7 @@ export const authAPI = {
   },
 
   // Iniciar sesión
-  async login(data: { email: string; password: string }) {
+  async login(data: { email: string; password: string; rememberMe?: boolean }) {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
