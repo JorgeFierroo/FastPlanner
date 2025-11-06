@@ -2,6 +2,7 @@
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "tu_clave_secreta_super_segura_2024";
@@ -26,21 +27,36 @@ export const authService = {
   // Registrar un nuevo usuario
   async register(data: { name: string; email: string; password: string }, userAgent?: string) {
     try {
+      const email = data.email.trim().toLowerCase();
+      const name = data.name.trim();
+      const plainPassword = data.password;
+
+      if (!name || !email || !plainPassword) {
+        throw new Error("Todos los campos son requeridos");
+      }
+
+      if (plainPassword.length < 6) {
+        throw new Error("La contraseña debe tener al menos 6 caracteres");
+      }
+
       // Verificar si el usuario ya existe
       const existingUser = await prisma.user.findUnique({
-        where: { email: data.email },
+        where: { email },
       });
 
       if (existingUser) {
         throw new Error("El email ya está registrado");
       }
 
+      // Hash de contraseña
+      const passwordHash = await bcrypt.hash(plainPassword, 10);
+
       // Crear el usuario
       const user = await prisma.user.create({
         data: {
-          name: data.name,
-          email: data.email,
-          password: data.password,
+          name,
+          email,
+          password: passwordHash,
         },
         select: {
           id: true,
@@ -50,7 +66,7 @@ export const authService = {
       });
 
       // Generar tokens
-      const accessToken = generateAccessToken(user.id, user.email);
+  const accessToken = generateAccessToken(user.id, user.email);
       const refreshToken = generateRefreshToken();
       const refreshTokenExpiry = new Date(Date.now() + REFRESH_TOKEN_EXPIRY);
 
@@ -78,9 +94,16 @@ export const authService = {
   // Iniciar sesión
   async login(data: { email: string; password: string }, userAgent?: string) {
     try {
+      const email = data.email.trim().toLowerCase();
+      const plainPassword = data.password;
+
+      if (!email || !plainPassword) {
+        throw new Error("Email y contraseña son requeridos");
+      }
+
       // Buscar el usuario por email
       const user = await prisma.user.findUnique({
-        where: { email: data.email },
+        where: { email },
       });
 
       if (!user) {
@@ -88,7 +111,8 @@ export const authService = {
       }
 
       // Verificar contraseña
-      if (user.password !== data.password) {
+      const isValid = await bcrypt.compare(plainPassword, user.password);
+      if (!isValid) {
         throw new Error("Credenciales inválidas");
       }
 
@@ -108,7 +132,7 @@ export const authService = {
       });
 
       // Devolver usuario sin la contraseña
-      const { password: _, ...userWithoutPassword } = user;
+  const { password: _, ...userWithoutPassword } = user as any;
 
       return {
         user: userWithoutPassword,
