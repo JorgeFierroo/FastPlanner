@@ -200,25 +200,25 @@ const Auth: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 "
-      style={{backgroundColor:`linear-gradient(135deg, #2f0147, #610f7f, #9c528b)`,}}>
+      style={{backgroundColor:'linear-gradient(135deg, #D1BA7B, #A89663, #7F724B)',}}>
       <div className="max-w-md w-full space-y-8 rounded-xl p-8 shadow-2xl"
         style={{
-          backgroundColor: "#2f0147e6",
+          backgroundColor: "#7F724B",
           backdropFilter: "blur(8px)",
-          border: "1px solid #610f7f",
+          border: "1px solid #A89663",
         }}>
         <div>
 
-          <h2 className="mt-6 text-center text-3xl font-extrabold" style= {{color:"#e2c2c6"}}>
+          <h2 className="mt-6 text-center text-3xl font-extrabold" style= {{color:"#F5DA91"}}>
             {isLogin ? 'Iniciar Sesión' : 'Crear cuenta'}
           </h2>
-          <p className="mt-2 text-center text-sm" style = {{color:"#b9929f"}}>
+          <p className="mt-2 text-center text-sm" style = {{color:"#D1BA7B"}}>
             {isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}{' '}
             <button
               onClick={switchMode}
               className="font-medium transition-colors rounded"
-              style={{color:"#9c528b"}}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#e2c2c6")}
+              style={{color:"#52442D"}}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#F5DA91")}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "transparent")}
             >
               {isLogin ? 'Regístrate aquí' : 'Inicia sesión aquí'}
@@ -271,10 +271,11 @@ const Auth: React.FC = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className={"w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 sm:text-sm placeholder-red-900"}
+                  className={"w-full px-3 py-2 my-2 rounded-md focus:outline-none focus:ring-2 sm:text-sm placeholder-red-900"}
                   style={{
-                    backgroundColor:"#e2c2c6",
-                    color:"#2f0147",
+                    backgroundColor:"#F5DA91",
+                    color:"#574D33",
+                    borderColor:"#52442D",
                     border: `1px solid ${loginErrors.email ?"#ff6b6b": "#b9929f" }`,
                   }}
                   placeholder="Dirección de email"
@@ -298,8 +299,9 @@ const Auth: React.FC = () => {
                   required
                   className={"w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 sm:text-sm placeholder-red-900"}
                   style={{
-                    backgroundColor:"#e2c2c6",
-                    color:"#2f0147",
+                    backgroundColor:"#F5DA91",
+                    color:"#574D33",
+                    borderColor:"#52442D",
                     border: `1px solid ${loginErrors.email ?"#ff6b6b": "#b9929f" }`,
                   }}
                   placeholder="Contraseña"
@@ -320,15 +322,15 @@ const Auth: React.FC = () => {
                   type="checkbox"
                   className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm" style={{color:"#e2c2c6"}}>
+                <label htmlFor="remember-me" className="ml-2 block text-sm" style={{color:"#D1BA7B"}}>
                   Recordarme
                 </label>
               </div>
 
               <div className="text-sm">
                 <button type="button" className="font-medium transition-colors rounded"  
-                style={{color:"#e2c2c6"}}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#610f7f")}
+                style={{color:"#F5DA91"}}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#A89663")}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "transparent")}>
                   ¿Olvidaste tu contraseña?
                 </button>
@@ -340,9 +342,9 @@ const Auth: React.FC = () => {
                 type="submit"
                 disabled={isLoading}
                 className="group relative w-full flex justify-center py-2 px-4 border transition-colors rounded-md"
-                style={{color:"#610f7f" , backgroundColor:"#e2c2c6", borderColor:"#b9929f"}}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#b9929f")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "#e2c2c6")}
+                style={{color:"#574D33" , backgroundColor:"#F5DA91", borderColor:"#52442D"}}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#D1BA7B")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "#F5DA91")}
               >
                 {isLoading ? (
                   <div className="flex items-center">
@@ -374,8 +376,9 @@ const Auth: React.FC = () => {
                   required
                   className={"w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 sm:text-sm placeholder-red-900"}
                   style={{
-                    backgroundColor:"#e2c2c6",
-                    color:"#2f0147",
+                    backgroundColor:"#F5DA91",
+                    color:"#574D33",
+                    borderColor:"#52442D",
                     border: `1px solid ${registerErrors.name ?"#ff6b6b": "#b9929f" }`,
                   }}
                   placeholder="Tu nombre completo"
@@ -399,8 +402,9 @@ const Auth: React.FC = () => {
                   required
                   className={"w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 sm:text-sm placeholder-red-900"}
                   style={{
-                    backgroundColor:"#e2c2c6",
-                    color:"#2f0147",
+                    backgroundColor:"#F5DA91",
+                    color:"#574D33",
+                    borderColor:"#52442D",
                     border: `1px solid ${registerErrors.email ?"#ff6b6b": "#b9929f" }`,
                   }}
                   placeholder="tu@email.com"
@@ -424,8 +428,9 @@ const Auth: React.FC = () => {
                   required
                   className={"w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 sm:text-sm placeholder-red-900"}
                   style={{
-                    backgroundColor:"#e2c2c6",
-                    color:"#2f0147",
+                    backgroundColor:"#F5DA91",
+                    color:"#574D33",
+                    borderColor:"#52442D",
                     border: `1px solid ${registerErrors.password ?"#ff6b6b": "#b9929f" }`,
                   }}
                   placeholder="Mínimo 6 caracteres"
@@ -449,8 +454,9 @@ const Auth: React.FC = () => {
                   required
                   className={"w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 sm:text-sm placeholder-red-900"}
                   style={{
-                    backgroundColor:"#e2c2c6",
-                    color:"#2f0147",
+                    backgroundColor:"#F5DA91",
+                    color:"#574D33",
+                    borderColor:"#52442D",
                     border: `1px solid ${registerErrors.confirmPassword ?"#ff6b6b": "#b9929f" }`,
                   }}
                   placeholder="Repite tu contraseña"
@@ -471,18 +477,18 @@ const Auth: React.FC = () => {
                 required
                 className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
               />
-              <label htmlFor="agree-terms" className="ml-2 block text-sm" style={{color:"#b9929f"}}>
+              <label htmlFor="agree-terms" className="ml-2 block text-sm" style={{color:"#f5da91"}}>
                 Acepto los{' '}
-                <button type="button" className="transition-colors" style={{color:"#9c528b"}}
-                onMouseEnter={(e) => (e.currentTarget.style.color= "#e2c2c6")}
-                onMouseLeave={(e) => (e.currentTarget.style.color= "#9c528b")}
+                <button type="button" className="transition-colors" style={{color:"#D1BA7B"}}
+                onMouseEnter={(e) => (e.currentTarget.style.color= "#D1BA7B")}
+                onMouseLeave={(e) => (e.currentTarget.style.color= "#52442D")}
                 >
                   términos y condiciones
                 </button>{' '}
                 y la{' '}
-                <button type="button" className="transition-colors" style={{color:"#9c528b"}}
-                onMouseEnter={(e) => (e.currentTarget.style.color= "#e2c2c6")}
-                onMouseLeave={(e) => (e.currentTarget.style.color= "#9c528b")}
+                <button type="button" className="transition-colors" style={{color:"#D1BA7B"}}
+                onMouseEnter={(e) => (e.currentTarget.style.color= "#D1BA7B")}
+                onMouseLeave={(e) => (e.currentTarget.style.color= "#52442D")}
                 >
                   política de privacidad
                 </button>
@@ -494,9 +500,9 @@ const Auth: React.FC = () => {
                 type="submit"
                 disabled={isLoading}
                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                style={{color:"#610f7f" , backgroundColor:"#e2c2c6", borderColor:"#b9929f"}}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#b9929f")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "#e2c2c6")}
+                style={{color:"#52442D" , backgroundColor:"#F5DA91", borderColor:"#52442D",}}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#D1BA7B")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "#F5DA91")}
               >
                 {isLoading ? (
                   <div className="flex items-center">
