@@ -1,5 +1,5 @@
 // src/services/api.ts
-const API_URL = "http://localhost:3001";
+const API_URL = process.env.REACT_APP_API_URL;
 
 // Función auxiliar para manejar respuestas
 async function handleResponse(response: Response) {
@@ -10,15 +10,6 @@ async function handleResponse(response: Response) {
   }
   
   return data;
-}
-
-// Función auxiliar para obtener headers con token
-function getAuthHeaders() {
-  const token = localStorage.getItem("token");
-  return {
-    "Content-Type": "application/json",
-    ...(token && { Authorization: `Bearer ${token}` }),
-  };
 }
 
 export const authAPI = {
@@ -44,23 +35,13 @@ export const authAPI = {
     return handleResponse(response);
   },
 
-  // Obtener usuario actual
-  async getCurrentUser() {
-    const response = await fetch(`${API_URL}/auth/me`, {
-      method: "GET",
-      headers: getAuthHeaders(),
+  // Refrescar token
+  async refreshToken(refreshToken: string) {
+    const response = await fetch(`${API_URL}/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
     });
-    
-    return handleResponse(response);
-  },
-
-  // Verificar token
-  async verifyToken() {
-    const response = await fetch(`${API_URL}/auth/verify`, {
-      method: "GET",
-      headers: getAuthHeaders(),
-    });
-    
     return handleResponse(response);
   },
 };
