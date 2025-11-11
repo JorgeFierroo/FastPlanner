@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes";
+import boardRoutes from "./routes/board.routes";
 
 // Cargar variables de entorno
 dotenv.config();
@@ -17,6 +18,7 @@ app.use(express.json());
 // Rutas
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/boards", boardRoutes);
 
 // Ruta de prueba
 app.get("/api/health", (req, res) => {
