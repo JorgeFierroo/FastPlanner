@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, Folder, User, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 
-const Sidebar: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+interface SidebarProps {
+  collapsed: boolean;
+  setCollapsed: (value: boolean) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({collapsed, setCollapsed}) => {
   const location = useLocation();
 
   const links = [

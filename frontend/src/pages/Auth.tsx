@@ -200,7 +200,7 @@ const Auth: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 "
-      style={{backgroundColor:'linear-gradient(135deg, #D1BA7B, #A89663, #7F724B)',}}>
+      style={{background:'linear-gradient(135deg, #D1BA7B, #A89663, #7F724B)',}}>
       <div className="max-w-md w-full space-y-8 rounded-xl p-8 shadow-2xl"
         style={{
           backgroundColor: "#7F724B",
