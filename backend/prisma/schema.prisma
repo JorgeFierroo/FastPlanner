@@ -1,49 +1,238 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model User {
-  id       Int      @id @default(autoincrement())
-  name     String
-  email    String   @unique
-  password String
-  role     Role     @default(COLLABORATOR)
-  boards   Board[]  @relation("UserBoards")
-}
-
-model Board {
-  id       Int      @id @default(autoincrement())
-  title    String
-  ownerId  Int
-  owner    User     @relation("UserBoards", fields: [ownerId], references: [id])
-  lists    List[]
-}
-
-model List {
-  id       Int      @id @default(autoincrement())
-  title    String
-  boardId  Int
-  board    Board    @relation(fields: [boardId], references: [id])
-  tasks    Task[]
+  id                                        Int             @id @default(autoincrement())
+  name                                      String
+  email                                     String          @unique
+  password                                  String
+  profilePicture                            String?
+  resetToken                                String?         @db.VarChar(255)
+  resetTokenExpires                         DateTime?
+  createdAt                                 DateTime        @default(now())
+  ChangeHistory                             ChangeHistory[]
+  Invitation_Invitation_invitedByIdToUser   Invitation[]    @relation("Invitation_invitedByIdToUser")
+  Invitation_Invitation_invitedUserIdToUser Invitation[]    @relation("Invitation_invitedUserIdToUser")
+  Notification                              Notification[]
+  RefreshToken                              RefreshToken[]
+  Task_Task_assigneeIdToUser                Task[]          @relation("Task_assigneeIdToUser")
+  Task_Task_creatorIdToUser                 Task[]          @relation("Task_creatorIdToUser")
+  TaskTime                                  TaskTime[]
+  UserProject                               UserProject[]
 }
 
 model Task {
-  id       Int      @id @default(autoincrement())
-  title    String
-  desc     String?
-  status   String   @default("todo") // todo, in_progress, done
-  dueDate  DateTime?
-  listId   Int
-  list     List     @relation(fields: [listId], references: [id])
+  id                         Int             @id @default(autoincrement())
+  title                      String
+  description                String?
+  createdAt                  DateTime        @default(now())
+  dueDate                    DateTime?
+  creatorId                  Int
+  assigneeId                 Int?
+  projectId                  Int
+  status                     StatusType      @default(created)
+  priority                   PriorityType    @default(medium)
+  sprintId                   Int?
+  Attachment                 Attachment[]
+  ChangeHistory              ChangeHistory[]
+  User_Task_assigneeIdToUser User?           @relation("Task_assigneeIdToUser", fields: [assigneeId], references: [id])
+  User_Task_creatorIdToUser  User            @relation("Task_creatorIdToUser", fields: [creatorId], references: [id])
+  Project                    Project         @relation(fields: [projectId], references: [id])
+  Sprint                     Sprint?         @relation(fields: [sprintId], references: [id])
+  TaskTag                    TaskTag[]
+  TaskTime                   TaskTime[]
 }
 
-enum Role {
-  ADMIN
-  EDITOR
-  COLLABORATOR
+model Attachment {
+  id           Int      @id @default(autoincrement())
+  taskId       Int
+  createdAt    DateTime @default(now())
+  filename     String
+  mimetype     String
+  originalName String
+  path         String
+  size         Int
+  Task         Task     @relation(fields: [taskId], references: [id])
+}
+
+model ChangeHistory {
+  id          Int        @id @default(autoincrement())
+  date        DateTime   @default(now())
+  description String
+  userId      Int
+  taskId      Int?
+  projectId   Int?
+  action      ActionType
+  createdAt   DateTime   @default(now())
+  Project     Project?   @relation(fields: [projectId], references: [id])
+  Task        Task?      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  User        User       @relation(fields: [userId], references: [id])
+}
+
+model Invitation {
+  id                                  Int              @id @default(autoincrement())
+  email                               String
+  invitedUserId                       Int?
+  projectId                           Int
+  invitedById                         Int
+  role                                ProjectRoleType  @default(developer)
+  status                              InvitationStatus @default(PENDING)
+  token                               String           @unique
+  expiresAt                           DateTime?
+  createdAt                           DateTime         @default(now())
+  updatedAt                           DateTime
+  User_Invitation_invitedByIdToUser   User             @relation("Invitation_invitedByIdToUser", fields: [invitedById], references: [id])
+  User_Invitation_invitedUserIdToUser User?            @relation("Invitation_invitedUserIdToUser", fields: [invitedUserId], references: [id])
+  Project                             Project          @relation(fields: [projectId], references: [id])
+
+  @@unique([projectId, email], map: "uniq_project_email")
+  @@index([email])
+  @@index([projectId])
+}
+
+model Notification {
+  id               Int              @id @default(autoincrement())
+  message          String
+  read             Boolean          @default(false)
+  userId           Int
+  typeId           Int
+  createdAt        DateTime         @default(now())
+  NotificationType NotificationType @relation(fields: [typeId], references: [id])
+  User             User             @relation(fields: [userId], references: [id])
+}
+
+model NotificationType {
+  id           Int            @id @default(autoincrement())
+  type         String         @unique
+  Notification Notification[]
+}
+
+model Project {
+  id            Int             @id @default(autoincrement())
+  name          String
+  description   String?
+  createdAt     DateTime        @default(now())
+  endDate       DateTime?
+  startDate     DateTime?
+  status        String          @default("active")
+  ChangeHistory ChangeHistory[]
+  Invitation    Invitation[]
+  Sprint        Sprint[]
+  Tag           Tag[]
+  Task          Task[]
+  UserProject   UserProject[]
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  userAgent String?
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
+  @@index([userId])
+}
+
+model Sprint {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  isActive    Boolean  @default(true)
+  projectId   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  Project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  Task        Task[]
+}
+
+model Tag {
+  id        Int       @id @default(autoincrement())
+  name      String
+  color     String?
+  projectId Int
+  Project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  TaskTag   TaskTag[]
+
+  @@unique([name, projectId])
+}
+
+model TaskTag {
+  id     Int  @id @default(autoincrement())
+  taskId Int
+  tagId  Int
+  Tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  Task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, tagId])
+}
+
+model TaskTime {
+  id              Int      @id @default(autoincrement())
+  taskId          Int
+  userId          Int
+  durationMinutes Int
+  date            DateTime @default(now())
+  description     String?
+  createdAt       DateTime @default(now())
+  Task            Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  User            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([userId])
+}
+
+model UserProject {
+  id        Int             @id @default(autoincrement())
+  userId    Int
+  projectId Int
+  role      ProjectRoleType @default(developer)
+  Project   Project         @relation(fields: [projectId], references: [id])
+  User      User            @relation(fields: [userId], references: [id])
+}
+
+enum ActionType {
+  CREATED
+  UPDATED
+  DELETED
+  ASSIGNED
+  STATUS_CHANGED
+  PRIORITY_CHANGED
+  TIME_LOGGED
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+enum PriorityType {
+  high
+  medium
+  low
+}
+
+enum ProjectRoleType {
+  admin
+  developer
+  guest
+}
+
+enum StatusType {
+  created
+  in_progress
+  completed
+  archived
 }
