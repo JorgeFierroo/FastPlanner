@@ -196,6 +196,7 @@ enum PriorityType {
 enum ProjectRoleType {
   admin
   developer
+  colaborador
   guest
 }
 

@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes";
+import taskRoutes from "./routes/task.routes";
 import { globalLimiter } from "./middleware/rateLimit";
 import type { RequestHandler } from "express";
 
@@ -20,6 +21,7 @@ app.use(globalLimiter as unknown as RequestHandler);
 // Rutas
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/tasks", taskRoutes);
 
 // Ruta de prueba
 app.get("/api/health", (req, res) => {

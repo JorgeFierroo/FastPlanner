@@ -44,6 +44,18 @@ Remove-Item -Path ".\prisma\migrations" -Recurse -Force
 npx prisma migrate dev --name init
 ```
 
+### Nota si cambias enums o modelos (por ejemplo: agregar el rol `colaborador`)
+
+Si actualizas `prisma/schema.prisma` (por ejemplo, agregando un nuevo valor al enum `ProjectRoleType`), crea y aplica una migración con:
+
+```powershell
+cd backend
+npx prisma migrate dev --name add-colaborador-role
+npx prisma generate
+```
+
+Si solo quieres sincronizar el esquema en desarrollo sin crear una migración explícita, puedes usar `npx prisma db push` (no recomendado para producción).
+
 ## ✅ Verificar que funcionó:
 
 ```powershell
