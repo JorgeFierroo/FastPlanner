@@ -135,11 +135,37 @@ export const authService = {
         },
       });
 
-      // Devolver usuario sin la contraseña
-      const { password: _, ...userWithoutPassword } = user as any;
+      // Obtener datos relacionados del usuario (proyectos, tareas, historial)
+      const fullUser = await prisma.user.findUnique({
+        where: { id: user.id },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profilePicture: true,
+          UserProject: {
+            select: {
+              projectId: true,
+              role: true,
+              Project: {
+                select: { id: true, name: true, description: true }
+              }
+            }
+          },
+          Task_Task_assigneeIdToUser: {
+            select: { id: true, title: true, status: true, projectId: true, dueDate: true }
+          },
+          Task_Task_creatorIdToUser: {
+            select: { id: true, title: true, status: true, projectId: true, dueDate: true }
+          },
+          ChangeHistory: {
+            select: { id: true, date: true, description: true, action: true, projectId: true, taskId: true }
+          }
+        }
+      });
 
       return {
-        user: userWithoutPassword,
+        user: fullUser,
         accessToken,
         refreshToken,
         expiresIn: ACCESS_TOKEN_EXPIRY,
@@ -163,12 +189,23 @@ export const authService = {
     try {
       const decoded: any = jwt.verify(token, JWT_SECRET);
       
+      // Devolver usuario con datos relacionados para mostrar dashboard previo
       const user = await prisma.user.findUnique({
         where: { id: decoded.userId },
         select: {
           id: true,
           name: true,
           email: true,
+          profilePicture: true,
+          UserProject: {
+            select: {
+              projectId: true,
+              role: true,
+              Project: { select: { id: true, name: true } }
+            }
+          },
+          Task_Task_assigneeIdToUser: { select: { id: true, title: true, status: true, projectId: true } },
+          Task_Task_creatorIdToUser: { select: { id: true, title: true, status: true, projectId: true } },
         },
       });
 

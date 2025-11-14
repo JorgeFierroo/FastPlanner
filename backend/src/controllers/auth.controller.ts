@@ -74,6 +74,7 @@ export const authController = {
         });
       }
 
+      // getUserFromToken ahora devuelve el usuario con relaciones (proyectos, tareas, etc.)
       const user = await authService.getUserFromToken(token);
       
       res.json({ user });
