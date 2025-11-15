@@ -29,7 +29,6 @@ export const authService = {
           id: true,
           name: true,
           email: true,
-          role: true,
         },
       });
 
@@ -37,8 +36,7 @@ export const authService = {
       const token = jwt.sign(
         { 
           userId: user.id, 
-          email: user.email,
-          role: user.role 
+          email: user.email
         },
         JWT_SECRET,
         { expiresIn: "7d" } // Token válido por 7 días
@@ -74,8 +72,7 @@ export const authService = {
       const token = jwt.sign(
         { 
           userId: user.id, 
-          email: user.email,
-          role: user.role 
+          email: user.email
         },
         JWT_SECRET,
         { expiresIn: "7d" }
@@ -113,7 +110,6 @@ export const authService = {
           id: true,
           name: true,
           email: true,
-          role: true,
         },
       });
 

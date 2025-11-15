@@ -18,7 +18,7 @@ app.use(express.json());
 // Rutas
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/boards", boardRoutes);
+app.use("/api/tasks", boardRoutes);
 
 // Ruta de prueba
 app.get("/api/health", (req, res) => {

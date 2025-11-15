@@ -18,8 +18,18 @@ type Column = {
 };
 
 export function KanbanBoard() {
-  const { tasks, moveTask, addTask, deleteTask } = useTask();
+  const { tasks, loading, projectId, setProjectId, moveTask, addTask, deleteTask } = useTask();
   const [newListTitle, setNewListTitle] = useState("");
+
+  // TODO: Obtener projectId del contexto de proyecto o de la URL
+  // Por ahora, si no hay projectId, usar uno por defecto
+  if (!projectId) {
+    // Intentar obtener de localStorage o usar un valor por defecto
+    const savedProjectId = localStorage.getItem('currentProjectId');
+    if (savedProjectId) {
+      setProjectId(parseInt(savedProjectId));
+    }
+  }
 
   // Organizar tareas por columnas
   const columns: Column[] = [
@@ -105,11 +115,47 @@ export function KanbanBoard() {
     deleteTask(cardId);
   };
 
+  if (loading) {
+    return (
+      <div className="p-6 bg-gray-100 min-h-screen flex items-center justify-center">
+        <div className="text-xl text-gray-600">Cargando tareas...</div>
+      </div>
+    );
+  }
+
+  if (!projectId) {
+    return (
+      <div className="p-6 bg-gray-100 min-h-screen flex items-center justify-center">
+        <div className="text-xl text-gray-600">
+          Por favor selecciona un proyecto para ver las tareas
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Tablero Kanban</h1>
-
-
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-3xl font-bold text-gray-800">Tablero Kanban</h1>
+        
+        {/* Selector temporal de proyecto */}
+        <div className="flex items-center gap-3">
+          <label className="text-sm text-gray-600">Proyecto ID:</label>
+          <input
+            type="number"
+            value={projectId || ''}
+            onChange={(e) => {
+              const id = parseInt(e.target.value);
+              if (id) {
+                setProjectId(id);
+                localStorage.setItem('currentProjectId', id.toString());
+              }
+            }}
+            className="px-3 py-2 border border-gray-300 rounded-md w-24"
+            placeholder="ID"
+          />
+        </div>
+      </div>
 
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <div className="flex gap-6 overflow-x-auto pb-6">
