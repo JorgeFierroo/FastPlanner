@@ -2,21 +2,27 @@ import TestCalendar from "./TestCalendar";
 import { KanbanBoard } from "../components/KanbanBoard";
 import Tabla from "./Tabla";
 import TaskPage from "./TaskPage";
+import Estadisticas from "./Stats"
 import ViewModeSelect from "../components/ViewModeSelect";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Vistas() {
-    const [currentMode, setCurrentMode] = useState<"Tabla" | "Calendario" | "Kanban" | "Tareas">("Kanban");
+    const [currentMode, setCurrentMode] = useState<
+        "Tabla" | "Calendario" | "Kanban" | "Tareas" | "Estadísticas"
+    >("Kanban");
+
     const { isAuthenticated, user, loading } = useAuth();
     const navigate = useNavigate();
 
-    const handleModeChange = (mode: "Tabla" | "Calendario" | "Kanban" | "Tareas") => {
+    const handleModeChange = (
+        mode: "Tabla" | "Calendario" | "Kanban" | "Tareas" | "Estadísticas"
+    ) => {
         setCurrentMode(mode);
-    }
+    };
 
-    // Mostrar loading mientras se verifica la autenticación
+    // Loading auth
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -28,7 +34,7 @@ export default function Vistas() {
         );
     }
 
-    // Si no está autenticado, mostrar mensaje y botón para login
+    // Not authenticated
     if (!isAuthenticated) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -63,7 +69,7 @@ export default function Vistas() {
         );
     }
 
-    // Si está autenticado, mostrar las vistas normalmente
+    // Authenticated → render views
     return (
         <div>
             <div className="mb-4 p-4 bg-white rounded-lg shadow-sm">
@@ -71,11 +77,14 @@ export default function Vistas() {
                     Bienvenido, <span className="font-semibold text-indigo-600">{user?.name || "usuario"}</span>
                 </p>
             </div>
+
             <ViewModeSelect currentMode={currentMode} onClick={handleModeChange} />
+
             {currentMode === "Tabla" && <Tabla />}
             {currentMode === "Calendario" && <TestCalendar />}
             {currentMode === "Kanban" && <KanbanBoard />}
             {currentMode === "Tareas" && <TaskPage />}
+            {currentMode === "Estadísticas" && <Estadisticas />} 
         </div>
     );
 }
