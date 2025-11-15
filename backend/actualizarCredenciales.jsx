@@ -67,7 +67,9 @@ export default function EditProfile({ user }) {
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-xl">
-      <h2 className="text-3xl font-bold text-gray-900 mb-6">Actualizar Perfil</h2>
+      <h2 className="text-3xl font-bold text-gray-900 mb-6">
+        Actualizar Perfil
+      </h2>
 
       <form onSubmit={handleSubmit} className="space-y-5">
 
