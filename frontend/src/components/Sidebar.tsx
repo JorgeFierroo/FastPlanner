@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { Home, Folder, User, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface SidebarProps {
@@ -9,14 +10,17 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({collapsed, setCollapsed}) => {
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
 
-  const links = [
-    { path: "/", label: "Inicio", icon: <Home size={20} /> },
-    { path: "/projects", label: "Proyectos", icon: <Folder size={20} /> },
-    { path: "/profile", label: "Perfil", icon: <User size={20} /> },
-    { path: "/Configuracion", label: "Ajustes", icon: <Settings size={20} /> },
-
-  ];
+  const links = {
+    unlogged:{ path: "/", label: "Inicio", icon: <Home size={20} /> },
+    logged: [
+      { path: "/", label: "Inicio", icon: <Home size={20} /> },
+      { path: "/projects", label: "Proyectos", icon: <Folder size={20} /> },
+      { path: "/profile", label: "Perfil", icon: <User size={20} /> },
+      { path: "/Configuracion", label: "Ajustes", icon: <Settings size={20} /> },
+    ]
+  };
 
   return (
     <aside
@@ -43,7 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({collapsed, setCollapsed}) => {
       </div>
 
       <nav className="mt-2 flex flex-col space-y-1">
-        {links.map((link) => {
+        {(isAuthenticated ? links.logged : [links.unlogged]).map((link) => {
           const isActive = location.pathname === link.path;
           return(
             <Link

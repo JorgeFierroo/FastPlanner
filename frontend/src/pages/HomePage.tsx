@@ -44,9 +44,6 @@ const HomePage: React.FC = () => {
               <p className="text-sm text-indigo-700">
                 <span className="font-medium">Email:</span> {user.email}
               </p>
-              <p className="text-sm text-indigo-700">
-                <span className="font-medium">Rol:</span> {user.role}
-              </p>
             </div>
           ) : (
             <div className="mb-6 p-4 bg-gray-100 rounded-lg">
