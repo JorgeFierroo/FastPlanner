@@ -8,17 +8,26 @@ const boardController = new BoardController();
 // Todas las rutas requieren autenticación
 router.use(authMiddleware);
 
-// Rutas de tableros
-router.get("/", boardController.getBoards);
-router.post("/", boardController.createBoard);
-router.get("/:id", boardController.getBoardById);
-router.put("/:id", boardController.updateBoard);
-router.delete("/:id", boardController.deleteBoard);
+// Rutas de tareas (board)
+// POST /tasks/{projectId} - Crear nueva tarea
+router.post("/:projectId", boardController.createTask.bind(boardController));
 
-// Rutas de listas dentro de tableros
-router.post("/:id/lists", boardController.createList);
+// GET /tasks/projects/{projectId}/tasks/{taskId} - Obtener tarea por ID
+router.get("/projects/:projectId/tasks/:taskId", boardController.getTaskById.bind(boardController));
 
-// Rutas de tareas dentro de listas
-router.post("/lists/:listId/tasks", boardController.createTask);
+// PUT /tasks/projects/{projectId}/tasks/{taskId} - Actualizar tarea
+router.put("/projects/:projectId/tasks/:taskId", boardController.updateTask.bind(boardController));
+
+// DELETE /tasks/projects/{projectId}/tasks/{taskId} - Eliminar tarea
+router.delete("/projects/:projectId/tasks/:taskId", boardController.deleteTask.bind(boardController));
+
+// GET /tasks/projects/{projectId}/tasks - Obtener tareas por proyecto
+router.get("/projects/:projectId/tasks", boardController.getTasksByProject.bind(boardController));
+
+// POST /tasks/{projectId}/{taskId}/assign - Asignar tarea
+router.post("/:projectId/:taskId/assign", boardController.assignTask.bind(boardController));
+
+// POST /tasks/{projectId}/{taskId}/status - Cambiar estado de tarea
+router.post("/:projectId/:taskId/status", boardController.changeTaskStatus.bind(boardController));
 
 export default router;
