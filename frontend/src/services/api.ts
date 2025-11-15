@@ -10,6 +10,12 @@ async function handleResponse(response: Response) {
   const data = await response.json();
   
   if (!response.ok) {
+    console.error('API Error Details:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorMessage: data.error,
+        fullResponse: data
+    });
     throw new Error(data.error || "Error en la solicitud");
   }
   
@@ -99,56 +105,4 @@ export async function apiFetch(input: string, options: RequestInit = {}) {
   return handleResponse(response);
 }
 
-export const authAPI = {
-  // Registrar usuario
-  async register(data: { name: string; email: string; password: string }) {
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    
-    return handleResponse(response);
-  },
-
-  // Iniciar sesión
-  async login(data: { email: string; password: string }) {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    
-    return handleResponse(response);
-  },
-
-  // Refrescar token
-  async refreshToken(refreshToken: string) {
-    const response = await fetch(`${API_URL}/auth/refresh`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
-    });
-    return handleResponse(response);
-  },
-};
-
-export const projectsAPI = {
-  // Obtener proyectos del usuario
-  async getProjects(accessToken: string) {
-    const response = await fetch(`${API_URL}/projects`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    return handleResponse(response);
-  },
-
-  // Datos de un proyecto específico
-  async getProjectById(accessToken: string, projectId: string) {
-    const response = await fetch(`${API_URL}/projects/${projectId}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    return handleResponse(response);
-  }
-}
-
-export default authAPI;
+export default apiFetch;

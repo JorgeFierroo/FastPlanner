@@ -3,6 +3,7 @@ import ProjectCard from "../components/ProjectCard";
 import { apiFetch } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import ProjectModal from "../components/projectModal";
 
 const Projects: React.FC = () => {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
@@ -10,19 +11,15 @@ const Projects: React.FC = () => {
   const [items, setItems] = useState<any[]>([]);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const mapApiProjectToUI = (p: any) => ({
-    title: p.title ?? p.name ?? "Sin título",
-    description: p.description ?? "",
-    status: (p.status ?? "pendiente") as "activo" | "pendiente" | "completado",
-    people: (p.people ?? p.members ?? []).map((m: any) =>
-      typeof m === "string" ? m : m?.name ?? ""
-    ),
-    tasks: (p.tasks ?? []).map((t: any) => ({
-      name: t.name ?? t.title ?? "Tarea",
-      assigned: Boolean(t.assigned ?? t.isAssigned ?? false),
-    })),
-    isFuture: Boolean(p.isFuture ?? p.future ?? false),
+    title: p.project.title ?? p.project.name ?? "Sin título",
+    description: p.project.description ?? "",
+    status: (p.project.status ?? "pendiente") as "activo" | "pendiente" | "completado"
   });
 
   React.useEffect(() => {
@@ -32,7 +29,7 @@ const Projects: React.FC = () => {
         const data = await apiFetch(`/projects/user/${user?.id}`, {
           method: "GET"});
         console.log("Proyectos obtenidos desde API:", data);
-        const list = Array.isArray(data) ? data : data?.projects ?? [];
+        const list = Array.isArray(data) ? data : data?.project ?? [];
         setItems(list.map(mapApiProjectToUI));
       } catch (error) {
         console.error("Error al obtener proyectos:", error);
@@ -74,6 +71,7 @@ const Projects: React.FC = () => {
 
   return (
     <div className="p-6">
+      <ProjectModal isOpen={isModalOpen} onClose={closeModal} newProject={true} />
       <h1 className="text-2xl font-bold mb-6 text-neutral-black">Proyectos</h1>
 
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -82,7 +80,7 @@ const Projects: React.FC = () => {
             key={i}
             title={p.title}
             description={p.description}
-            status={p.status as "activo" | "pendiente" | "completado"}
+            status={p.status as "active" | "pending" | "completed"}
             onClick={() => navigate(`/projects/${i}`)}
           />
         ))}
@@ -90,7 +88,7 @@ const Projects: React.FC = () => {
           title=""
           description=""
           addProject={true}
-          onClick={() => navigate("/projects/new")}
+          onClick={openModal}
         />
       </div>
     </div>
