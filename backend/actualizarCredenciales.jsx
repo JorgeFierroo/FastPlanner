@@ -1,14 +1,15 @@
 import React, { useState } from "react";
+import { useNotification } from "../context/NotificationContext";
 
 export default function EditProfile({ user }) {
+  const { notify } = useNotification();
+
   const [formData, setFormData] = useState({
     name: user.name,
     email: user.email,
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,11 +21,11 @@ export default function EditProfile({ user }) {
 
   const validateForm = () => {
     if (!formData.name || !formData.email) {
-      setError("Todos los campos son obligatorios.");
+      notify("Todos los campos son obligatorios.", "error");
       return false;
     }
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setError("Por favor ingrese un correo electrónico válido.");
+      notify("Por favor ingrese un correo electrónico válido.", "error");
       return false;
     }
     return true;
@@ -37,8 +38,6 @@ export default function EditProfile({ user }) {
     if (!validateForm()) return;
 
     setIsLoading(true);
-    setError(null);
-    setSuccess(false);
 
     try {
       const response = await fetch("/api/updateProfile", {
@@ -52,12 +51,12 @@ export default function EditProfile({ user }) {
       const result = await response.json();
 
       if (result.success) {
-        setSuccess(true);
+        notify("Perfil actualizado con éxito.", "success");
       } else {
-        setError("Hubo un error al actualizar los datos. Inténtalo de nuevo.");
+        notify("Hubo un error al actualizar los datos. Inténtalo de nuevo.", "error");
       }
     } catch (err) {
-      setError("Error de conexión. Inténtalo más tarde.");
+      notify("Error de conexión. Inténtalo más tarde.", "error");
     }
 
     setIsLoading(false);
@@ -66,18 +65,6 @@ export default function EditProfile({ user }) {
   return (
     <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Actualizar Perfil</h2>
-
-      {error && (
-        <div className="bg-red-100 text-red-800 p-4 mb-4 rounded-md">
-          <strong>Error: </strong>{error}
-        </div>
-      )}
-
-      {success && (
-        <div className="bg-green-100 text-green-800 p-4 mb-4 rounded-md">
-          <strong>¡Éxito! </strong>Tu perfil ha sido actualizado correctamente.
-        </div>
-      )}
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
