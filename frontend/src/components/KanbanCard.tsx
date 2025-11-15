@@ -34,22 +34,22 @@ export function KanbanCard({
       {...attributes}
       {...listeners}
       style={style}
-      className={`rounded-xl border bg-white p-4 shadow-sm transition cursor-grab ${
-        isDragging ? "opacity-50 border-dashed" : "hover:shadow-md"
+      className={`rounded-xl border border-[#a89663] bg-[#d1ba7b] p-4 shadow-md transition cursor-grab ${
+        isDragging ? "opacity-50 border-dashed" : "hover:shadow-lg hover:border-[#7f724b]"
       }`}
     >
       <div className="flex justify-between items-center">
-        <div className="font-semibold text-gray-800">{title}</div>
+        <div className="font-semibold text-[#574d33]">{title}</div>
         <button
           onClick={() => onDeleteCard(columnId, id)}
-          className="text-purple-400 hover:text-purple-800 text-sm"
+          className="text-[#7f724b] hover:text-[#574D33] text-sm font-bold"
         >
           ✕
         </button>
       </div>
-      <p className="text-sm text-gray-500 mt-1">{description}</p>
+      <p className="text-sm text-[#6b603f] mt-1">{description}</p>
       {label && (
-        <span className="inline-block mt-3 text-xs font-medium px-2 py-1 rounded bg-gray-200 text-gray-700">
+        <span className="inline-block mt-3 text-xs font-medium px-2 py-1 rounded bg-[#a89663] text-white border border-[#7f724b]">
           {label}
         </span>
       )}

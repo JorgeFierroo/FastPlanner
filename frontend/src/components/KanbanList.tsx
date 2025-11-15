@@ -29,12 +29,12 @@ export function KanbanList({
   };
 
   return (
-    <div className="flex-1 bg-gray-50 rounded-xl p-4 border shadow-sm min-w-[250px]">
+    <div className="flex-1 bg-[#F5DA91] rounded-xl p-4 border-2 border-[#a89663] shadow-md min-w-[250px]">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-bold text-lg text-gray-700">{title}</h2>
+        <h2 className="font-bold text-lg text-[#574d33]">{title}</h2>
         <button
           onClick={() => onDeleteList(columnId)}
-          className="text-purple-500 hover:text-purple-700 text-sm"
+          className="text-[#7f724b] hover:text-[#574D33] text-sm font-semibold"
         >
           ✕
         </button>
@@ -57,11 +57,11 @@ export function KanbanList({
           value={newTask}
           onChange={e => setNewTask(e.target.value)}
           placeholder="Nueva tarea..."
-          className="border rounded-md px-2 py-1 text-sm w-full"
+          className="border-2 border-[#a89663] bg-[#EFE0B4] rounded-md px-2 py-1 text-sm w-full text-[#574D33] placeholder-[#A89663]"
         />
         <button
           onClick={handleAddTask}
-          className="mt-2 bg-purple-600 text-white px-3 py-1 rounded-md w-full hover:bg-purple-700 text-sm"
+          className="mt-2 text-white px-3 py-1 rounded-md w-full bg-[#a89663] hover:bg-[#7f724b] text-sm"
         >
           Agregar tarea
         </button>

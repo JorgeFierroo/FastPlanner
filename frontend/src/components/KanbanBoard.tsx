@@ -127,8 +127,8 @@ export function KanbanBoard() {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Tablero Kanban</h1>
+    <div className="p-6 bg-[#EFE0B4] min-h-screen">
+      <h1 className="text-3xl font-bold mb-6 text-[#574D33]">Tablero Kanban</h1>
 
       {/* Crear nueva lista */}
       <div className="flex gap-2 mb-6">
@@ -137,11 +137,11 @@ export function KanbanBoard() {
           value={newListTitle}
           onChange={e => setNewListTitle(e.target.value)}
           placeholder="Nombre de nueva lista..."
-          className="border rounded-lg px-3 py-2 flex-1"
+          className="border-2 border-[#A89663] bg-[#F5DA91] rounded-lg px-3 py-2 flex-1 text-[#574D33] placeholder-[#A89663]"
         />
         <button
           onClick={addNewList}
-          className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
+          className="text-white px-4 py-2 rounded-lg bg-[#a89663] hover:bg-[#7f724b]"
         >
           Agregar lista
         </button>
