@@ -3,7 +3,7 @@ import React from "react";
 interface ProjectCardProps {
   title: string;
   description: string;
-  status?: "activo" | "pendiente" | "completado";
+  status?: "active" | "pending" | "completed";
   onClick?: () => void;
   addProject?: boolean;
 }
@@ -24,7 +24,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   if (addProject) {
     return (
       <div
-        className="bg-neutral-white rounded-lg shadow hover:bg-gray-200 hover:shadow-lg transition-shadow p-5 flex items-center justify-center cursor-pointer min-h-[200px]"
+        className="bg-neutral-white rounded-lg shadow hover:bg-gray-200 hover:shadow-lg transition-shadow p-5 flex items-center justify-center cursor-pointer min-h-[150px]"
         onClick={onClick}
       >
         <span className="text-6xl text-neutral-darkgray">+</span>
@@ -34,7 +34,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
   return (
     <div
-      className={`bg-neutral-white rounded-lg shadow hover:bg-gray-200 hover:shadow-lg transition-shadow p-5 flex flex-col justify-between cursor-pointer`}
+      className={`bg-neutral-white rounded-lg shadow hover:bg-gray-200 hover:shadow-lg transition-shadow p-5 flex flex-col justify-between cursor-pointer min-h-[150px]`}
       onClick={onClick}
     >
       {/* Título */}
