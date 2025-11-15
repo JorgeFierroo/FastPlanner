@@ -1,6 +1,6 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import authAPI from '../services/api';
+import {apiFetch} from '../services/api';
 
 interface User {
   id: number;
@@ -34,12 +34,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const savedAccess = localStorage.getItem('accessToken');
     const savedRefresh = localStorage.getItem('refreshToken');
     const savedUser = localStorage.getItem('user');
-
-    console.log("Cargando tokens desde localStorage:", {
-      savedAccess,
-      savedRefresh,
-      savedUser
-    });
+    console.log("Saved user in localStorage:", savedUser);
 
     if (savedAccess && savedRefresh && savedUser) {
       setAccessToken(savedAccess);
@@ -52,8 +47,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await authAPI.login({ email, password });
-      console.log("Respuesta de login:", response);
+      const response = await apiFetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+      console.log("Login response:", response);
       
       const { user, accessToken, refreshToken } = response;
 
@@ -72,8 +70,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const register = async (name: string, email: string, password: string) => {
     try {
-      const response = await authAPI.register({ name, email, password });
-      console.log("Respuesta de registro:", response);
+      const response = await apiFetch('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, password }),
+      });
 
       const { user, accessToken, refreshToken } = response;
 
@@ -94,7 +94,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       if (!refreshToken) return false;
 
-      const response = await authAPI.refreshToken(refreshToken); 
+      const response = await apiFetch('/auth/refresh', {
+        method: 'POST',
+        body: JSON.stringify({ refreshToken }),
+      });
       // La API debería devolver un nuevo accessToken
       if (!response || !response.accessToken) {
         throw new Error("No se recibió un nuevo access token");
@@ -104,10 +107,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setAccessToken(newAccessToken);
       localStorage.setItem('accessToken', newAccessToken);
 
-      console.log("Access token renovado:", newAccessToken);
       return true;
     } catch (error) {
-      console.error("Error al refrescar el token:", error);
       logout();
       return false;
     }
