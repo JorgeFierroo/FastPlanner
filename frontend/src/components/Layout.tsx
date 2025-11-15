@@ -15,7 +15,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Navigation />
 
       {/* Contenedor con sidebar + contenido */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden bg-[#d1ba7b]">
         <Sidebar collapsed={collapsed} setCollapsed={setCollapsed}/>
 
         <main className={`flex-1 overflow-auto transition-all duration-300 ${collapsed ? "ml-16" : "ml-56"}`}>
