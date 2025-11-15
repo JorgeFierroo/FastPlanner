@@ -1,8 +1,8 @@
-import express from "express";
-import { getStats } from "../../controllers/Stats/stats.controller";
+import { Router } from "express";
+import { getGeneralStats } from "../../controllers/Stats/stats.controller";
 
-const router = express.Router();
+const router = Router();
 
-router.get("/", getStats);
+router.get("/general", getGeneralStats);
 
 export default router;
