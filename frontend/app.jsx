@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useParams } from "react-router-dom";
-
+import { NotificationProvider } from "./context/NotificationContext";
 // Datos simulados de proyectos
 const proyectos = [
   {
@@ -135,6 +135,15 @@ function PaginaVistas() {
         </p>
       </div>
     </div>
+  );
+}
+
+
+function App() {
+  return (
+    <NotificationProvider>
+      {/* rutas, páginas, etc */}
+    </NotificationProvider>
   );
 }
 
