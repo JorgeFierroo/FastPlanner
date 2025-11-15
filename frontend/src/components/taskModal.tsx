@@ -304,7 +304,7 @@ const TaskModal = ({ isOpen, taskInfo, onClose }: TaskModalProps) => {
           <p className="text-gray-500">Crea una nueva tarea</p>
         )}
         <div className="mt-4 gap-4 text-right">
-          <Button disabled={!isTaskEdited} className="mr-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed" >Guardar Cambios</Button>
+          <Button variant="success" disabled={!isTaskEdited} className="mr-2  disabled:bg-gray-400 disabled:cursor-not-allowed" >Guardar Cambios</Button>
           <Button onClick={onClose}>Cerrar</Button>
         </div>
       </div>
