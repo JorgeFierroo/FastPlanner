@@ -1,3 +1,4 @@
+// src/components/EditProfile.jsx
 import React, { useState } from "react";
 import { useNotification } from "../context/NotificationContext";
 
@@ -13,6 +14,7 @@ export default function EditProfile({ user }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -24,17 +26,18 @@ export default function EditProfile({ user }) {
       notify("Todos los campos son obligatorios.", "error");
       return false;
     }
+
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      notify("Por favor ingrese un correo electrónico válido.", "error");
+      notify("Correo electrónico inválido.", "error");
       return false;
     }
+
     return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar los campos antes de hacer el submit
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -51,61 +54,65 @@ export default function EditProfile({ user }) {
       const result = await response.json();
 
       if (result.success) {
-        notify("Perfil actualizado con éxito.", "success");
+        notify("Perfil actualizado correctamente.", "success");
       } else {
-        notify("Hubo un error al actualizar los datos. Inténtalo de nuevo.", "error");
+        notify("No se pudieron guardar los cambios.", "error");
       }
     } catch (err) {
-      notify("Error de conexión. Inténtalo más tarde.", "error");
+      notify("Error de servidor, intenta nuevamente.", "error");
     }
 
     setIsLoading(false);
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Actualizar Perfil</h2>
+    <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-xl">
+      <h2 className="text-3xl font-bold text-gray-900 mb-6">Actualizar Perfil</h2>
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700" htmlFor="name">
+      <form onSubmit={handleSubmit} className="space-y-5">
+
+        {/* Nombre */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">
             Nombre
           </label>
           <input
-            id="name"
             type="text"
             name="name"
+            placeholder="Ingresa tu nombre"
             value={formData.name}
             onChange={handleInputChange}
-            className="mt-2 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Ingresa tu nombre"
+            className="w-full p-3 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700" htmlFor="email">
+        {/* Correo */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">
             Correo Electrónico
           </label>
           <input
-            id="email"
             type="email"
             name="email"
+            placeholder="Ingresa tu correo"
             value={formData.email}
             onChange={handleInputChange}
-            className="mt-2 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Ingresa tu correo electrónico"
+            className="w-full p-3 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
-        <div className="mt-6">
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={isLoading}
-          >
-            {isLoading ? "Actualizando..." : "Actualizar Perfil"}
-          </button>
-        </div>
+        {/* Botón */}
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`w-full py-3 rounded-md text-white font-semibold transition ${
+            isLoading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
+        >
+          {isLoading ? "Actualizando..." : "Guardar Cambios"}
+        </button>
       </form>
     </div>
   );
