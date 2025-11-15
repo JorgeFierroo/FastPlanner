@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Vistas() {
     const [currentMode, setCurrentMode] = useState<"Tabla" | "Calendario" | "Kanban" | "Tareas">("Kanban");
-    //const { isAuthenticated, user, loading } = useAuth();
+    const { isAuthenticated, user, loading } = useAuth();
     const navigate = useNavigate();
 
     const handleModeChange = (mode: "Tabla" | "Calendario" | "Kanban" | "Tareas") => {
@@ -17,7 +17,6 @@ export default function Vistas() {
     }
 
     // Mostrar loading mientras se verifica la autenticación
-    const loading = false; // Reemplazar con valor real del contexto
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -30,7 +29,6 @@ export default function Vistas() {
     }
 
     // Si no está autenticado, mostrar mensaje y botón para login
-    const isAuthenticated = true; // Reemplazar con valor real del contexto
     if (!isAuthenticated) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -70,7 +68,7 @@ export default function Vistas() {
         <div>
             <div className="mb-4 p-4 bg-white rounded-lg shadow-sm">
                 <p className="text-sm text-gray-600">
-                    Bienvenido, <span className="font-semibold text-indigo-600">usuario</span>
+                    Bienvenido, <span className="font-semibold text-indigo-600">{user?.name || "usuario"}</span>
                 </p>
             </div>
             <ViewModeSelect currentMode={currentMode} onClick={handleModeChange} />
