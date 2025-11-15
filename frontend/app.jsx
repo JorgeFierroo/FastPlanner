@@ -138,11 +138,10 @@ function PaginaVistas() {
   );
 }
 
-
 function App() {
   return (
     <NotificationProvider>
-      {/* rutas, páginas, etc */}
+      <EditProfile user={{ name: "Juan", email: "juan@example.com" }} />
     </NotificationProvider>
   );
 }
