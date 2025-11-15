@@ -1,51 +1,61 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../../prisma"; 
 
 export const getSystemStats = async () => {
-  // -------- Totales globales --------
-  const totalUsers = await prisma.user.count();
-  const totalTasks = await prisma.task.count();
+    // ---------- TOTALES GENERALES ----------
+    const totalUsers = await prisma.user.count();
+    const totalProjects = await prisma.project.count();
+    const totalTasks = await prisma.task.count();
 
-  const completedTasks = await prisma.task.count({
-    where: { status: "completed" }
-  });
+    const completedTasks = await prisma.task.count({
+        where: { status: "completed" }
+    });
 
-  const completionPercentage =
-    totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+    const completionPercentage =
+        totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
-  // -------- Stats por usuario --------
-  const users = await prisma.user.findMany({
-    include: {
-      Task_Task_assigneeIdToUser: true, // tareas asignadas al usuario
-      Task_Task_creatorIdToUser: true,  // tareas creadas por el usuario
-    },
-  });
+    // ---------- TAREAS POR USUARIO ----------
+    const users = await prisma.user.findMany({
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            Task_Task_assigneeIdToUser: {
+                select: {
+                    status: true
+                }
+            }
+        }
+    });
 
-  const userStats = users.map((user) => {
-    const assignedTasks = user.Task_Task_assigneeIdToUser;
-    const createdTasks = user.Task_Task_creatorIdToUser;
+    const tasksPerUser = users.map((user: typeof users[number]) => {
+        const tasks = user.Task_Task_assigneeIdToUser;
 
-    const allUserTasks = [...assignedTasks, ...createdTasks];
+        const completed = tasks.filter((t: { status: string }) => t.status === "completed").length;
+        const inProgress = tasks.filter((t: { status: string }) => t.status === "in_progress").length;
+        const created = tasks.filter((t: { status: string }) => t.status === "created").length;
+        const archived = tasks.filter((t: { status: string }) => t.status === "archived").length;
 
-    const completed = allUserTasks.filter(
-      (t) => t.status === "completed"
-    ).length;
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            totalTasks: tasks.length,
+            completed,
+            inProgress,
+            created,
+            archived
+        };
+    });
 
+    // ---------- RESPUESTA FINAL ----------
     return {
-      userId: user.id,
-      name: user.name,
-      email: user.email,
-      totalTasks: allUserTasks.length,
-      completedTasks: completed,
+        totals: {
+            users: totalUsers,
+            projects: totalProjects,
+            tasks: totalTasks,
+            completedTasks,
+            completionPercentage
+        },
+        tasksPerUser
     };
-  });
-
-  return {
-    totalUsers,
-    totalTasks,
-    completedTasks,
-    completionPercentage: Number(completionPercentage.toFixed(2)),
-    userStats,
-  };
 };

@@ -4,10 +4,6 @@ import { Router, Request, Response } from "express";
 // Es como un mini-servidor que maneja rutas específicas
 const router = Router();
 
-// ¿Cómo funciona una ruta?
-// router.MÉTODO(URL, FUNCIÓN)
-// Cuando llegue una petición con ese MÉTODO a esa URL, ejecuta esa FUNCIÓN
-
 // RUTA 1: GET /boards - Obtener todos los tableros
 router.get("/", (req: Request, res: Response) => {
   // Por ahora devolvemos datos falsos para probar
