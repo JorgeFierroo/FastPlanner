@@ -365,7 +365,7 @@ const Auth: React.FC = () => {
           <form className="mt-8 space-y-6" onSubmit={handleRegisterSubmit}>
             <div className="space-y-4">
               <div>
-                <label htmlFor="register-name" className="block text-sm font-medium" style={{color:"#b9929f"}}>
+                <label htmlFor="register-name" className="block text-sm font-medium" style={{color:"#52442D"}}>
                   Nombre completo
                 </label>
                 <input
@@ -391,7 +391,7 @@ const Auth: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="register-email" className="block text-sm font-medium" style={{color:"#b9929f"}}>
+                <label htmlFor="register-email" className="block text-sm font-medium" style={{color:"#52442D"}}>
                   Dirección de email
                 </label>
                 <input
@@ -417,7 +417,7 @@ const Auth: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="register-password" className="block text-sm font-medium" style={{color:"#b9929f"}}>
+                <label htmlFor="register-password" className="block text-sm font-medium" style={{color:"#52442D"}}>
                   Contraseña
                 </label>
                 <input
@@ -443,7 +443,7 @@ const Auth: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="register-confirmPassword" className="block text-sm font-medium" style={{color:"#b9929f"}}>
+                <label htmlFor="register-confirmPassword" className="block text-sm font-medium" style={{color:"#52442D"}}>
                   Confirmar contraseña
                 </label>
                 <input
