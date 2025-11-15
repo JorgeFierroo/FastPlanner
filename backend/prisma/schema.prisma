@@ -8,21 +8,23 @@ datasource db {
 }
 
 model User {
-  id                         Int             @id @default(autoincrement())
-  name                       String
-  email                      String          @unique
-  password                   String
-  profilePicture             String?
-  resetToken                 String?         @db.VarChar(255)
-  resetTokenExpires          DateTime?
-  createdAt                  DateTime        @default(now())
-  ChangeHistory              ChangeHistory[]
-  Notification               Notification[]
-  refreshTokens              RefreshToken[]
-  Task_Task_assigneeIdToUser Task[]          @relation("Task_assigneeIdToUser")
-  Task_Task_creatorIdToUser  Task[]          @relation("Task_creatorIdToUser")
-  TaskTime                   TaskTime[]
-  UserProject                UserProject[]
+  id                                        Int             @id @default(autoincrement())
+  name                                      String
+  email                                     String          @unique
+  password                                  String
+  profilePicture                            String?
+  resetToken                                String?         @db.VarChar(255)
+  resetTokenExpires                         DateTime?
+  createdAt                                 DateTime        @default(now())
+  ChangeHistory                             ChangeHistory[]
+  Invitation_Invitation_invitedByIdToUser   Invitation[]    @relation("Invitation_invitedByIdToUser")
+  Invitation_Invitation_invitedUserIdToUser Invitation[]    @relation("Invitation_invitedUserIdToUser")
+  Notification                              Notification[]
+  refreshTokens                             RefreshToken[]
+  Task_Task_assigneeIdToUser                Task[]          @relation("Task_assigneeIdToUser")
+  Task_Task_creatorIdToUser                 Task[]          @relation("Task_creatorIdToUser")
+  TaskTime                                  TaskTime[]
+  UserProject                               UserProject[]
 }
 
 model RefreshToken {
@@ -112,6 +114,7 @@ model Project {
   startDate     DateTime?
   status        String          @default("active")
   ChangeHistory ChangeHistory[]
+  Invitation    Invitation[]
   Sprint        Sprint[]
   Tag           Tag[]
   Task          Task[]
@@ -177,6 +180,27 @@ model UserProject {
   User      User            @relation(fields: [userId], references: [id])
 }
 
+model Invitation {
+  id                                  Int              @id @default(autoincrement())
+  email                               String
+  invitedUserId                       Int?
+  projectId                           Int
+  invitedById                         Int
+  role                                ProjectRoleType  @default(developer)
+  status                              InvitationStatus @default(PENDING)
+  token                               String           @unique
+  expiresAt                           DateTime?
+  createdAt                           DateTime         @default(now())
+  updatedAt                           DateTime
+  User_Invitation_invitedByIdToUser   User             @relation("Invitation_invitedByIdToUser", fields: [invitedById], references: [id])
+  User_Invitation_invitedUserIdToUser User?            @relation("Invitation_invitedUserIdToUser", fields: [invitedUserId], references: [id])
+  Project                             Project          @relation(fields: [projectId], references: [id])
+
+  @@unique([projectId, email], map: "uniq_project_email")
+  @@index([email])
+  @@index([projectId])
+}
+
 enum ActionType {
   CREATED
   UPDATED
@@ -196,7 +220,7 @@ enum PriorityType {
 enum ProjectRoleType {
   admin
   developer
-  colaborador
+  editor
   guest
 }
 
@@ -205,4 +229,11 @@ enum StatusType {
   in_progress
   completed
   archived
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EXPIRED
 }

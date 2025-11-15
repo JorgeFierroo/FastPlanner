@@ -34,6 +34,13 @@ export const PERMISSIONS_BY_ROLE: Record<Role, Permission[]> = {
     Permission.VIEW_STATS,
     Permission.VIEW_CHANGE_HISTORY,
   ],
+  // Rol 'editor': puede ver y editar tareas, adjuntar archivos y ver historial, pero no ver estadísticas
+  editor: [
+    Permission.VIEW_TASKS,
+    Permission.EDIT_TASKS,
+    Permission.ATTACH_FILES,
+    Permission.VIEW_CHANGE_HISTORY,
+  ],
   // Invitado/guest: puede ver tareas pero no editarlas ni ver estadísticas
   guest: [
     Permission.VIEW_TASKS,
