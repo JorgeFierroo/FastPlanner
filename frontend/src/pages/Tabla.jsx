@@ -101,7 +101,7 @@ export default function Tabla() {
   };
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-lg">
+    <div className="p-6 bg-white rounded-2xl shadow-lg mx-2 my-4">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold">Vista de Tabla</h2>
 

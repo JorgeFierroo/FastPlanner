@@ -90,8 +90,8 @@ export default function CalendarHeader({ monthNames, month, year, onPrev, onNext
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`px-3 py-1 rounded-lg bg-white hover:bg-gray-300 border text-lg
-            ${currentDragOver === "prev" ? " bg-gray-300" : ""}`} // Cambia el fondo si está en drag over
+          className={`px-3 py-1 rounded-lg bg-[#FCECBD] hover:bg-[#c8b07a] border border-[#7f724b] text-lg text-[#574d33]
+            ${currentDragOver === "prev" ? " bg-[#c8b07a]" : ""}`} // Cambia el fondo si está en drag over
         >
           &lt;
         </button>
@@ -104,8 +104,8 @@ export default function CalendarHeader({ monthNames, month, year, onPrev, onNext
           onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
           onDrop={handleDrop}
-          className={`px-3 py-1 rounded-lg bg-white hover:bg-gray-300 border text-lg
-            ${currentDragOver === "next" ? " bg-gray-300" : ""}`} // Cambia el fondo si está en drag over
+          className={`px-3 py-1 rounded-lg bg-[#FCECBD] hover:bg-[#c8b07a] border border-[#7f724b] text-lg text-[#574d33]
+            ${currentDragOver === "next" ? " bg-[#c8b07a]" : ""}`} // Cambia el fondo si está en drag over
         >
           &gt;
         </button>

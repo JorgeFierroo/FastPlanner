@@ -8,13 +8,13 @@ export default function CalendarModeToggle({ currentMode, onClick: onClick }: Ca
   return (
     <div className="flex ml-[35%]">
       <button
-        className={`px-4 py-2 w-24 rounded-tl-lg border ${currentMode === "month" ? "bg-white" : "bg-gray-200"}`}
+        className={`px-4 py-2 w-24 rounded-tl-lg border border-[#C8B07A] ${currentMode === "month" ? "bg-[#FCECBD]" : "bg-[#a89663]"}`}
         onClick={() => onClick("month")}
       >
         Mes
       </button>
       <button
-        className={`px-4 py-2 w-24 rounded-tr-lg border ${currentMode === "week" ? "bg-white" : "bg-gray-200"}`}
+        className={`px-4 py-2 w-24 rounded-tr-lg border border-[#C8B07A] ${currentMode === "week" ? "bg-[#FCECBD]" : "bg-[#a89663]"}`}
         onClick={() => onClick("week")}
       >
         Semana

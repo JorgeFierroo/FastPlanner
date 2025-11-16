@@ -68,7 +68,7 @@ export default function CalendarWeekGrid({ selectedDate, week, month, year, task
         <div className="grid grid-cols-7 gap-2">
             {/* Cabecera de días de la semana */}
             {["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"].map((day) => (
-                <div key={day} className="text-center font-medium text-gray-500">
+                <div key={day} className="text-center font-medium text-[#574d33]">
                     {day}
                 </div>
             ))}
