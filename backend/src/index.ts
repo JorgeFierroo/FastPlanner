@@ -3,7 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes";
-import statsRoutes from "./routes/Stats/stats.routes"; 
+import boardRoutes from "./routes/board.routes";
+import statsRoutes from "./routes/Stats/stats.routes";
 
 // Cargar variables de entorno
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(express.json());
 // Rutas
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/tasks", boardRoutes);
 app.use("/api/stats", statsRoutes);
 
 // Ruta de prueba

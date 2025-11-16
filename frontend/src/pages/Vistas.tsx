@@ -2,22 +2,27 @@ import TestCalendar from "./TestCalendar";
 import { KanbanBoard } from "../components/KanbanBoard";
 import Tabla from "./Tabla";
 import TaskPage from "./TaskPage";
+import Estadisticas from "./Stats"
 import ViewModeSelect from "../components/ViewModeSelect";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Vistas() {
-    const [currentMode, setCurrentMode] = useState<"Tabla" | "Calendario" | "Kanban" | "Tareas">("Kanban");
-    //const { isAuthenticated, user, loading } = useAuth();
+    const [currentMode, setCurrentMode] = useState<
+        "Tabla" | "Calendario" | "Kanban" | "Tareas" | "Estadísticas"
+    >("Kanban");
+
+    const { isAuthenticated, user, loading } = useAuth();
     const navigate = useNavigate();
 
-    const handleModeChange = (mode: "Tabla" | "Calendario" | "Kanban" | "Tareas") => {
+    const handleModeChange = (
+        mode: "Tabla" | "Calendario" | "Kanban" | "Tareas" | "Estadísticas"
+    ) => {
         setCurrentMode(mode);
-    }
+    };
 
-    // Mostrar loading mientras se verifica la autenticación
-    const loading = false; // Reemplazar con valor real del contexto
+    // Loading auth
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -29,8 +34,7 @@ export default function Vistas() {
         );
     }
 
-    // Si no está autenticado, mostrar mensaje y botón para login
-    const isAuthenticated = true; // Reemplazar con valor real del contexto
+    // Not authenticated
     if (!isAuthenticated) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -44,7 +48,7 @@ export default function Vistas() {
                         Acceso Restringido
                     </h2>
                     <p className="text-gray-600 mb-6">
-                        Necesitas iniciar sesión para ver tus tableros y proyectos.
+                        Necesitas iniciar sesión para ver las vistas integradas de Kanban, Tabla y Calendario.
                     </p>
                     <div className="space-y-3">
                         <button
@@ -65,19 +69,35 @@ export default function Vistas() {
         );
     }
 
-    // Si está autenticado, mostrar las vistas normalmente
+    // Authenticated → render views
     return (
         <div>
             <div className="mb-4 p-4 bg-white rounded-lg shadow-sm">
-                <p className="text-sm text-gray-600">
-                    Bienvenido, <span className="font-semibold text-indigo-600">usuario</span>
-                </p>
+                <div className="flex justify-between items-center">
+                    <div>
+                        <h2 className="text-xl font-semibold text-gray-800">
+                            Vistas Integradas - Kanban, Tabla y Calendario
+                        </h2>
+                        <p className="text-sm text-gray-600 mt-1">
+                            Las tareas se sincronizan automáticamente entre todas las vistas
+                        </p>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-sm text-gray-600">
+                            Bienvenido, <span className="font-semibold text-indigo-600">{user?.name || "usuario"}</span>
+                        </p>
+                        <p className="text-xs text-gray-500">{user?.email}</p>
+                    </div>
+                </div>
             </div>
+
             <ViewModeSelect currentMode={currentMode} onClick={handleModeChange} />
+
             {currentMode === "Tabla" && <Tabla />}
             {currentMode === "Calendario" && <TestCalendar />}
             {currentMode === "Kanban" && <KanbanBoard />}
             {currentMode === "Tareas" && <TaskPage />}
+            {currentMode === "Estadísticas" && <Estadisticas />} 
         </div>
     );
 }

@@ -1,84 +1,95 @@
 import React, { useState } from "react";
 import ProjectCard from "../components/ProjectCard";
-
-const projects = [
-  {
-    title: "FastPlanner MVP",
-    description: "Primera versión funcional del sistema de gestión de proyectos.",
-    status: "activo",
-    people: ["Sebas", "Jorge", "Ana"],
-    tasks: [
-      { name: "Diseño UI", assigned: true },
-      { name: "Backend API", assigned: true },
-      { name: "Documentación", assigned: false },
-    ],
-    isFuture: false,
-  },
-  {
-    title: "hospitrack",
-    description: "Te extraño.",
-    status: "completado",
-    people: ["Carlos", "Luis"],
-    tasks: [
-      { name: "Setup DB", assigned: true },
-      { name: "Testing", assigned: true },
-    ],
-    isFuture: false,
-  },
-  {
-    title: "Completar el año",
-    description: "bebesitaaaa.",
-    status: "pendiente",
-    people: ["Sebas"],
-    tasks: [
-      { name: "Planificación", assigned: false },
-    ],
-    isFuture: true,
-  },
-  {
-    title: "Proyecto X",
-    description: "Descripción del Proyecto X.",
-    status: "activo",
-    people: ["Jorge", "Ana"],
-    tasks: [
-      { name: "Frontend", assigned: true },
-      { name: "Backend", assigned: false },
-    ],
-    isFuture: false,
-  },
-  {
-    title: "Proyecto Y",
-    description: "Descripción del Proyecto Y.",
-    status: "pendiente",
-    people: [],
-    tasks: [
-      { name: "Idea", assigned: false },
-    ],
-    isFuture: true,
-  },
-];
+import { apiFetch } from "../services/api";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import ProjectModal from "../components/projectModal";
 
 const Projects: React.FC = () => {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [items, setItems] = useState<any[]>([]);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  const mapApiProjectToUI = (p: any) => ({
+    title: p.project.title ?? p.project.name ?? "Sin título",
+    description: p.project.description ?? "",
+    status: (p.project.status ?? "pendiente") as "activo" | "pendiente" | "completado"
+  });
+
+  React.useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken") || "";
+        const data = await apiFetch(`/projects/user/${user?.id}`, {
+          method: "GET"});
+        console.log("Proyectos obtenidos desde API:", data);
+        const list = Array.isArray(data) ? data : data?.project ?? [];
+        setItems(list.map(mapApiProjectToUI));
+      } catch (error) {
+        console.error("Error al obtener proyectos:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <svg
+          className="animate-spin h-16 w-16 text-black"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          ></circle>
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <div className="mt-4 text-neutral-darkgray">Cargando proyectos...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6">
+      <ProjectModal isOpen={isModalOpen} onClose={closeModal} newProject={true} />
       <h1 className="text-2xl font-bold mb-6 text-neutral-black">Proyectos</h1>
 
-      {/* Grid de tarjetas */}
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {projects.map((p, i) => (
+        {items.map((p, i) => (
           <ProjectCard
             key={i}
             title={p.title}
             description={p.description}
-            status={p.status as "activo" | "pendiente" | "completado"}
-            expanded={expandedIdx === i}
-            onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}
-            people={p.people}
-            tasks={p.tasks}
-            isFuture={p.isFuture}
+            status={p.status as "active" | "pending" | "completed"}
+            onClick={() => navigate(`/projects/${i}`)}
           />
         ))}
+        <ProjectCard
+          title=""
+          description=""
+          addProject={true}
+          onClick={openModal}
+        />
       </div>
     </div>
   );

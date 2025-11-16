@@ -31,8 +31,6 @@ export function KanbanCard({
   return (
     <div
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
       style={style}
       className={`rounded-xl border border-[#a89663] bg-[#d1ba7b] p-4 shadow-md transition cursor-grab ${
         isDragging ? "opacity-50 border-dashed" : "hover:shadow-lg hover:border-[#7f724b]"
