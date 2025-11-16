@@ -1,21 +1,23 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import authAPI from '../services/api';
+import {apiFetch} from '../services/api';
 
 interface User {
   id: number;
   name: string;
   email: string;
-  role: string;
+  // profile picture pero no se como se usa aún
 }
 
 interface AuthContextType {
   user: User | null;
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  refreshAccessToken: () => Promise<boolean>;
   isAuthenticated: boolean;
 }
 
@@ -23,39 +25,44 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Verificar si hay un token guardado al cargar la app
   useEffect(() => {
-    const checkAuth = async () => {
-      const savedToken = localStorage.getItem('token');
+    const savedAccess = localStorage.getItem('accessToken');
+    const savedRefresh = localStorage.getItem('refreshToken');
+    const savedUser = localStorage.getItem('user');
+    console.log("Saved user in localStorage:", savedUser);
 
-      if (savedToken) {
-        setToken(savedToken);
-        try {
-          const response = await authAPI.getCurrentUser();
-          setUser(response.user);
-        } catch (error) {
-          console.error('Token inválido:', error);
-          localStorage.removeItem('token');
-          setToken(null);
-        }
-      }
+    if (savedAccess && savedRefresh && savedUser) {
+      setAccessToken(savedAccess);
+      setRefreshToken(savedRefresh);
+      setUser(JSON.parse(savedUser));
+    }
 
-      setLoading(false);
-    };
-
-    checkAuth();
+    setLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await authAPI.login({ email, password });
+      const response = await apiFetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+      console.log("Login response:", response);
+      
+      const { user, accessToken, refreshToken } = response;
 
-      setUser(response.user);
-      setToken(response.token);
-      localStorage.setItem('token', response.token);
+      setUser(user);
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('user', JSON.stringify(user));
+
     } catch (error: any) {
       throw new Error(error.message || 'Error al iniciar sesión');
     }
@@ -63,30 +70,69 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const register = async (name: string, email: string, password: string) => {
     try {
-      const response = await authAPI.register({ name, email, password });
+      const response = await apiFetch('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, password }),
+      });
 
-      setUser(response.user);
-      setToken(response.token);
-      localStorage.setItem('token', response.token);
+      const { user, accessToken, refreshToken } = response;
+
+      setUser(user);
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('user', JSON.stringify(user));
+
     } catch (error: any) {
       throw new Error(error.message || 'Error al registrarse');
     }
   };
 
+  const refreshAccessToken = async (): Promise<boolean> => {
+    try {
+      if (!refreshToken) return false;
+
+      const response = await apiFetch('/auth/refresh', {
+        method: 'POST',
+        body: JSON.stringify({ refreshToken }),
+      });
+      // La API debería devolver un nuevo accessToken
+      if (!response || !response.accessToken) {
+        throw new Error("No se recibió un nuevo access token");
+      }
+      const { accessToken: newAccessToken } = response;
+
+      setAccessToken(newAccessToken);
+      localStorage.setItem('accessToken', newAccessToken);
+
+      return true;
+    } catch (error) {
+      logout();
+      return false;
+    }
+  };
+
   const logout = () => {
     setUser(null);
-    setToken(null);
-    localStorage.removeItem('token');
+    setAccessToken(null);
+    setRefreshToken(null);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
   };
 
   const value = {
     user,
-    token,
+    accessToken,
+    refreshToken,
     loading,
     login,
     register,
     logout,
-    isAuthenticated: !!user && !!token,
+    refreshAccessToken,
+    isAuthenticated: !!user && !!accessToken,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -111,20 +111,20 @@ function TaskList({ title }: Props) {
         );
 
     return(
-        <div className="w-full max-w-6xl mx-auto bg-white shadow-md rounded-xl p-6">
+        <div className="w-full max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-6 font-sans ">
             <div className= "flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                <h2 className="text-2xl font-bold">{title}</h2>
+                <h2 className="text-3xl font-semibold tracking-tight border-1-4 border-indigo-500 pl-3">{title}</h2>
                 
                 <div className="relative w-full md:w-1/3">
                     <input type="text" 
-                    placeholder="Buscar..." 
+                    placeholder="Buscar tarea..." 
                     value={search} onChange={(e)=> setSearch(e.target.value)}
-                    className="border rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-green-400"/>
+                    className="border rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-400 transition text-sm"/>
                 </div>
             </div>
-            <div className="grid grid-cols-2 gap-2 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 bg-gray-50 p-4 rounded-lg border border-gray-100">
                 <div>
-                    <label className="block font-medium text-sm mb-1">Estatus:</label>
+                    <label className="block font-medium text-xs mb-1 uppercase tracking-wide">Estatus:</label>
                     <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="rounded border p-1">
                         <option value={"all"}>Todos</option>
                         <option value={"Pendiente"}>Pendientes</option>
@@ -133,7 +133,7 @@ function TaskList({ title }: Props) {
                     </select>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium mb-1">Prioridad:</label>
+                    <label className="block font-medium text-xs mb-1 uppercase tracking-wide">Prioridad:</label>
                     <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)} className="rounded border p-1">
                         <option value={"all"}>Todos</option>
                         <option value={"Baja"}>Baja</option>
@@ -142,7 +142,7 @@ function TaskList({ title }: Props) {
                     </select>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium mb-1">Responsable:</label>
+                    <label className="block font-medium text-xs mb-1 uppercase tracking-wide">Responsable:</label>
                     <select value={responsibleFilter} onChange={(e)=> setResponsibleFilter(e.target.value)} className="border rounded p-1">
                         <option value="">Todos</option>
                         {Array.from(new Set(tasks.map((t)=> t.responsible).filter(Boolean))).map(
@@ -154,32 +154,32 @@ function TaskList({ title }: Props) {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Orden</label>
+                    <label className="block font-medium text-xs mb-1 uppercase tracking-wide">Orden</label>
                     <select 
                     value={order} 
                     onChange={(e) => setOrder(e.target.value as "asc"|"desc")} 
-                    className="border rounded p-1"
+                    className="w-full border border-gray-300 rounded-md rounded p-2 text-sm focus:ring-2 focus:ring-indigo-400"
                     >
                         <option value={"asc"}>A-Z</option>
                         <option value={"desc"}>Z-A</option>
                     </select>
                 </div>
             </div>
-            <div className="flex justify-center">
+            <div className="flex justify-center mb-6">
                 <button
                 onClick={openNewTaskModal} 
-                className="mt-4 bg-indigo-200 text-black rounded hover:bg-blue-300 p-2 text-sm w-100 my-2">
-                    <PlusCircle className="w-5 h-5 mr-2" />Agregar tarea
+                className="flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg px-4 py-2 text-sm font-medium shadow-md transition">
+                    <PlusCircle className="w-5 h-5" />Agregar tarea
                 </button>
             </div>
 
-            {filteredTasks.length === 0 ? ( <p className="text-gray-500 text-center py-8">No hay tareas disponibles</p>
+            {filteredTasks.length === 0 ? ( <p className="text-gray-500 text-center py-8 italic">No hay tareas disponibles</p>
             ) : (
-                <div className="grid grid-cols-1 gap-4">
+                <div className="divide-y divide-gray-100 rounded-lg">
                     {filteredTasks.map((task) => (
-                        <div key={task.id} className="relative group">
+                        <div key={task.id} className="relative group bg-white rounded-lg p-4 hover:shadow-lg trasition-all duration-200">
                             <TaskCard task={task}/>
-                            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition">
+                            <div className="absolute top-3 right-5 opacity-0 group-hover:opacity-100 transition">
                                 <TaskMenu onEdit={() => editTaskModal(task)} onDelete={() => setConfirmDelete(task.id)} />
                             </div>
                         </div>

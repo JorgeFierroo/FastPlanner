@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Welcome: React.FC = () => {
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
 
   const handleLogin = () => {
     navigate('/auth');
@@ -18,13 +20,13 @@ const Welcome: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50 to-purple-50 flex items-center justify-center px-4">
       <div className="max-w-4xl w-full">
         {/* Hero Section */}
         <div className="text-center mb-12">
           {/* Logo o Icon */}
           <div className="mb-6 flex justify-center animate-bounce">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full p-6 shadow-2xl">
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full p-6 shadow-2xl">
               <svg 
                 className="w-20 h-20" 
                 fill="none" 
@@ -42,7 +44,7 @@ const Welcome: React.FC = () => {
           </div>
 
           <h1 className="text-6xl md:text-7xl font-bold text-gray-900 mb-4">
-            Bienvenido a <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">FastPlanner</span>
+            Bienvenido a <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">FastPlanner</span>
           </h1>
           
           <p className="text-2xl text-gray-600 mb-12 max-w-2xl mx-auto">
@@ -55,8 +57,8 @@ const Welcome: React.FC = () => {
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           <div className="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-2xl">
-            <div className="bg-blue-100 rounded-full w-14 h-14 flex items-center justify-center mb-4 mx-auto">
-              <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-purple-100 rounded-full w-14 h-14 flex items-center justify-center mb-4 mx-auto">
+              <svg className="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
@@ -86,6 +88,7 @@ const Welcome: React.FC = () => {
         </div>
 
         {/* Call to Action Card */}
+        { !isAuthenticated ? (
         <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-t-4 border-indigo-600">
           <h2 className="text-4xl font-bold text-center text-gray-900 mb-4">
             Comienza Ahora
@@ -116,29 +119,25 @@ const Welcome: React.FC = () => {
               Registrarse
             </button>
           </div>
-
-          {/* Separador */}
-          <div className="relative flex items-center justify-center my-6">
-            <div className="border-t border-gray-300 w-full"></div>
-            <span className="px-4 bg-white text-gray-500 text-sm absolute">o</span>
-          </div>
-
-          {/* Botón de invitado */}
-          <div className="text-center">
-            <button
-              onClick={handleGuestAccess}
-              className="group px-8 py-3 bg-gray-100 text-gray-700 text-lg font-medium rounded-xl hover:bg-gray-200 transform hover:scale-105 transition-all duration-300 inline-flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
-            >
-              <svg className="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              Continuar como Invitado
-            </button>
-            <p className="text-gray-500 text-sm mt-3">
-              Explora sin crear una cuenta
-            </p>
-          </div>
         </div>
+        ) : (
+          <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-t-4 border-green-600">
+            <h2 className="text-4xl font-bold text-center text-gray-900 mb-4">
+              ¡Hola de nuevo, {user?.name}!
+            </h2>
+            <p className="text-center text-gray-600 mb-10 text-lg">
+              Continúa gestionando tus proyectos y tareas.
+            </p>
+            <div className="flex justify-center">
+              <button
+                onClick={() => navigate('/projects')}
+                className="px-10 py-5 bg-gradient-to-r from-green-600 to-green-500 text-white text-xl font-semibold rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+              >
+                Ir a mis Proyectos
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Footer info */}
         <div className="text-center mt-8 text-gray-500">
