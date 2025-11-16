@@ -9,9 +9,9 @@ const Button: React.FC<ButtonProps> = ({ children, variant = "primary", classNam
     "px-4 py-2 rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2";
 
   const variants = {
-    primary: "bg-primary text-neutral-white hover:bg-primary-dark focus:ring-primary",
-    secondary: "bg-neutral-darkgray text-neutral-white hover:bg-neutral-black focus:ring-neutral-black",
-    outline: "border border-primary text-primary hover:bg-primary-light hover:text-neutral-black focus:ring-primary",
+    primary: "bg-[#7F724B] text-[#F5DA91] hover:bg-[#a89663] focus:[#a89663]",
+    secondary: "bg-[#52442d] text-white hover:bg-[#a89663] focus:ring-[#52442d]",
+    outline: "border border-[#a89663] text-[#a89663] hover:bg-[#f5da91] hover:text-[#52442d] focus:ring-[#a89663]",
   };
 
   return (
