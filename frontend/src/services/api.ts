@@ -1,5 +1,6 @@
 import exp from "constants";
 import { getTokens, setTokens, clearTokens } from "./authStorage";
+import { triggerLogout } from "../events/authEvents";
 
 const API_URL = process.env.REACT_APP_API_URL;
 let isRefreshing = false;
@@ -75,6 +76,8 @@ export async function apiFetch(input: string, options: RequestInit = {}) {
       pendingRequests.forEach((callback) => callback(newAccessToken));
       pendingRequests = [];
     } catch (error) {
+      // Si no se pudo refrescar, hacer logout
+      triggerLogout();
       clearTokens();
       throw error;
     } finally {

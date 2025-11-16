@@ -4,22 +4,48 @@ import { apiFetch } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import ProjectModal from "../components/projectModal";
+import { useProject } from "../context/ProjectContext";
 
 const Projects: React.FC = () => {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [items, setItems] = useState<any[]>([]);
   const { user } = useAuth();
+  const { selectProject } = useProject();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ isNewProject, setIsNewProject ] = useState(true);
+  const [ modalProjectInfo, setModalProjectInfo ] = useState<any>(null);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const clickNewProject = () => {
+    setModalProjectInfo(null);
+    setIsNewProject(true);
+    openModal();
+  }
+
+  const clickEditProject = (projectId: number) => {
+    const project = items.find(p => p.id === projectId);
+    setModalProjectInfo(project);
+    setIsNewProject(false);
+    openModal();
+  }
+
+  const handleVerTareas = (projectId: number) => {
+    selectProject(projectId);
+    navigate("/Vistas");
+  }
+
   const mapApiProjectToUI = (p: any) => ({
+    id: p.project.id,
     title: p.project.title ?? p.project.name ?? "Sin título",
     description: p.project.description ?? "",
-    status: (p.project.status ?? "pendiente") as "activo" | "pendiente" | "completado"
+    status: (p.project.status ?? "pending") as "active" | "pending" | "completed",
+    role: p.role,
+    startDate: p.project.startDate,
+    endDate: p.project.endDate
   });
 
   React.useEffect(() => {
@@ -28,9 +54,10 @@ const Projects: React.FC = () => {
         const accessToken = localStorage.getItem("accessToken") || "";
         const data = await apiFetch(`/projects/user/${user?.id}`, {
           method: "GET"});
-        console.log("Proyectos obtenidos desde API:", data);
+        //console.log("Proyectos obtenidos desde API:", data);
         const list = Array.isArray(data) ? data : data?.project ?? [];
         setItems(list.map(mapApiProjectToUI));
+        //console.log("Proyectos mapeados para UI:", list.map(mapApiProjectToUI));
       } catch (error) {
         console.error("Error al obtener proyectos:", error);
       } finally {
@@ -71,7 +98,7 @@ const Projects: React.FC = () => {
 
   return (
     <div className="p-6">
-      <ProjectModal isOpen={isModalOpen} onClose={closeModal} newProject={true} />
+      <ProjectModal isOpen={isModalOpen} onClose={closeModal} newProject={isNewProject} projectInfo={modalProjectInfo} />
       <h1 className="text-2xl font-bold mb-6 text-neutral-black">Proyectos</h1>
 
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -81,14 +108,18 @@ const Projects: React.FC = () => {
             title={p.title}
             description={p.description}
             status={p.status as "active" | "pending" | "completed"}
-            onClick={() => navigate(`/projects/${i}`)}
+            role={p.role}
+            expanded={expandedIdx === i}
+            onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}
+            verTareas={() => handleVerTareas(p.id)}
+            editarProyecto={() => clickEditProject(p.id)}
           />
         ))}
         <ProjectCard
           title=""
           description=""
           addProject={true}
-          onClick={openModal}
+          onClick={clickNewProject}
         />
       </div>
     </div>

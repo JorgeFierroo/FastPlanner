@@ -3,28 +3,40 @@ import Button from "./ui/Button";
 import { SquarePen, Check, X } from "lucide-react";
 import { apiFetch } from "../services/api";
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "../context/AuthContext";
 
 type ProjectInfo = {
     id: number;
-    name: string;
+    title: string;
     description: string;
     startDate: string;
     endDate: string;
+    status?: "active" | "pending" | "completed";
+    members?: [{
+        id: number;
+        name: string;
+        role: string;
+    }]
 };
 
 type ProjectModalProps = {
     isOpen: boolean;
     newProject: boolean;
-    projectInfo?: ProjectInfo;
+    projectInfo?: ProjectInfo | null;
     onClose: () => void;
 };
 
 
 const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModalProps) => {
+    const { user } = useAuth();
     const navigate = useNavigate();
     function toISO(dateStr: string) {
         const date = new Date(dateStr);
         return date.toISOString();
+    }
+    function fromISO(isoStr: string) {
+        const date = new Date(isoStr);
+        return date.toISOString().split("T")[0];
     }
 
     async function CreateProject(projectData: Omit<ProjectInfo, "id">) {
@@ -41,20 +53,40 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
         }
     }
 
+    async function UpdateProject(projectId: number, projectData: Omit<ProjectInfo, "id" | "members">) {
+        try {
+            const response = await apiFetch(`/projects/${projectId}`, {
+                method: "PUT",
+                body: JSON.stringify(projectData),
+            });
+            console.log("Project updated:", response);
+            onClose();
+            navigate(0); // Refrescar la página para mostrar el proyecto actualizado
+        } catch (error) {
+            console.error("Error updating project:", error);
+        }
+    }
+
     const [editingFields, setEditingFields] = useState({
         name: false,
         description: false,
         startDate: false,
         endDate: false,
+        status: false,
     });
 
     const [projectData, setProjectData] = useState<ProjectInfo>(
         projectInfo || {
             id: 0,
-            name: "Nuevo Proyecto",
+            title: "Nuevo Proyecto",
             description: "Sin descripción",
             startDate: new Date().toISOString().split("T")[0],
             endDate: new Date().toISOString().split("T")[0],
+            members: [{
+                id: user?.id || 0,
+                name: user?.name || "",
+                role: "admin"
+            }]
         }
     );
 
@@ -62,6 +94,8 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
 
     useEffect(() => {
         if (projectInfo) {
+            projectInfo.startDate = fromISO(projectInfo.startDate);
+            projectInfo.endDate = fromISO(projectInfo.endDate);
             setProjectData(projectInfo);
             setIsProjectEdited(false);
         }
@@ -71,6 +105,7 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
     const startDateRef = useRef<HTMLInputElement>(null);
     const endDateRef = useRef<HTMLInputElement>(null);
+    const statusRef = useRef<HTMLSelectElement>(null);
 
     const toggleEditing = (field: keyof typeof editingFields) =>
         setEditingFields(prev => ({ ...prev, [field]: !prev[field] }));
@@ -89,6 +124,9 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                 break;
             case "endDate":
                 newValue = endDateRef.current?.value || "";
+                break;
+            case "status":
+                newValue = statusRef.current?.value || "pending";
                 break;
         }
         setProjectData(prev => ({ ...prev, [field]: newValue }));
@@ -110,7 +148,7 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                                 <input
                                     ref={nameRef}
                                     type="text"
-                                    defaultValue={projectData.name}
+                                    defaultValue={projectData.title}
                                     className="flex-1 border border-gray-300 rounded-md p-2"
                                     autoFocus
                                 />
@@ -126,7 +164,7 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                                 />
                             </div>
                         ) : (
-                            <span className="flex-1">{projectData.name}</span>
+                            <span className="flex-1">{projectData.title}</span>
                         )}
                         {!editingFields.name && (
                             <SquarePen
@@ -253,6 +291,51 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                             </p>
                         )}
                     </div>
+                    {/* Campo de status cuando es un proyecto existente */}
+                    {!newProject && projectInfo && (
+                        <div className="mb-4">
+                                        <label className="block font-semibold flex items-center">
+                                          Estado:
+                                          {!editingFields.status && (
+                                            <SquarePen 
+                                              className="ml-2 cursor-pointer hover:text-purple-600" 
+                                              size={16}
+                                              onClick={() => toggleEditing('status')}
+                                            />
+                                          )}
+                                        </label>
+                                        {editingFields.status ? (
+                                          <div className="mt-1">
+                                            <select 
+                                              ref={statusRef}
+                                              defaultValue={projectData.status}
+                                              className="w-full border border-gray-300 rounded-md p-2"
+                                              autoFocus
+                                            >
+                                              {["active", "pending", "completed"].map((status) => (
+                                                <option key={status} value={status}>
+                                                  {status}
+                                                </option>
+                                              ))}
+                                            </select>
+                                            <div className="flex gap-2 mt-2">
+                                              <Check 
+                                                className="cursor-pointer hover:text-green-600 text-green-500" 
+                                                size={20}
+                                                onClick={() => saveField('status')}
+                                              />
+                                              <X 
+                                                className="cursor-pointer hover:text-red-600 text-red-500" 
+                                                size={20}
+                                                onClick={() => cancelEdit('status')}
+                                              />
+                                            </div>
+                                          </div>
+                                        ) : (
+                                          <p className="mt-1 p-2 bg-gray-50 rounded-md border">{projectData.status}</p>
+                                        )}
+                                      </div>
+                    )}
                 </div>
                 <div className="mt-4 text-right">
                     <Button
@@ -260,11 +343,17 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                         disabled={!newProject && !isProjectEdited}
                         className="mr-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
                         onClick={newProject ? () => CreateProject({
-                            name: projectData.name,
+                            title: projectData.title,
                             description: projectData.description,
                             startDate: toISO(projectData.startDate),
                             endDate: toISO(projectData.endDate),
-                        }) : undefined}
+                        }) : () => UpdateProject(projectData.id, {
+                            title: projectData.title,
+                            description: projectData.description,
+                            startDate: toISO(projectData.startDate),
+                            endDate: toISO(projectData.endDate),
+                            status: projectInfo?.status || "pending",
+                        })}
                     >
                         {newProject ? "Crear Proyecto" : "Guardar Cambios"}
                     </Button>

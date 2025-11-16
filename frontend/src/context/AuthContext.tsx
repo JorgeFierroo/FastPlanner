@@ -1,6 +1,7 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import {apiFetch} from '../services/api';
+import { setLogoutHandler } from '../events/authEvents';
 
 interface User {
   id: number;
@@ -28,6 +29,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Configurar el manejador de logout para eventos externos
+  useEffect(() => {
+    setLogoutHandler(logout);
+  }, []);
 
   // Verificar si hay un token guardado al cargar la app
   useEffect(() => {
