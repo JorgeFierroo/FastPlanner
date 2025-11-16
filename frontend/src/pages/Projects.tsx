@@ -26,8 +26,32 @@ const Projects: React.FC = () => {
     openModal();
   }
 
-  const clickEditProject = (projectId: number) => {
+  async function findMembersInProject(projectId: number): Promise<[{ id: number; name: string; role: string; }] | null> {
+    try {
+      // Preguntar a la API /projects/{projectId}/members
+      const response = await apiFetch(`/projects/${projectId}/members`, {
+        method: "GET",
+      });
+      let miembros = response.map((m: any) => ({
+        id: m.userId,
+        name: m.user.name,
+        role: m.role
+      }));
+      console.log("Miembros encontrados para proyecto", projectId, ":", miembros);
+      return miembros;
+    } catch (error) {
+      console.error("Error al encontrar miembros del proyecto:", error);
+      return null;
+    }
+  }
+
+  const clickEditProject = async (projectId: number) => {
     const project = items.find(p => p.id === projectId);
+    // Encontrar miembros del proyecto
+    const members = await findMembersInProject(projectId);
+    if (members) {
+      project.members = members;
+    }
     setModalProjectInfo(project);
     setIsNewProject(false);
     openModal();
@@ -51,7 +75,6 @@ const Projects: React.FC = () => {
   React.useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const accessToken = localStorage.getItem("accessToken") || "";
         const data = await apiFetch(`/projects/user/${user?.id}`, {
           method: "GET"});
         //console.log("Proyectos obtenidos desde API:", data);
