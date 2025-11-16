@@ -15,10 +15,10 @@ function generateRefreshToken(): string {
   return crypto.randomBytes(64).toString("hex");
 }
 
-// Función auxiliar para generar access token
-function generateAccessToken(userId: number, email: string): string {
+// Función auxiliar para generar access token (incluye bandera isAdmin)
+function generateAccessToken(userId: number, email: string, isAdmin: boolean = false): string {
   return jwt.sign(
-    { userId, email },
+    { userId, email, isAdmin },
     JWT_SECRET,
     { expiresIn: ACCESS_TOKEN_EXPIRY }
   );
@@ -66,8 +66,8 @@ export const authService = {
         },
       });
 
-      // Generar tokens
-  const accessToken = generateAccessToken(user.id, user.email);
+        // Generar tokens
+        const accessToken = generateAccessToken(user.id, user.email, false);
       const refreshToken = generateRefreshToken();
       const refreshTokenExpiry = new Date(Date.now() + REFRESH_TOKEN_EXPIRY);
 
@@ -119,7 +119,7 @@ export const authService = {
       }
 
       // Generar tokens
-      const accessToken = generateAccessToken(user.id, user.email);
+      const accessToken = generateAccessToken(user.id, user.email, (user as any).isAdmin === true);
       const refreshToken = generateRefreshToken();
       // Usar expiración extendida si "recordarme" está activo
       const expiryTime = rememberMe ? REFRESH_TOKEN_EXPIRY_EXTENDED : REFRESH_TOKEN_EXPIRY;
@@ -196,6 +196,7 @@ export const authService = {
           id: true,
           name: true,
           email: true,
+          isAdmin: true,
           profilePicture: true,
           UserProject: {
             select: {
@@ -206,7 +207,7 @@ export const authService = {
           },
           Task_Task_assigneeIdToUser: { select: { id: true, title: true, status: true, projectId: true } },
           Task_Task_creatorIdToUser: { select: { id: true, title: true, status: true, projectId: true } },
-        },
+        } as any,
       });
 
       if (!user) {
@@ -242,7 +243,7 @@ export const authService = {
       }
 
       // Generar nuevo access token
-      const accessToken = generateAccessToken(storedToken.user.id, storedToken.user.email);
+      const accessToken = generateAccessToken(storedToken.user.id, storedToken.user.email, (storedToken.user as any).isAdmin === true);
 
       return {
         accessToken,
