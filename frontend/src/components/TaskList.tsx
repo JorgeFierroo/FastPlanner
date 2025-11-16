@@ -111,21 +111,21 @@ function TaskList({ title }: Props) {
         );
 
     return(
-        <div className="w-full max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-6 font-sans ">
+        <div className="w-full max-w-6xl mx-auto bg-[#efe0b4] shadow-lg rounded-2xl p-6 font-sans ">
             <div className= "flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                <h2 className="text-3xl font-semibold tracking-tight border-1-4 border-indigo-500 pl-3">{title}</h2>
+                <h2 className="text-3xl font-semibold tracking-tight pl-3">{title}</h2>
                 
                 <div className="relative w-full md:w-1/3">
                     <input type="text" 
                     placeholder="Buscar tarea..." 
                     value={search} onChange={(e)=> setSearch(e.target.value)}
-                    className="border rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-400 transition text-sm"/>
+                    className="border rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-[#a89663] transition text-sm bg-[#d1ba7b] border-[#a89663] text-[#574d33] placeholder-white"/>
                 </div>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 bg-gray-50 p-4 rounded-lg border border-gray-100">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 bg-[#C8B07A] p-4 rounded-lg border border-[#a89663]">
                 <div>
                     <label className="block font-medium text-xs mb-1 uppercase tracking-wide">Estatus:</label>
-                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="rounded border p-1">
+                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="rounded border border-[#574d33] p-1 bg-[#efe0b4]">
                         <option value={"all"}>Todos</option>
                         <option value={"Pendiente"}>Pendientes</option>
                         <option value={"En-progreso"}>En Progreso</option>
@@ -134,7 +134,7 @@ function TaskList({ title }: Props) {
                 </div>
                 <div>
                     <label className="block font-medium text-xs mb-1 uppercase tracking-wide">Prioridad:</label>
-                    <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)} className="rounded border p-1">
+                    <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)} className="rounded border border-[#574d33] p-1 bg-[#efe0b4]">
                         <option value={"all"}>Todos</option>
                         <option value={"Baja"}>Baja</option>
                         <option value={"Media"}>Media</option>
@@ -143,7 +143,7 @@ function TaskList({ title }: Props) {
                 </div>
                 <div>
                     <label className="block font-medium text-xs mb-1 uppercase tracking-wide">Responsable:</label>
-                    <select value={responsibleFilter} onChange={(e)=> setResponsibleFilter(e.target.value)} className="border rounded p-1">
+                    <select value={responsibleFilter} onChange={(e)=> setResponsibleFilter(e.target.value)} className="rounded border border-[#574d33] p-1 bg-[#efe0b4]">
                         <option value="">Todos</option>
                         {Array.from(new Set(tasks.map((t)=> t.responsible).filter(Boolean))).map(
                             (responsible) => (
@@ -158,7 +158,7 @@ function TaskList({ title }: Props) {
                     <select 
                     value={order} 
                     onChange={(e) => setOrder(e.target.value as "asc"|"desc")} 
-                    className="w-full border border-gray-300 rounded-md rounded p-2 text-sm focus:ring-2 focus:ring-indigo-400"
+                    className="w-full border border-[#574d33] rounded-md rounded p-2 text-sm focus:ring-2 focus:ring-[#6B603F] bg-[#efe0b4]"
                     >
                         <option value={"asc"}>A-Z</option>
                         <option value={"desc"}>Z-A</option>
@@ -168,16 +168,16 @@ function TaskList({ title }: Props) {
             <div className="flex justify-center mb-6">
                 <button
                 onClick={openNewTaskModal} 
-                className="flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg px-4 py-2 text-sm font-medium shadow-md transition">
+                className="flex items-center gap-2 bg-[#7F724B] hover:bg-[#6B603F] text-white rounded-lg px-4 py-2 text-sm font-medium shadow-md transition">
                     <PlusCircle className="w-5 h-5" />Agregar tarea
                 </button>
             </div>
 
             {filteredTasks.length === 0 ? ( <p className="text-gray-500 text-center py-8 italic">No hay tareas disponibles</p>
             ) : (
-                <div className="divide-y divide-gray-100 rounded-lg">
+                <div className="divide-y divide-[#a89663] rounded-lg">
                     {filteredTasks.map((task) => (
-                        <div key={task.id} className="relative group bg-white rounded-lg p-4 hover:shadow-lg trasition-all duration-200">
+                        <div key={task.id} className="relative group bg-[#D1BA7B] border border-[#a89663] rounded-lg p-4 hover:shadow-lg trasition-all duration-200">
                             <TaskCard task={task}/>
                             <div className="absolute top-3 right-5 opacity-0 group-hover:opacity-100 transition">
                                 <TaskMenu onEdit={() => editTaskModal(task)} onDelete={() => setConfirmDelete(task.id)} />
