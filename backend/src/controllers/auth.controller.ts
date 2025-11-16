@@ -30,8 +30,13 @@ export const authController = {
       });
     } catch (error: any) {
       console.error("Error en registro:", error);
+      // Evitar user enumeration: no revelar si el email ya está registrado
+      if (String(error?.message || "").toLowerCase().includes("email ya está")) {
+        return res.status(200).json({ message: "Si la cuenta no existía, se ha creado. Revisa tu correo." });
+      }
+
       res.status(400).json({ 
-        error: error.message || "Error al registrar usuario" 
+        error: "No fue posible completar el registro"
       });
     }
   },
@@ -57,9 +62,8 @@ export const authController = {
       });
     } catch (error: any) {
       console.error("Error en login:", error);
-      res.status(401).json({ 
-        error: error.message || "Error al iniciar sesión" 
-      });
+      // Mensaje genérico para no revelar información sensible
+      res.status(401).json({ error: "Credenciales inválidas" });
     }
   },
 
