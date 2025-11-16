@@ -9,7 +9,7 @@ export class BoardController {
     try {
       const userId = req.user?.id;
       const projectId = parseInt(req.params.projectId);
-      const { title, description, dueDate, assigneeId, priority, sprintId } = req.body;
+      const { title, description, dueDate, assigneeId, priority, status, sprintId } = req.body;
 
       if (!userId) {
         return res.status(401).json({ error: 'Usuario no autenticado' });
@@ -39,7 +39,7 @@ export class BoardController {
           creatorId: userId,
           assigneeId: assigneeId || null,
           projectId: projectId,
-          priority: priority || 'medium',
+          status: status || 'created',
           sprintId: sprintId || null
         },
         include: {

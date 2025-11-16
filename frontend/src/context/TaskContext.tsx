@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useProject } from './ProjectContext';
 
-const API_URL = "http://localhost:3001/api";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001/api";
 
 // Función auxiliar para obtener headers con token
 function getAuthHeaders() {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("accessToken");
   return {
     "Content-Type": "application/json",
     ...(token && { Authorization: `Bearer ${token}` }),
@@ -63,79 +64,11 @@ interface TaskContextType {
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-// Datos iniciales unificados
-const initialTasks: Task[] = [
-  {
-    id: 1,
-    title: "Crear componentes iniciales de UI",
-    description: "Implementar componentes base con shadcn/ui para el sistema colaborativo",
-    status: 'done',
-    priority: 'alta',
-    assignedTo: ["MG"],
-    tags: ["Frontend", "Completado"],
-    dueDate: "2025-01-15",
-    createdBy: "Admin",
-    createdAt: "2025-01-01",
-    updatedAt: "2025-01-15"
-  },
-  {
-    id: 2,
-    title: "Implementar funcionalidad de arrastrar y soltar",
-    description: "Agregar react-dnd para mover tarjetas entre listas con permisos",
-    status: 'inProgress',
-    priority: 'media',
-    assignedTo: ["JP", "AN"],
-    tags: ["Desarrollo", "Frontend"],
-    dueDate: "2025-01-20",
-    createdBy: "Admin",
-    createdAt: "2025-01-05",
-    updatedAt: "2025-01-10"
-  },
-  {
-    id: 3,
-    title: "Implementar sistema de roles",
-    description: "Crear admin, editor, colaborador y visualizador con permisos diferenciados",
-    status: 'todo',
-    priority: 'alta',
-    assignedTo: ["FR"],
-    tags: ["Desarrollo", "Backend"],
-    dueDate: "2025-01-25",
-    createdBy: "Admin",
-    createdAt: "2025-01-02",
-    updatedAt: "2025-01-02"
-  },
-  {
-    id: 4,
-    title: "Diseñar interfaz de usuario",
-    description: "Crear mockups y prototipos para la aplicación",
-    status: 'inProgress',
-    priority: 'media',
-    assignedTo: ["Designer"],
-    tags: ["Diseño", "UI/UX"],
-    dueDate: "2025-01-18",
-    createdBy: "Admin",
-    createdAt: "2025-01-03",
-    updatedAt: "2025-01-08"
-  },
-  {
-    id: 5,
-    title: "Configurar base de datos",
-    description: "Establecer conexión y esquemas de base de datos",
-    status: 'done',
-    priority: 'alta',
-    assignedTo: ["Backend Dev"],
-    tags: ["Backend", "Database"],
-    dueDate: "2025-01-12",
-    createdBy: "Admin",
-    createdAt: "2025-01-01",
-    updatedAt: "2025-01-12"
-  }
-];
-
 export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(false);
   const [projectId, setProjectId] = useState<number | null>(null);
+  const projectContext = useProject();
 
   // Mapear estados del backend al frontend
   const mapBackendStatus = (status: string): Task['status'] => {
@@ -216,12 +149,18 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setTasks(mappedTasks);
     } catch (error) {
       console.error('Error al cargar tareas:', error);
-      // Si falla, usar datos iniciales
-      setTasks(initialTasks);
+      setTasks([]);
     } finally {
       setLoading(false);
     }
   };
+
+  // Sincronizar con el proyecto seleccionado del contexto
+  useEffect(() => {
+    if (projectContext.selectedProject) {
+      setProjectId(projectContext.selectedProject.id);
+    }
+  }, [projectContext.selectedProject]);
 
   // Cargar tareas cuando cambia el projectId
   useEffect(() => {
@@ -243,6 +182,7 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         body: JSON.stringify({
           title: taskData.title,
           description: taskData.description,
+          status: mapFrontendStatus(taskData.status),
           priority: mapFrontendPriority(taskData.priority),
           dueDate: taskData.dueDate,
           assigneeId: taskData.assigneeId,

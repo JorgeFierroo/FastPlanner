@@ -3,83 +3,62 @@ import { Request, Response } from "express";
 import { authService } from "../services/auth.service";
 
 export const authController = {
-  // Registro de usuario
+  // Registrar usuario
   async register(req: Request, res: Response) {
     try {
       const { name, email, password } = req.body;
 
-      // Validaciones básicas
       if (!name || !email || !password) {
-        return res.status(400).json({ 
-          error: "Todos los campos son requeridos" 
-        });
-      }
-
-      if (password.length < 6) {
-        return res.status(400).json({ 
-          error: "La contraseña debe tener al menos 6 caracteres" 
-        });
+        return res.status(400).json({ error: "Todos los campos son requeridos" });
       }
 
       const result = await authService.register({ name, email, password });
-      
+
       res.status(201).json({
         message: "Usuario registrado exitosamente",
-        ...result,
+        user: result.user,
+        token: result.token,
       });
     } catch (error: any) {
-      console.error("Error en registro:", error);
-      res.status(400).json({ 
-        error: error.message || "Error al registrar usuario" 
-      });
+      res.status(400).json({ error: error.message });
     }
   },
 
-  // Login de usuario
+  // Iniciar sesión
   async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
 
-      // Validaciones básicas
       if (!email || !password) {
-        return res.status(400).json({ 
-          error: "Email y contraseña son requeridos" 
-        });
+        return res.status(400).json({ error: "Email y contraseña son requeridos" });
       }
 
       const result = await authService.login({ email, password });
-      
+
       res.json({
         message: "Inicio de sesión exitoso",
-        ...result,
+        user: result.user,
+        token: result.token,
       });
     } catch (error: any) {
-      console.error("Error en login:", error);
-      res.status(401).json({ 
-        error: error.message || "Error al iniciar sesión" 
-      });
+      res.status(401).json({ error: error.message });
     }
   },
 
-  // Obtener usuario actual (basado en el token)
+  // Obtener usuario actual
   async me(req: Request, res: Response) {
     try {
       const token = req.headers.authorization?.replace("Bearer ", "");
 
       if (!token) {
-        return res.status(401).json({ 
-          error: "Token no proporcionado" 
-        });
+        return res.status(401).json({ error: "Token no proporcionado" });
       }
 
       const user = await authService.getUserFromToken(token);
-      
+
       res.json({ user });
     } catch (error: any) {
-      console.error("Error al obtener usuario:", error);
-      res.status(401).json({ 
-        error: error.message || "Error al obtener información del usuario" 
-      });
+      res.status(401).json({ error: error.message });
     }
   },
 
@@ -89,23 +68,14 @@ export const authController = {
       const token = req.headers.authorization?.replace("Bearer ", "");
 
       if (!token) {
-        return res.status(401).json({ 
-          error: "Token no proporcionado",
-          valid: false 
-        });
+        return res.status(401).json({ error: "Token no proporcionado" });
       }
 
       const decoded = authService.verifyToken(token);
-      
-      res.json({ 
-        valid: true,
-        decoded 
-      });
+
+      res.json({ valid: true, decoded });
     } catch (error: any) {
-      res.status(401).json({ 
-        error: error.message || "Token inválido",
-        valid: false 
-      });
+      res.status(401).json({ valid: false, error: error.message });
     }
   },
 };
