@@ -10,15 +10,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const [collapsed, setCollapsed] = useState(false);
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="h-screen flex flex-col overflow-hidden">
       {/* Barra superior */}
       <Navigation />
 
       {/* Contenedor con sidebar + contenido */}
-      <div className="flex">
+      <div className="flex flex-1 overflow-hidden bg-[#d1ba7b]">
         <Sidebar collapsed={collapsed} setCollapsed={setCollapsed}/>
 
-        <main className={`flex-1 p-6 mt-12 transition-all duration-300 ${collapsed ? "ml-16" : "ml-56"}`}>
+        <main className={`flex-1 overflow-auto transition-all duration-300 ${collapsed ? "ml-16" : "ml-56"}`}>
           {children}
         </main>
       </div>

@@ -137,31 +137,24 @@ export function KanbanBoard() {
   }
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-800">Tablero Kanban</h1>
-        
-        {/* Selector de proyecto */}
-        <div className="flex items-center gap-3">
-          <label className="text-sm text-gray-600 font-medium">Proyecto:</label>
-          <select
-            value={selectedProject?.id || ''}
-            onChange={(e) => {
-              const id = parseInt(e.target.value);
-              if (id) {
-                selectProject(id);
-              }
-            }}
-            className="px-4 py-2 border border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-          >
-            <option value="">Selecciona un proyecto</option>
-            {projects.map((project) => (
-              <option key={project.id} value={project.id}>
-                {project.name}
-              </option>
-            ))}
-          </select>
-        </div>
+    <div className="p-6 bg-[#EFE0B4] min-h-screen">
+      <h1 className="text-3xl font-bold mb-6 text-[#574D33]">Tablero Kanban</h1>
+
+      {/* Crear nueva lista */}
+      <div className="flex gap-2 mb-6">
+        <input
+          type="text"
+          value={newListTitle}
+          onChange={e => setNewListTitle(e.target.value)}
+          placeholder="Nombre de nueva lista..."
+          className="border-2 border-[#A89663] bg-[#F5DA91] rounded-lg px-3 py-2 flex-1 text-[#574D33] placeholder-[#A89663]"
+        />
+        <button
+          onClick={addNewList}
+          className="text-white px-4 py-2 rounded-lg bg-[#a89663] hover:bg-[#7f724b]"
+        >
+          Agregar lista
+        </button>
       </div>
 
       {!selectedProject ? (

@@ -97,7 +97,7 @@ export default function Tabla() {
   };
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-lg">
+    <div className="p-6 bg-[#efe0b4] rounded-2xl shadow-lg mx-2 my-4 text-[#574d33]">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold">Vista de Tabla</h2>
 
@@ -105,7 +105,7 @@ export default function Tabla() {
         <Button
           variant="primary"
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 text-[#F5DA91]"
         >
           <Plus className="w-4 h-4" /> Agregar tarea
         </Button>
@@ -115,7 +115,7 @@ export default function Tabla() {
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-gray-100 text-left">
+            <tr className="bg-[#d1ba7b] text-left text-[#574d33]">
               <th className="p-3 text-sm font-semibold text-gray-700">Título</th>
               <th className="p-3 text-sm font-semibold text-gray-700">Lista</th>
               <th className="p-3 text-sm font-semibold text-gray-700">Asignados</th>
@@ -125,15 +125,15 @@ export default function Tabla() {
           </thead>
           <tbody>
             {tareas.map((tarea) => (
-              <tr key={tarea.id} className="border-b hover:bg-gray-50">
+              <tr key={tarea.id} className="border-b border-[#a89663] hover:bg-[#f5da91] transition">
                 <td className="p-3">
                   <div className="flex items-start gap-2">
                     {tarea.estado === "verde" && <CheckCircle className="text-green-500 w-5 h-5 mt-1" />}
                     {tarea.estado === "amarillo" && <Clock className="text-yellow-500 w-5 h-5 mt-1" />}
                     {tarea.estado === "gris" && <Circle className="text-gray-400 w-5 h-5 mt-1" />}
                     <div>
-                      <p className="font-semibold">{tarea.titulo}</p>
-                      <p className="text-xs text-gray-500">{tarea.descripcion}</p>
+                      <p className="font-semibold text-[#574d33]">{tarea.titulo}</p>
+                      <p className="text-xs text-[#7f724b]">{tarea.descripcion}</p>
                     </div>
                   </div>
                 </td>
@@ -143,7 +143,7 @@ export default function Tabla() {
                     {tarea.asignados.map((a, i) => (
                       <div
                         key={i}
-                        className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full border text-xs font-bold"
+                        className="w-8 h-8 flex items-center justify-center bg-[#c8b07a] rounded-full border border-[#6b603f] text-xs font-bold text-[#574d33]"
                       >
                         {a}
                       </div>
@@ -155,7 +155,7 @@ export default function Tabla() {
                     {tarea.etiquetas.map((etiqueta, i) => (
                       <span
                         key={i}
-                        className="px-2 py-1 text-xs rounded-full bg-gray-100 border"
+                        className="px-2 py-1 text-xs rounded-full bg-[#efe0b4] border border-[#a89663] text-[#574d33]"
                       >
                         {etiqueta}
                       </span>
@@ -163,7 +163,7 @@ export default function Tabla() {
                   </div>
                 </td>
                 <td className="p-3 text-sm">
-                  <span className="text-gray-400">Sin fecha</span>
+                  <span className="text-[#574d33]">Sin fecha</span>
                 </td>
               </tr>
             ))}
@@ -215,11 +215,11 @@ export default function Tabla() {
             />
             {nuevaTarea.asignados.length > 0 && (
               <div className="mt-2 flex gap-2">
-                <span className="text-sm text-gray-600">Vista previa:</span>
+                <span className="text-sm text-[#6b603f]">Vista previa:</span>
                 {nuevaTarea.asignados.map((asignado, i) => (
                   <div
                     key={i}
-                    className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full border text-xs font-bold"
+                    className="w-8 h-8 flex items-center justify-center bg-[#c8b07a] rounded-full border border-[#6b603f] text-[#574d33] text-xs font-bold"
                   >
                     {asignado}
                   </div>

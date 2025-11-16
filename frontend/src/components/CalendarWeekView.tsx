@@ -86,7 +86,7 @@ export default function CalendarWeekView({ mockTasks = [], handleTaskDrop }: Cal
 
     return (
         <div className="flex justify-center flex-row">
-            <div className="w-3/5 mt-0 bg-white rounded-2xl shadow-lg p-6 mx-4">
+            <div className="w-3/5 mt-0 bg-[#f5da91] rounded-2xl shadow-lg p-6 mx-4">
                 <CalendarWeekHeader
                     monthNames={monthNames}
                     week={currentWeekState}
@@ -105,7 +105,7 @@ export default function CalendarWeekView({ mockTasks = [], handleTaskDrop }: Cal
                     handleTaskDrop={handleTaskDrop}
                 />
             </div>
-            <div className="w-1/5 p-4 mt-0 bg-white rounded-2xl shadow-lg p-6 mx-4">
+            <div className="w-1/5 p-4 mt-0 bg-[#f5da91] rounded-2xl shadow-lg p-6 mx-4">
                 <CalendarSide monthNames={monthNames} selectedDate={selectedDate} tasks={mockTasks.filter(task => task.date === selectedDate)} />
             </div>
         </div>

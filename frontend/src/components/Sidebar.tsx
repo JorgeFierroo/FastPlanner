@@ -27,19 +27,19 @@ const Sidebar: React.FC<SidebarProps> = ({collapsed, setCollapsed}) => {
       className={`h-screen fixed top-12 left-0 bg-white border-r shadow-sm transition-all duration-300 ${
         collapsed ? "w-16" : "w-56"
       }`}
-      style={{backgroundColor:"#2f0147"}}
+      style={{backgroundColor:"#52442D", borderColor: "#D1BA7B"}}
     >
       <div 
         className="flex items-center justify-between p-3 border-b"
-        style={{borderColor: "#610f7f"}}
+        style={{borderColor: "#D1BA7B"}}
       >
-        {!collapsed && <span className="font-semibold" style={{color: "#e2c2c6"}}>Menú</span>}
+        {!collapsed && <span className="font-semibold" style={{color: "#D1BA7B"}}>Menú</span>}
 
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="p-1 rounded transition-colors"
-          style={{color: "#e2c2c6"}}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#610f7f")}
+          style={{color: "#D1BA7B"}}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor= "#A89663")}
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor= "transparent")}
         >
           {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
@@ -55,10 +55,10 @@ const Sidebar: React.FC<SidebarProps> = ({collapsed, setCollapsed}) => {
             to = {link.path}
             className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-r-full transition-colors`}
             style={{
-              backgroundColor: isActive ? "#610f7f" : "transparent",
-              color: isActive ? "#e2c2c6": "#e2c2c6",
+              backgroundColor: isActive ? "#A89663" : "transparent",
+              color: isActive ? "#52442D": "#D1BA7B",
             }}
-            onMouseEnter={(e : React.MouseEvent<HTMLAnchorElement>) => {if (!isActive) e.currentTarget.style.backgroundColor = "#610f7f";}}
+            onMouseEnter={(e : React.MouseEvent<HTMLAnchorElement>) => {if (!isActive) e.currentTarget.style.backgroundColor = "#A89663";}}
             onMouseLeave={(e : React.MouseEvent<HTMLAnchorElement>) => {if (!isActive) e.currentTarget.style.backgroundColor = "transparent";}}
             >
               {link.icon}
