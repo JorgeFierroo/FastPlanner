@@ -34,7 +34,7 @@ export function KanbanList({
         <h2 className="font-bold text-lg text-gray-700">{title}</h2>
         <button
           onClick={() => onDeleteList(columnId)}
-          className="text-blue-500 hover:text-blue-700 text-sm"
+          className="text-purple-500 hover:text-purple-700 text-sm"
         >
           ✕
         </button>
@@ -61,7 +61,7 @@ export function KanbanList({
         />
         <button
           onClick={handleAddTask}
-          className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-md w-full hover:bg-blue-700 text-sm"
+          className="mt-2 bg-purple-600 text-white px-3 py-1 rounded-md w-full hover:bg-purple-700 text-sm"
         >
           Agregar tarea
         </button>
