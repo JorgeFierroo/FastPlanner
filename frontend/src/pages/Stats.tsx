@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ProgressBar from "../components/ProgressBar";
 
 export default function Estadisticas() {
     const navigate = useNavigate();
@@ -50,7 +51,7 @@ export default function Estadisticas() {
                 <Card title="Tareas Completadas" value={stats.completedTasks} />
                 <Card 
                     title="Avance General" 
-                    value={stats.completionPercentage + '%'} 
+                    value={<ProgressBar percentage={stats.completionPercentage}/>} 
                 />
 
             </div>
