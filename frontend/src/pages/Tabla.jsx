@@ -4,44 +4,25 @@ import Button from "../components/ui/Button";
 import Modal from "../components/ui/Modal";
 import Input from "../components/ui/Input";
 import SelectMenu from "../components/ui/SelectMenu";
-
-// Datos iniciales de ejemplo
-const tareasIniciales = [
-  {
-    id: 1,
-    titulo: "Crear componentes iniciales de UI",
-    descripcion: "Implementar componentes base con shadcn/ui para el sistema colaborativo",
-    lista: "Completado",
-    asignados: ["MG"],
-    etiquetas: ["Frontend", "Completado"],
-    fecha: null,
-    estado: "verde",
-  },
-  {
-    id: 2,
-    titulo: "Implementar funcionalidad de arrastrar y soltar",
-    descripcion: "Agregar react-dnd para mover tarjetas entre listas con permisos",
-    lista: "En Progreso",
-    asignados: ["JP", "AN"],
-    etiquetas: ["Desarrollo", "Frontend"],
-    fecha: null,
-    estado: "amarillo",
-  },
-  {
-    id: 3,
-    titulo: "Implementar sistema de roles",
-    descripcion: "Crear admin, editor, colaborador y visualizador con permisos diferenciados",
-    lista: "Por Hacer",
-    asignados: ["FR"],
-    etiquetas: ["Desarrollo", "Backend"],
-    fecha: null,
-    estado: "gris",
-  },
-];
+import { useTask } from "../context/TaskContext";
 
 export default function Tabla() {
-  // Estado con las tareas actuales
-  const [tareas, setTareas] = useState(tareasIniciales);
+  // Usar el contexto compartido de tareas
+  const { tasks, addTask, updateTask, deleteTask } = useTask();
+
+  // Mapear tareas del contexto al formato de la tabla
+  const tareas = tasks.map(task => ({
+    id: task.id,
+    titulo: task.title,
+    descripcion: task.description,
+    lista: task.status === 'todo' ? 'Por Hacer' : 
+           task.status === 'inProgress' ? 'En Progreso' : 'Completado',
+    asignados: task.assignedTo || ["--"],
+    etiquetas: task.tags || [],
+    fecha: task.dueDate,
+    estado: task.status === 'done' ? 'verde' : 
+            task.status === 'inProgress' ? 'amarillo' : 'gris',
+  }));
 
   // Control del modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -70,6 +51,22 @@ export default function Tabla() {
       return;
     }
 
+    // Mapear estado de la tabla al contexto
+    let status;
+    switch (nuevaTarea.lista) {
+      case 'Por Hacer':
+        status = 'todo';
+        break;
+      case 'En Progreso':
+        status = 'inProgress';
+        break;
+      case 'Completado':
+        status = 'done';
+        break;
+      default:
+        status = 'todo';
+    }
+
     // Generar etiquetas basadas en el estado y lista
     const etiquetas = ["Nueva"];
     if (nuevaTarea.lista === "Completado") {
@@ -78,18 +75,17 @@ export default function Tabla() {
       etiquetas.push("Desarrollo");
     }
 
-    const nueva = {
-      id: tareas.length + 1,
-      titulo: nuevaTarea.titulo,
-      descripcion: nuevaTarea.descripcion,
-      lista: nuevaTarea.lista,
-      asignados: nuevaTarea.asignados.length > 0 ? nuevaTarea.asignados : ["--"],
-      etiquetas: etiquetas,
-      fecha: null,
-      estado: nuevaTarea.estado,
-    };
+    addTask({
+      title: nuevaTarea.titulo,
+      description: nuevaTarea.descripcion,
+      status: status,
+      priority: 'media',
+      assignedTo: nuevaTarea.asignados.length > 0 ? nuevaTarea.asignados : [],
+      tags: etiquetas,
+      dueDate: new Date().toISOString().split('T')[0],
+      createdBy: "Usuario"
+    });
 
-    setTareas([...tareas, nueva]);
     setNuevaTarea({ 
       titulo: "", 
       descripcion: "", 
