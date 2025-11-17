@@ -96,3 +96,38 @@ export const getUserStats = async (userId : number) =>{
             completionPercentage: tasks.length === 0 ? 0 : Math.round((completed / tasks.length) * 100)
     };
 }
+
+export const getTaskStats = async (taskId : number) => {
+    const task = await prisma.task.findUnique({
+        where: {id: taskId},
+        include:{
+            User_Task_assigneeIdToUser: {
+                select: {id:true, name:true, email:true}
+            },
+            User_Task_creatorIdToUser: {
+                select: {id:true, name:true, email:true}
+            },
+            Project: {
+                select: {id:true, name:true}
+            }
+        }
+
+    });
+
+    if(!task){
+        throw new Error("Tarea no encontrada");
+    }
+
+    return{
+        id: task.id,
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        priority: task.priority,
+        createdAt: task.createdAt,
+        dueDate: task.dueDate,
+        creatorId: task.User_Task_creatorIdToUser,
+        assignee: task.User_Task_assigneeIdToUser,
+        project: task.Project
+    };
+};
