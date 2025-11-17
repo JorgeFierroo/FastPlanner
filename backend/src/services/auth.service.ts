@@ -5,10 +5,16 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
+// Configuración via variables de entorno (con valores por defecto seguros para desarrollo)
 const JWT_SECRET = process.env.JWT_SECRET || "tu_clave_secreta_super_segura_2024";
-const ACCESS_TOKEN_EXPIRY = "15m"; // Access token expira en 15 minutos
-const REFRESH_TOKEN_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos
-const REFRESH_TOKEN_EXPIRY_EXTENDED = 30 * 24 * 60 * 60 * 1000; // 30 días si "recordarme"
+// Ejemplo: ACCESS_TOKEN_EXPIRY='15m' o '900s' o '0.25h'
+const ACCESS_TOKEN_EXPIRY: string = process.env.ACCESS_TOKEN_EXPIRY || "15m"; // usado por jsonwebtoken
+
+// Refresh token expirations en días (valores enteros). Si no están presentes, se usan los valores por defecto.
+const REFRESH_TOKEN_DAYS = Number(process.env.REFRESH_TOKEN_DAYS || "7"); // 7 días
+const REFRESH_TOKEN_EXTENDED_DAYS = Number(process.env.REFRESH_TOKEN_EXTENDED_DAYS || "30"); // 30 días si "recordarme"
+const REFRESH_TOKEN_EXPIRY = REFRESH_TOKEN_DAYS * 24 * 60 * 60 * 1000; // ms
+const REFRESH_TOKEN_EXPIRY_EXTENDED = REFRESH_TOKEN_EXTENDED_DAYS * 24 * 60 * 60 * 1000; // ms
 
 // Función auxiliar para generar refresh token
 function generateRefreshToken(): string {
