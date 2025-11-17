@@ -1,6 +1,6 @@
 // src/services/auth.service.ts
 import { PrismaClient } from "@prisma/client";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 
@@ -23,7 +23,8 @@ function generateRefreshToken(): string {
 
 // Función auxiliar para generar access token (incluye bandera isAdmin)
 function generateAccessToken(userId: number, email: string, isAdmin: boolean = false): string {
-  return jwt.sign(
+  // usar any para evitar discrepancias de tipos entre versiones de @types/jsonwebtoken
+  return (jwt as any).sign(
     { userId, email, isAdmin },
     JWT_SECRET,
     { expiresIn: ACCESS_TOKEN_EXPIRY }

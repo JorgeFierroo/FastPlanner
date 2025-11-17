@@ -1,4 +1,6 @@
 import { Router, Request, Response } from "express";
+import { authMiddleware } from "../middleware/auth.middleware";
+import requireSelfOrAdmin from "../middleware/requireSelfOrAdmin";
 
 // ¿Qué es Router?
 // Es como un mini-servidor que maneja rutas específicas
@@ -9,7 +11,7 @@ const router = Router();
 // Cuando llegue una petición con ese MÉTODO a esa URL, ejecuta esa FUNCIÓN
 
 // RUTA 1: GET /boards - Obtener todos los tableros
-router.get("/", (req: Request, res: Response) => {
+router.get("/", authMiddleware, (req: Request, res: Response) => {
   // Por ahora devolvemos datos falsos para probar
   // Más tarde esto vendrá de la base de datos
   const tableros = [
@@ -21,7 +23,7 @@ router.get("/", (req: Request, res: Response) => {
 });
 
 // RUTA 2: GET /boards/:id - Obtener un tablero específico
-router.get("/:id", (req: Request, res: Response) => {
+router.get("/:id", authMiddleware, requireSelfOrAdmin, (req: Request, res: Response) => {
   // ¿Qué es req.params.id?
   // Si alguien va a /boards/123, entonces req.params.id = "123"
   const id = req.params.id;
@@ -42,7 +44,7 @@ router.get("/:id", (req: Request, res: Response) => {
 });
 
 // RUTA 3: POST /boards - Crear un nuevo tablero
-router.post("/", (req: Request, res: Response) => {
+router.post("/", authMiddleware, requireSelfOrAdmin, (req: Request, res: Response) => {
   // ¿Qué es req.body?
   // Son los datos que envía el frontend (title, ownerId, etc.)
   const { title, ownerId } = req.body;
@@ -68,7 +70,7 @@ router.post("/", (req: Request, res: Response) => {
 });
 
 // RUTA 4: PUT /boards/:id - Actualizar un tablero
-router.put("/:id", (req: Request, res: Response) => {
+router.put("/:id", authMiddleware, requireSelfOrAdmin, (req: Request, res: Response) => {
   const id = req.params.id;
   const { title } = req.body;
   
@@ -87,9 +89,9 @@ router.put("/:id", (req: Request, res: Response) => {
 });
 
 // RUTA 5: DELETE /boards/:id - Eliminar un tablero
-router.delete("/:id", (req: Request, res: Response) => {
+router.delete("/:id", authMiddleware, requireSelfOrAdmin, (req: Request, res: Response) => {
   const id = req.params.id;
-  
+
   // Simulamos eliminar
   res.json({ 
     message: `Tablero ${id} eliminado exitosamente`,
