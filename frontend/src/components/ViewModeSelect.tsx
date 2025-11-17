@@ -45,7 +45,7 @@ export default function ViewModeSelect({ currentMode, onClick }: ViewModeSelectP
                 {/*  ESTADÍSTICAS  */}
                 <button
                     className={`px-4 rounded-full py-2 w-48 transition-all ${
-                        currentMode === "Estadísticas" ? "bg-white" : "bg-gray-300"
+                        currentMode === "Estadísticas" ? "bg-[#D1BA7B]" : "bg-[#f5da91]"
                     }`}
                     onClick={() => onClick("Estadísticas")}
                 >
