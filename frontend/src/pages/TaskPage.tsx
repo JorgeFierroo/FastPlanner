@@ -12,6 +12,11 @@ function TaskPage() {
     const [newTaskAssignee, setNewTaskAssignee] = useState<number | null>(null);
     const [projectMembers, setProjectMembers] = useState<any[]>([]);
     const [filterStatus, setFilterStatus] = useState<string>("all");
+    
+    // Estados para edición
+    const [editingTask, setEditingTask] = useState<any>(null);
+    const [editTitle, setEditTitle] = useState("");
+    const [editDescription, setEditDescription] = useState("");
 
     // Cargar miembros del proyecto cuando cambia el proyecto seleccionado
     useEffect(() => {
@@ -80,6 +85,34 @@ function TaskPage() {
         } catch (error) {
             console.error('Error al asignar tarea:', error);
         }
+    };
+
+    const handleEditTask = (task: any) => {
+        setEditingTask(task);
+        setEditTitle(task.title);
+        setEditDescription(task.description || "");
+    };
+
+    const handleSaveEdit = async () => {
+        if (!editingTask || !editTitle.trim()) return;
+        
+        try {
+            await updateTask(editingTask.id, {
+                title: editTitle,
+                description: editDescription
+            });
+            setEditingTask(null);
+            setEditTitle("");
+            setEditDescription("");
+        } catch (error) {
+            console.error('Error al actualizar tarea:', error);
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setEditingTask(null);
+        setEditTitle("");
+        setEditDescription("");
     };
 
     if (projectsLoading) {
@@ -279,6 +312,12 @@ function TaskPage() {
                                                 ))}
                                             </select>
                                             <button
+                                                onClick={() => handleEditTask(task)}
+                                                className="text-blue-500 hover:text-blue-700 text-sm px-2 py-1 rounded hover:bg-blue-50"
+                                            >
+                                                Editar
+                                            </button>
+                                            <button
                                                 onClick={() => handleDeleteTask(task.id)}
                                                 className="text-red-500 hover:text-red-700 text-sm px-2 py-1 rounded hover:bg-red-50"
                                             >
@@ -291,6 +330,51 @@ function TaskPage() {
                         </div>
                     )}
                 </>
+            )}
+
+            {/* Modal de edición */}
+            {editingTask && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={handleCancelEdit}>
+                    <div className="bg-white rounded-lg p-6 w-96 shadow-xl" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="text-xl font-bold mb-4 text-gray-800">Editar Tarea</h3>
+                        
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Título</label>
+                            <input
+                                type="text"
+                                value={editTitle}
+                                onChange={(e) => setEditTitle(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                autoFocus
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                            <textarea
+                                value={editDescription}
+                                onChange={(e) => setEditDescription(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                                rows={4}
+                            />
+                        </div>
+
+                        <div className="flex justify-end gap-2">
+                            <button
+                                onClick={handleCancelEdit}
+                                className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleSaveEdit}
+                                className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
+                            >
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

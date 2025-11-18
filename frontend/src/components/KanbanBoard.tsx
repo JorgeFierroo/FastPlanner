@@ -205,7 +205,6 @@ export function KanbanBoard() {
                   cards={col.cards}
                   columnId={col.id}
                   onAddCard={addNewCard}
-                  onDeleteList={() => {}}
                   onDeleteCard={deleteCard}
                 />
               </SortableContext>

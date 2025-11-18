@@ -32,16 +32,18 @@ export function KanbanCard({
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
       className={`rounded-xl border-2 p-4 shadow-md transition-all duration-200 ${
         isDragging 
-          ? "opacity-40 scale-105 border-dashed border-blue-400 bg-blue-50 cursor-grabbing shadow-2xl z-50" 
-          : "border-[#a89663] bg-[#d1ba7b] cursor-grab hover:shadow-xl hover:border-[#7f724b] hover:scale-102 active:cursor-grabbing"
+          ? "opacity-40 scale-105 border-dashed border-blue-400 bg-blue-50 shadow-2xl z-50" 
+          : "border-[#a89663] bg-[#d1ba7b] hover:shadow-xl hover:border-[#7f724b]"
       }`}
     >
-      <div className="flex justify-between items-center">
-        <div className={`font-semibold ${isDragging ? "text-blue-600" : "text-[#574d33]"}`}>
+      <div className="flex justify-between items-center gap-2">
+        <div 
+          {...attributes}
+          {...listeners}
+          className={`font-semibold flex-1 cursor-grab active:cursor-grabbing ${isDragging ? "text-blue-600" : "text-[#574d33]"}`}
+        >
           {title}
         </div>
         <button
@@ -49,12 +51,16 @@ export function KanbanCard({
             e.stopPropagation();
             onDeleteCard(columnId, id);
           }}
-          className="text-[#7f724b] hover:text-[#574D33] text-sm font-bold transition-colors"
+          className="text-[#7f724b] hover:text-[#574D33] text-sm font-bold transition-colors cursor-pointer"
         >
           ✕
         </button>
       </div>
-      <p className={`text-sm mt-1 ${isDragging ? "text-blue-500" : "text-[#6b603f]"}`}>
+      <p 
+        {...attributes}
+        {...listeners}
+        className={`text-sm mt-1 cursor-grab active:cursor-grabbing ${isDragging ? "text-blue-500" : "text-[#6b603f]"}`}
+      >
         {description}
       </p>
       {label && (

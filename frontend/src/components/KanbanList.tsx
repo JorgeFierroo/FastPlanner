@@ -7,7 +7,6 @@ type KanbanListProps = {
   cards: { id: number; title: string; description: string; label?: string }[];
   columnId: string;
   onAddCard: (columnId: string, title: string, description: string) => void;
-  onDeleteList: (columnId: string) => void;
   onDeleteCard: (columnId: string, cardId: number) => void;
 };
 
@@ -16,7 +15,6 @@ export function KanbanList({
   cards,
   columnId,
   onAddCard,
-  onDeleteList,
   onDeleteCard,
 }: KanbanListProps) {
   const { setNodeRef } = useDroppable({ id: columnId, data: { columnId } });
@@ -30,14 +28,8 @@ export function KanbanList({
 
   return (
     <div className="flex-1 bg-[#F5DA91] rounded-xl p-4 border-2 border-[#a89663] shadow-md min-w-[250px]">
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4">
         <h2 className="font-bold text-lg text-[#574d33]">{title}</h2>
-        <button
-          onClick={() => onDeleteList(columnId)}
-          className="text-[#7f724b] hover:text-[#574D33] text-sm font-semibold"
-        >
-          ✕
-        </button>
       </div>
 
       <div ref={setNodeRef} className="min-h-[80px] flex flex-col gap-3">

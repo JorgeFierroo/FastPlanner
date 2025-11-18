@@ -73,21 +73,16 @@ export default function Vistas() {
     return (
         <div>
             <div className="mb-4 p-4 bg-white rounded-lg shadow-sm">
-                <div className="flex flex-col gap-2">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-xl font-semibold text-gray-800">
-                            Vistas Integradas - Kanban, Tabla y Calendario
-                        </h2>
-                        <div className="text-right">
-                            <p className="text-sm text-gray-600">
-                                Bienvenido, <span className="font-semibold text-indigo-600">{user?.name || "usuario"}</span>
-                            </p>
-                            <p className="text-xs text-gray-500">{user?.email}</p>
-                        </div>
+                <div className="flex justify-between items-center">
+                    <h2 className="text-xl font-semibold text-gray-800">
+                        Vistas Integradas - Kanban, Tabla y Calendario
+                    </h2>
+                    <div className="text-right">
+                        <p className="text-sm text-gray-600">
+                            Bienvenido, <span className="font-semibold text-indigo-600">{user?.name || "usuario"}</span>
+                        </p>
+                        <p className="text-xs text-gray-500">{user?.email}</p>
                     </div>
-                    <p className="text-sm text-gray-600">
-                        Las tareas se sincronizan automáticamente entre todas las vistas
-                    </p>
                 </div>
             </div>
 
