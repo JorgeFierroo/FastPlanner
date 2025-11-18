@@ -48,7 +48,7 @@ export default function Vistas() {
                         Acceso Restringido
                     </h2>
                     <p className="text-gray-600 mb-6">
-                        Necesitas iniciar sesión para ver las vistas integradas de Kanban, Tabla y Calendario.
+                        Necesitas iniciar sesión para ver tus tableros y proyectos.
                     </p>
                     <div className="space-y-3">
                         <button
