@@ -31,10 +31,10 @@ function TaskCard({ task }: Props) {
     }
 
     return (
-        <div className= "bg-white p-2 rounded shadow border">
-            <h3 className="rounded" style={{backgroundColor: "#e454", display:"inline-block"}}>{task.title}</h3>
-            <p className="text-sm text-black break-words max-h-20 overflow-y-auto">{task.description}</p>
-            <p className="text-sm text-blue-500">{task.responsible}</p>
+        <div className= "bg-[#efe0b4] p-2 rounded shadow border border-[#c8b07a]">
+            <h3 className="rounded-lg font-semibold px-2 py-1" style={{backgroundColor: "#D1BA7B", display:"inline-block"}}>{task.title}</h3>
+            <p className="text-sm text-[#574d33] break-words max-h-20 overflow-y-auto">{task.description}</p>
+            <p className="text-sm text-[#7F724B]">Responsable: {task.responsible}</p>
             <span className={`text-xs rounded-full px-2 py-1 ${getStatusColor()}`}>{task.status ?? "Sin estado"}</span>
             <p className={`text-xs rounded-full px-2 py-1 my-1 ${getPriorityColor()}`}>{task.priority ?? "Sin prioridad"}</p>
         </div>

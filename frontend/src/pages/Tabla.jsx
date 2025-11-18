@@ -27,6 +27,9 @@ export default function Tabla() {
   // Control del modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  //Filtro por estado
+  const [filtroEstado, setFiltroEstado] = useState("all");
+
   // Opciones para los selectores
   const opcionesLista = ["Por Hacer", "En Progreso", "Completado"];
   const opcionesEstado = [
@@ -97,7 +100,7 @@ export default function Tabla() {
   };
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-lg">
+    <div className="p-6 bg-[#efe0b4] rounded-2xl shadow-lg mx-2 my-4 text-[#574d33]">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold">Vista de Tabla</h2>
 
@@ -105,17 +108,40 @@ export default function Tabla() {
         <Button
           variant="primary"
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 text-[#F5DA91]"
         >
           <Plus className="w-4 h-4" /> Agregar tarea
         </Button>
+      </div>
+
+      {/* Filtros */}
+      <div className="flex gap-3 mb-4">
+        <button onClick={() => setFiltroEstado("all")} className={`px-4 py-r rounded-lg border ${
+          filtroEstado === "all" ? "bg-[#d1ba7b] text-[#574d33]" : "bg-[#efe0b4] border-[#6b603f]"}`}>
+            Todas
+        </button>
+
+        <button onClick={() => setFiltroEstado("todo")} className={`px-4 py-r rounded-lg border flex items-center gap-2 ${
+          filtroEstado === "todo" ? "bg-[#d1ba7b] text-[#574d33]" : "bg-[#efe0b4] border-[#6b603f]"}`}>
+          <Circle className="w-4 h-4 text-gray-400" /> Por Hacer
+        </button>
+
+        <button onClick={() => setFiltroEstado("inProgress")} className={`px-4 py-r rounded-lg border flex items-center gap-2 ${
+          filtroEstado === "inProgress" ? "bg-[#d1ba7b] text-[#574d33]" : "bg-[#efe0b4] border-[#6b603f]"}`}>
+          <Circle className="w-4 h-4 text-yellow-500" /> En Progreso
+        </button>
+
+        <button onClick={() => setFiltroEstado("done")} className={`px-4 py-r rounded-lg border flex items-center gap-2 ${
+          filtroEstado === "done" ? "bg-[#d1ba7b] text-[#574d33]" : "bg-[#efe0b4] border-[#6b603f]"}`}>
+          <Circle className="w-4 h-4 text-green-600" /> Completadas
+        </button>
       </div>
 
       {/* Tabla */}
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-gray-100 text-left">
+            <tr className="bg-[#d1ba7b] text-left text-[#574d33]">
               <th className="p-3 text-sm font-semibold text-gray-700">Título</th>
               <th className="p-3 text-sm font-semibold text-gray-700">Lista</th>
               <th className="p-3 text-sm font-semibold text-gray-700">Asignados</th>
@@ -124,16 +150,23 @@ export default function Tabla() {
             </tr>
           </thead>
           <tbody>
-            {tareas.map((tarea) => (
-              <tr key={tarea.id} className="border-b hover:bg-gray-50">
+            {tareas
+            .filter((t)=>{
+              if(filtroEstado === "all") return true;
+              if(filtroEstado === "todo") return t.estado == "gris";
+              if(filtroEstado === "inProgress") return t.estado == "amarillo";
+              if(filtroEstado === "done") return t.estado == "verde";
+            })
+            .map((tarea) => (
+              <tr key={tarea.id} className="border-b border-[#a89663] hover:bg-[#f5da91] transition">
                 <td className="p-3">
                   <div className="flex items-start gap-2">
                     {tarea.estado === "verde" && <CheckCircle className="text-green-500 w-5 h-5 mt-1" />}
                     {tarea.estado === "amarillo" && <Clock className="text-yellow-500 w-5 h-5 mt-1" />}
                     {tarea.estado === "gris" && <Circle className="text-gray-400 w-5 h-5 mt-1" />}
                     <div>
-                      <p className="font-semibold">{tarea.titulo}</p>
-                      <p className="text-xs text-gray-500">{tarea.descripcion}</p>
+                      <p className="font-semibold text-[#574d33]">{tarea.titulo}</p>
+                      <p className="text-xs text-[#7f724b]">{tarea.descripcion}</p>
                     </div>
                   </div>
                 </td>
@@ -143,27 +176,29 @@ export default function Tabla() {
                     {tarea.asignados.map((a, i) => (
                       <div
                         key={i}
-                        className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full border text-xs font-bold"
+                        className="w-8 h-8 flex items-center justify-center bg-[#c8b07a] rounded-full border border-[#6b603f] text-xs font-bold text-[#574d33]"
                       >
                         {a}
                       </div>
                     ))}
                   </div>
                 </td>
+
                 <td className="p-3 text-sm">
                   <div className="flex gap-2 flex-wrap">
                     {tarea.etiquetas.map((etiqueta, i) => (
                       <span
                         key={i}
-                        className="px-2 py-1 text-xs rounded-full bg-gray-100 border"
+                        className="px-2 py-1 text-xs rounded-full bg-[#efe0b4] border border-[#a89663] text-[#574d33]"
                       >
                         {etiqueta}
                       </span>
                     ))}
                   </div>
                 </td>
+
                 <td className="p-3 text-sm">
-                  <span className="text-gray-400">Sin fecha</span>
+                  <span className="text-[#574d33]">Sin fecha</span>
                 </td>
               </tr>
             ))}
@@ -215,11 +250,11 @@ export default function Tabla() {
             />
             {nuevaTarea.asignados.length > 0 && (
               <div className="mt-2 flex gap-2">
-                <span className="text-sm text-gray-600">Vista previa:</span>
+                <span className="text-sm text-[#6b603f]">Vista previa:</span>
                 {nuevaTarea.asignados.map((asignado, i) => (
                   <div
                     key={i}
-                    className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full border text-xs font-bold"
+                    className="w-8 h-8 flex items-center justify-center bg-[#c8b07a] rounded-full border border-[#6b603f] text-[#574d33] text-xs font-bold"
                   >
                     {asignado}
                   </div>

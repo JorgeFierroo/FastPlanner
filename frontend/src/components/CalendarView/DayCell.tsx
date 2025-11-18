@@ -18,8 +18,8 @@ export default function DayCell({ dayNumber, isToday, isSelected, clickFunction,
     <div
       className={`flex flex-col border rounded hover:cursor-pointer 
       ${mode === "month" ? "h-32" : "h-96"}
-      ${!dayNumber ? "bg-gray-50" : isSelected ? "bg-purple-100 hover:bg-purple-200" : "bg-white hover:bg-gray-100"}
-      ${isToday ? "border-purple-500 border-2" : ""}`}
+      ${!dayNumber ? "bg-[#7F724B] text-[#574d33]" : isSelected ? "bg-[#d1ba7b] hover:bg-[#c8b07a] text-[#574d33]" : "bg-[#FCECBD] hover:bg-[#c8b07a] text-[#574d33]"}
+      ${isToday ? "border-[#574d33] border-2" : "border-[#a89663]"}`}
       onClick={dayNumber ? clickFunction : undefined} // Placeholder para futura funcionalidad
       onDragOver={(e) => dateKey && e.preventDefault()} // Permitir drop
       onDrop={(e) => {

@@ -137,7 +137,7 @@ export function KanbanBoard() {
   }
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-6 bg-[#efe0b4] min-h-screen">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-800">Tablero Kanban</h1>
         
