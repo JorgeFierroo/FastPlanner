@@ -32,17 +32,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   if (addProject) {
     return (
       <div
-        className="bg-neutral-white rounded-lg shadow hover:bg-gray-200 hover:shadow-lg transition-shadow p-5 flex items-center justify-center cursor-pointer min-h-[150px]"
+        className="bg-[#EFE0B4] rounded-lg shadow hover:bg-[#F5DA91] hover:shadow-lg transition-shadow p-5 flex items-center justify-center cursor-pointer min-h-[150px]"
         onClick={onClick}
       >
-        <span className="text-6xl text-neutral-darkgray">+</span>
+        <span className="text-6xl text-[#6B603F]">+</span>
       </div>
     );
   }
 
   return (
     <div
-      className={`bg-neutral-white rounded-lg shadow hover:bg-gray-200 hover:shadow-lg transition-shadow p-5 flex flex-col justify-between cursor-pointer min-h-[150px] ${expanded ? "border-2 border-primary" : ""}`}
+      className={`bg-[#EFE0B4] rounded-lg shadow hover:bg-[#F5DA91] hover:shadow-lg transition-shadow p-5 flex flex-col justify-between cursor-pointer min-h-[150px] ${expanded ? "border-2 border-primary" : ""}`}
       onClick={onClick}
     >
       {/* Título */}

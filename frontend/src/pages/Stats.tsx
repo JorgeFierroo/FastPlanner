@@ -30,7 +30,7 @@ export default function Estadisticas() {
     }
 
     return (
-        <div className="min-h-screen p-6 bg-gray-100">
+        <div className="min-h-screen p-6 bg-[#EFE0B4]">
 
             {/* Botón volver */}
             <button
