@@ -47,12 +47,14 @@ const Projects: React.FC = () => {
 
   const clickEditProject = async (projectId: number) => {
     const project = items.find(p => p.id === projectId);
+    if (!project) {
+      console.error("Proyecto no encontrado para editar:", projectId);
+      return;
+    }
     // Encontrar miembros del proyecto
     const members = await findMembersInProject(projectId);
-    if (members) {
-      project.members = members;
-    }
-    setModalProjectInfo(project);
+    const projectWithMembers = { ...project, members };
+    setModalProjectInfo(projectWithMembers);
     setIsNewProject(false);
     openModal();
   }

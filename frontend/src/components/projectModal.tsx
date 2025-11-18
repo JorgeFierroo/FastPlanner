@@ -1,10 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import Button from "./ui/Button";
-import { SquarePen, Check, X } from "lucide-react";
+import { SquarePen, Check, X, Crown, Plus } from "lucide-react";
 import { apiFetch } from "../services/api";
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext";
 
+type member = {
+    id: number;
+    name: string;
+    role: string;
+};
 type ProjectInfo = {
     id: number;
     title: string;
@@ -12,12 +17,17 @@ type ProjectInfo = {
     startDate: string;
     endDate: string;
     status?: "active" | "pending" | "completed";
-    members?: [{
-        id: number;
-        name: string;
-        role: string;
-    }]
+    members?: member[];
 };
+
+const defaultProject = (): ProjectInfo => ({
+    id: 0,
+    title: "Nuevo Proyecto",
+    description: "Sin descripción",
+    startDate: new Date().toISOString().split("T")[0],
+    endDate: new Date().toISOString().split("T")[0],
+    members: [],
+});
 
 type ProjectModalProps = {
     isOpen: boolean;
@@ -25,7 +35,6 @@ type ProjectModalProps = {
     projectInfo?: ProjectInfo | null;
     onClose: () => void;
 };
-
 
 const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModalProps) => {
     const { user } = useAuth();
@@ -75,31 +84,23 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
         status: false,
     });
 
-    const [projectData, setProjectData] = useState<ProjectInfo>(
-        projectInfo || {
-            id: 0,
-            title: "Nuevo Proyecto",
-            description: "Sin descripción",
-            startDate: new Date().toISOString().split("T")[0],
-            endDate: new Date().toISOString().split("T")[0],
-            members: [{
-                id: user?.id || 0,
-                name: user?.name || "",
-                role: "admin"
-            }]
-        }
-    );
+    const [projectData, setProjectData] = useState<ProjectInfo>(projectInfo ?? defaultProject());
 
     const [isProjectEdited, setIsProjectEdited] = useState(false);
+    
 
     useEffect(() => {
-        if (projectInfo) {
-            projectInfo.startDate = fromISO(projectInfo.startDate);
-            projectInfo.endDate = fromISO(projectInfo.endDate);
-            setProjectData(projectInfo);
+        if (isOpen) {
+            if (projectInfo) {
+                projectInfo.startDate = fromISO(projectInfo.startDate);
+                projectInfo.endDate = fromISO(projectInfo.endDate);
+                setProjectData(projectInfo);
+            } else {
+                setProjectData(defaultProject());
+            }
             setIsProjectEdited(false);
         }
-    }, [projectInfo]);
+    }, [projectInfo, isOpen]);
 
     const nameRef = useRef<HTMLInputElement>(null);
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -141,7 +142,8 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white rounded-lg shadow-lg p-6 w-3/5">
-                <div>
+                <div className="flex">
+                <div className={Array.isArray(projectData.members) && projectData.members.length > 0 ? "w-3/4" : "w-full"}>
                     <h2 className="text-xl font-bold mb-4 flex items-center">
                         {editingFields.name ? (
                             <div className="flex-1 flex items-center gap-2">
@@ -336,6 +338,27 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                                         )}
                                       </div>
                     )}
+                </div>
+                {Array.isArray(projectData.members) && projectData.members.length > 0 && (
+                <div className="w-1/4 ml-4 flex flex-col">
+                    <h3 className="text-lg font-bold mb-4 text-center">Miembros</h3>
+                    <div className="border-2 rounded-md border-gray-300 bg-gray-50 p-2 h-full overflow-y-auto">
+                        {projectData.members?.map((m) => (
+                            <div
+                                key={m.id}
+                                className="mb-2 p-2 bg-white rounded-md shadow-sm hover:cursor-pointer hover:bg-gray-100 flex justify-between items-center"
+                            >
+                                <span className="font-semibold">{m.name}</span>
+                                {m.role === "admin" && <Crown className="text-yellow-500" />}
+                            </div>
+                        ))}
+                        <div className="rounded-pill p-2 bg-white rounded-md shadow-sm hover:cursor-pointer hover:bg-gray-100 flex justify-between items-center">
+                        <span className="font-semibold text-gray-500">Agregar</span>
+                        <Plus className="text-green-500" />
+                        </div>
+                    </div>
+                    </div>
+                )} 
                 </div>
                 <div className="mt-4 text-right">
                     <Button
