@@ -8,9 +8,8 @@ export default function Estadisticas() {
     useEffect(() => {
         async function fetchStats() {
             try {
-                const res = await fetch("http://localhost:3000/api/stats", {
-                    credentials: "include",
-                });
+                const res = await fetch("http://localhost:3001/api/stats/general");
+                console.log("Respuesta de estadísticas:", res);
                 const data = await res.json();
                 setStats(data);
             } catch (err) {
@@ -40,24 +39,24 @@ export default function Estadisticas() {
                 ← Volver
             </button>
 
-            <h1 className="text-3xl font-bold mb-6"> Estadísticas</h1>
+            <h1 className="text-3xl font-bold mb-6">Estadísticas</h1>
 
             {/* GRID PRINCIPAL */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
-                <Card title="Proyectos" value={stats.totalProjects} />
-                <Card title="Tareas Totales" value={stats.totalTasks} />
-                <Card title="Tareas Completadas" value={stats.completedTasks} />
+                <Card title="Proyectos" value={stats.totals.projects} />
+                <Card title="Tareas Totales" value={stats.totals.tasks} />
+                <Card title="Tareas Completadas" value={stats.totals.completedTasks} />
                 <Card 
                     title="Avance General" 
-                    value={stats.completionPercentage + '%'} 
+                    value={stats.totals.completionPercentage + '%'} 
                 />
 
             </div>
 
             {/* USUARIOS */}
             <div className="mt-8">
-                <Card title="Usuarios Totales" value={stats.totalUsers} large />
+                <Card title="Usuarios Totales" value={stats.totals.users} large />
             </div>
 
         </div>
