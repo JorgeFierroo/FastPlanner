@@ -23,6 +23,7 @@ export default function CalendarGrid({ selectedDate, month, year, tasks, daySele
   // Crea celdas del calendario
   for (let i = 1; i < startDay; i++) {
     days.push(<DayCell
+      key={`empty-${i}`}
       dayNumber={null} 
       isToday={false} 
       isSelected={false}
@@ -38,6 +39,7 @@ export default function CalendarGrid({ selectedDate, month, year, tasks, daySele
     const taskList = tasks.filter(task => task.date === date);
     const today = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
     days.push(<DayCell 
+      key={date}
       dayNumber={i} 
       isToday={today === date} 
       isSelected={selectedDate === date}  // True o false

@@ -32,6 +32,7 @@ function App() {
               <Route path="/profile" element={<ProtectedRoute> <Profile /> </ProtectedRoute>} />
               <Route path="/tasks" element={<ProtectedRoute> <TaskPage /> </ProtectedRoute>} />
               <Route path="/Vistas" element={<ProtectedRoute> <Vistas /> </ProtectedRoute>} />
+              <Route path="/Configuracion" element={<ProtectedRoute> <Configurasion /> </ProtectedRoute>} />
               <Route path="/paginaayuda" element={<PaginaAyuda />} />
               </Routes>
             </Layout>

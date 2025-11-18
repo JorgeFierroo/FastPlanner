@@ -42,10 +42,9 @@ export const statusMapping = {
   'En Progreso': 'inProgress',
   'Completado': 'done',
   // Estados del Calendario
-  'pendiente': 'todo',
+  'por hacer': 'todo',
   'en progreso': 'inProgress',
-  'completada': 'done',
-  'sin empezar': 'todo'
+  'completada': 'done'
 };
 
 interface TaskContextType {
@@ -204,6 +203,14 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const updateTask = async (id: number, updates: Partial<Task>) => {
     if (!projectId) return;
 
+    // Actualización optimista: actualizar UI inmediatamente
+    const previousTasks = [...tasks];
+    setTasks(prevTasks => 
+      prevTasks.map(task => 
+        task.id === id ? { ...task, ...updates } : task
+      )
+    );
+
     try {
       const updateData: any = {};
       
@@ -222,10 +229,13 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       });
 
       if (!response.ok) {
+        // Si falla, revertir cambios
+        setTasks(previousTasks);
         throw new Error('Error al actualizar tarea');
       }
 
-      await refreshTasks();
+      // Refrescar en segundo plano para sincronizar
+      refreshTasks();
     } catch (error) {
       console.error('Error al actualizar tarea:', error);
       throw error;

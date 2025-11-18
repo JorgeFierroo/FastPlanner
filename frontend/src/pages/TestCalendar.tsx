@@ -19,7 +19,7 @@ const TestCalendar: React.FC = () => {
     title: task.title,
     description: task.description,
     creador: task.createdBy || "Usuario",
-    status: task.status === 'todo' ? 'pendiente' : 
+    status: task.status === 'todo' ? 'por hacer' : 
             task.status === 'inProgress' ? 'en progreso' : 'completada',
     prioridad: task.priority,
     date: task.dueDate || new Date().toISOString().split('T')[0]

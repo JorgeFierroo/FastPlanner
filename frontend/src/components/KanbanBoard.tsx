@@ -3,12 +3,15 @@ import {
   DndContext,
   closestCenter,
   DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
 } from "@dnd-kit/core";
 import {
   SortableContext,
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import { KanbanList } from "./KanbanList";
+import { KanbanCard } from "./KanbanCard";
 import { useTask, Task } from "../context/TaskContext";
 import { useProject } from "../context/ProjectContext";
 
@@ -22,6 +25,7 @@ export function KanbanBoard() {
   const { tasks, loading, moveTask, addTask, deleteTask } = useTask();
   const { projects, selectedProject, selectProject, loading: projectsLoading } = useProject();
   const [newListTitle, setNewListTitle] = useState("");
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   // Organizar tareas por columnas
   const columns: Column[] = [
@@ -42,9 +46,18 @@ export function KanbanBoard() {
     },
   ];
 
+  // --- Manejar inicio del drag ---
+  const handleDragStart = (event: DragStartEvent) => {
+    const taskId = Number(event.active.id);
+    const task = tasks.find((t: Task) => t.id === taskId);
+    setActiveTask(task || null);
+  };
+
   // --- Mover tarjetas entre columnas ---
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    setActiveTask(null);
+    
     if (!over) return;
     if (active.id === over.id) return;
 
@@ -175,7 +188,11 @@ export function KanbanBoard() {
           <div className="text-gray-600">Cargando tareas...</div>
         </div>
       ) : (
-        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <DndContext 
+          collisionDetection={closestCenter} 
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
           <div className="flex gap-6 overflow-x-auto pb-6">
             {columns.map(col => (
               <SortableContext
@@ -194,6 +211,19 @@ export function KanbanBoard() {
               </SortableContext>
             ))}
           </div>
+          <DragOverlay>
+            {activeTask ? (
+              <div className="scale-105">
+                <KanbanCard
+                  id={activeTask.id}
+                  title={activeTask.title}
+                  description={activeTask.description}
+                  columnId=""
+                  onDeleteCard={() => {}}
+                />
+              </div>
+            ) : null}
+          </DragOverlay>
         </DndContext>
       )}
     </div>

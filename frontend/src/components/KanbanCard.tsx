@@ -32,20 +32,31 @@ export function KanbanCard({
     <div
       ref={setNodeRef}
       style={style}
-      className={`rounded-xl border border-[#a89663] bg-[#d1ba7b] p-4 shadow-md transition cursor-grab ${
-        isDragging ? "opacity-50 border-dashed" : "hover:shadow-lg hover:border-[#7f724b]"
+      {...attributes}
+      {...listeners}
+      className={`rounded-xl border-2 p-4 shadow-md transition-all duration-200 ${
+        isDragging 
+          ? "opacity-40 scale-105 border-dashed border-blue-400 bg-blue-50 cursor-grabbing shadow-2xl z-50" 
+          : "border-[#a89663] bg-[#d1ba7b] cursor-grab hover:shadow-xl hover:border-[#7f724b] hover:scale-102 active:cursor-grabbing"
       }`}
     >
       <div className="flex justify-between items-center">
-        <div className="font-semibold text-[#574d33]">{title}</div>
+        <div className={`font-semibold ${isDragging ? "text-blue-600" : "text-[#574d33]"}`}>
+          {title}
+        </div>
         <button
-          onClick={() => onDeleteCard(columnId, id)}
-          className="text-[#7f724b] hover:text-[#574D33] text-sm font-bold"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDeleteCard(columnId, id);
+          }}
+          className="text-[#7f724b] hover:text-[#574D33] text-sm font-bold transition-colors"
         >
           ✕
         </button>
       </div>
-      <p className="text-sm text-[#6b603f] mt-1">{description}</p>
+      <p className={`text-sm mt-1 ${isDragging ? "text-blue-500" : "text-[#6b603f]"}`}>
+        {description}
+      </p>
       {label && (
         <span className="inline-block mt-3 text-xs font-medium px-2 py-1 rounded bg-[#a89663] text-white border border-[#7f724b]">
           {label}
