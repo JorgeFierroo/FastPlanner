@@ -110,7 +110,7 @@ function TaskPage() {
     return(
         <div className="p-6">
             <div className="mb-6 flex items-center justify-between">
-                <h1 className="text-3xl font-bold text-[#2f0147]">Lista de Tareas</h1>
+                <h1 className="text-3xl font-bold text-[#574d33]">Lista de Tareas</h1>
                 
                 {/* Selector de proyecto */}
                 <div className="flex items-center gap-3">
@@ -142,20 +142,20 @@ function TaskPage() {
             ) : (
                 <>
                     {/* Formulario para agregar tarea */}
-                    <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-                        <h2 className="text-xl font-semibold mb-4 text-[#2f0147]">Nueva Tarea</h2>
+                    <div className="bg-[#EFE0B4] rounded-lg shadow-md p-6 mb-6">
+                        <h2 className="text-xl font-semibold mb-4 text-[#574d33]">Nueva Tarea</h2>
                         <div className="flex flex-col gap-3">
                             <input
                                 value={newTaskTitle}
                                 onChange={(e) => setNewTaskTitle(e.target.value)}
                                 placeholder="Título de la tarea..."
-                                className="border p-3 rounded w-full shadow-sm focus:ring focus:ring-[#610f7f]"
+                                className="bg-[#D1BA7B] border border-[#C8B07A] p-3 rounded w-full shadow-sm focus:ring focus:ring-[#574d33] placeholder-[#574d33]"
                             />
                             <textarea
                                 value={newTaskDescription}
                                 onChange={(e) => setNewTaskDescription(e.target.value)}
                                 placeholder="Descripción (opcional)..."
-                                className="border p-3 rounded w-full shadow-sm focus:ring focus:ring-[#610f7f]"
+                                className="bg-[#D1BA7B] border border-[#C8B07A] p-3 rounded w-full shadow-sm focus:ring focus:ring-[#574d33] placeholder-[#574d33]"
                                 rows={3}
                             />
                             <div className="grid grid-cols-2 gap-3">
@@ -164,7 +164,7 @@ function TaskPage() {
                                     <select
                                         value={newTaskStatus}
                                         onChange={(e) => setNewTaskStatus(e.target.value as any)}
-                                        className="border p-3 rounded w-full shadow-sm focus:ring focus:ring-[#610f7f]"
+                                        className="bg-[#D1BA7B] border border-[#C8B07A] p-3 rounded w-full shadow-sm focus:ring focus:ring-[#574d33]"
                                     >
                                         <option value="todo">Por hacer</option>
                                         <option value="inProgress">En progreso</option>
@@ -176,7 +176,7 @@ function TaskPage() {
                                     <select
                                         value={newTaskAssignee || ''}
                                         onChange={(e) => setNewTaskAssignee(e.target.value ? parseInt(e.target.value) : null)}
-                                        className="border p-3 rounded w-full shadow-sm focus:ring focus:ring-[#610f7f]"
+                                        className="bg-[#D1BA7B] border border-[#C8B07A] p-3 rounded w-full shadow-sm focus:ring focus:ring-[#574d33]"
                                     >
                                         <option value="">Sin asignar</option>
                                         {projectMembers.map((member) => (
@@ -189,7 +189,7 @@ function TaskPage() {
                             </div>
                             <button 
                                 onClick={addNewTask} 
-                                className="bg-[#9C528B] hover:bg-[#610f7f] text-white px-6 py-3 rounded shadow transition"
+                                className="bg-[#7F724B] hover:bg-[#6B603F] text-white px-6 py-3 rounded shadow transition"
                             >
                                 Agregar Tarea
                             </button>
@@ -200,25 +200,25 @@ function TaskPage() {
                     <div className="mb-6 flex gap-2">
                         <button
                             onClick={() => setFilterStatus("all")}
-                            className={`px-4 py-2 rounded ${filterStatus === "all" ? "bg-[#610f7f] text-white" : "bg-gray-200"}`}
+                            className={`px-4 py-2 rounded ${filterStatus === "all" ? "bg-[#574d33] text-[#EFE0B4]" : "bg-[#7F724B] text-white"}`}
                         >
                             Todas ({tasks.length})
                         </button>
                         <button
                             onClick={() => setFilterStatus("todo")}
-                            className={`px-4 py-2 rounded ${filterStatus === "todo" ? "bg-[#610f7f] text-white" : "bg-gray-200"}`}
+                            className={`px-4 py-2 rounded ${filterStatus === "todo" ? "bg-[#574d33] text-[#EFE0B4]" : "bg-[#7F724B] text-[#EFE0B4]"}`}
                         >
                             Por hacer ({tasks.filter(t => t.status === 'todo').length})
                         </button>
                         <button
                             onClick={() => setFilterStatus("inProgress")}
-                            className={`px-4 py-2 rounded ${filterStatus === "inProgress" ? "bg-[#610f7f] text-white" : "bg-gray-200"}`}
+                            className={`px-4 py-2 rounded ${filterStatus === "inProgress" ? "bg-[#574d33] text-[#EFE0B4]" : "bg-[#7F724B] text-[#EFE0B4]"}`}
                         >
                             En progreso ({tasks.filter(t => t.status === 'inProgress').length})
                         </button>
                         <button
                             onClick={() => setFilterStatus("done")}
-                            className={`px-4 py-2 rounded ${filterStatus === "done" ? "bg-[#610f7f] text-white" : "bg-gray-200"}`}
+                            className={`px-4 py-2 rounded ${filterStatus === "done" ? "bg-[#574d33] text-[#EFE0B4]" : "bg-[#7F724B] text-[#EFE0B4]"}`}
                         >
                             Completadas ({tasks.filter(t => t.status === 'done').length})
                         </button>
@@ -230,13 +230,13 @@ function TaskPage() {
                             <div className="text-gray-600">Cargando tareas...</div>
                         </div>
                     ) : filteredTasks.length === 0 ? (
-                        <div className="text-center py-12 text-gray-500">
+                        <div className="text-center py-12 text-[#574d33]">
                             No hay tareas {filterStatus !== "all" && "en esta categoría"}
                         </div>
                     ) : (
                         <div className="space-y-3">
                             {filteredTasks.map((task) => (
-                                <div key={task.id} className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition">
+                                <div key={task.id} className="bg-[#EFE0B4] rounded-lg shadow-md p-4 hover:shadow-lg transition">
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex-1">
                                             <h3 className="font-semibold text-lg text-gray-800">{task.title}</h3>
@@ -245,7 +245,7 @@ function TaskPage() {
                                             )}
                                             <div className="flex gap-2 mt-2">
                                                 {task.dueDate && (
-                                                    <span className="text-xs px-2 py-1 rounded bg-blue-100 text-blue-700">
+                                                    <span className="text-xs px-2 py-1 rounded bg-[#7F724B] text-[#EFE0B4]">
                                                         {task.dueDate}
                                                     </span>
                                                 )}
