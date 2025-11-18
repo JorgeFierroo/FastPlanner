@@ -27,6 +27,9 @@ export default function Tabla() {
   // Control del modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  //Filtro por estado
+  const [filtroEstado, setFiltroEstado] = useState("all");
+
   // Opciones para los selectores
   const opcionesLista = ["Por Hacer", "En Progreso", "Completado"];
   const opcionesEstado = [
@@ -111,6 +114,29 @@ export default function Tabla() {
         </Button>
       </div>
 
+      {/* Filtros */}
+      <div className="flex gap-3 mb-4">
+        <button onClick={() => setFiltroEstado("all")} className={`px-4 py-r rounded-lg border ${
+          filtroEstado === "all" ? "bg-[#d1ba7b] text-[#574d33]" : "bg-[#efe0b4] border-[#6b603f]"}`}>
+            Todas
+        </button>
+
+        <button onClick={() => setFiltroEstado("todo")} className={`px-4 py-r rounded-lg border flex items-center gap-2 ${
+          filtroEstado === "todo" ? "bg-[#d1ba7b] text-[#574d33]" : "bg-[#efe0b4] border-[#6b603f]"}`}>
+          <Circle className="w-4 h-4 text-gray-400" /> Por Hacer
+        </button>
+
+        <button onClick={() => setFiltroEstado("inProgress")} className={`px-4 py-r rounded-lg border flex items-center gap-2 ${
+          filtroEstado === "inProgress" ? "bg-[#d1ba7b] text-[#574d33]" : "bg-[#efe0b4] border-[#6b603f]"}`}>
+          <Circle className="w-4 h-4 text-yellow-500" /> En Progreso
+        </button>
+
+        <button onClick={() => setFiltroEstado("done")} className={`px-4 py-r rounded-lg border flex items-center gap-2 ${
+          filtroEstado === "done" ? "bg-[#d1ba7b] text-[#574d33]" : "bg-[#efe0b4] border-[#6b603f]"}`}>
+          <Circle className="w-4 h-4 text-green-600" /> Completadas
+        </button>
+      </div>
+
       {/* Tabla */}
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
@@ -124,7 +150,14 @@ export default function Tabla() {
             </tr>
           </thead>
           <tbody>
-            {tareas.map((tarea) => (
+            {tareas
+            .filter((t)=>{
+              if(filtroEstado === "all") return true;
+              if(filtroEstado === "todo") return t.estado == "gris";
+              if(filtroEstado === "inProgress") return t.estado == "amarillo";
+              if(filtroEstado === "done") return t.estado == "verde";
+            })
+            .map((tarea) => (
               <tr key={tarea.id} className="border-b border-[#a89663] hover:bg-[#f5da91] transition">
                 <td className="p-3">
                   <div className="flex items-start gap-2">
@@ -150,6 +183,7 @@ export default function Tabla() {
                     ))}
                   </div>
                 </td>
+
                 <td className="p-3 text-sm">
                   <div className="flex gap-2 flex-wrap">
                     {tarea.etiquetas.map((etiqueta, i) => (
@@ -162,6 +196,7 @@ export default function Tabla() {
                     ))}
                   </div>
                 </td>
+
                 <td className="p-3 text-sm">
                   <span className="text-[#574d33]">Sin fecha</span>
                 </td>
