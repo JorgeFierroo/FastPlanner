@@ -57,7 +57,7 @@ export default function Estadisticas() {
     }
 
     return (
-        <div className="min-h-screen p-6 bg-gray-100">
+        <div className="min-h-screen p-6 bg-[#EFE0B4]">
 
             {/* Botón volver */}
             <button
@@ -95,15 +95,15 @@ export default function Estadisticas() {
     );
 }
 
-function Card({ title, value, large = false, color = "bg-white" }: any) {
+function Card({ title, value, large = false, color = "bg-[#D1BA7B]" }: any) {
     return (
         <div
             className={`${color} shadow rounded-xl p-6 border hover:shadow-md transition ${
                 large ? "text-center" : ""
             }`}
         >
-            <p className="text-gray-500 text-sm">{title}</p>
-            <h2 className="text-4xl font-semibold mt-2">{value}</h2>
+            <p className="text-[#7F724B] text-sm">{title}</p>
+            <h2 className="text-4xl text-[#574d33] font-semibold mt-2">{value}</h2>
         </div>
     );
 }

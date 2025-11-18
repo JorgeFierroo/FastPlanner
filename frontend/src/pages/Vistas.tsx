@@ -72,7 +72,7 @@ export default function Vistas() {
     // Authenticated → render views
     return (
         <div>
-            <div className="mb-4 p-4 bg-white rounded-lg shadow-sm">
+            <div className="mb-4 p-4 bg-[#EFE0B4] rounded-lg shadow-sm mt-12">
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl font-semibold text-gray-800">
                         Vistas Integradas - Kanban, Tabla y Calendario
