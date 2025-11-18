@@ -67,12 +67,12 @@ export default function Estadisticas() {
 function Card({ title, value, large = false }: any) {
     return (
         <div
-            className={`bg-white shadow rounded-xl p-6 border hover:shadow-md transition ${
+            className={`bg-[#D1BA7B] shadow rounded-xl p-6 border border-[#C8B07A] hover:shadow-md transition ${
                 large ? "text-center" : ""
             }`}
         >
-            <p className="text-gray-500 text-sm">{title}</p>
-            <h2 className="text-4xl font-semibold mt-2">{value}</h2>
+            <p className="text-[#7F724B] text-sm">{title}</p>
+            <h2 className="text-4xl text-[#574d33] font-semibold mt-2">{value}</h2>
         </div>
     );
 }
