@@ -66,7 +66,7 @@ const Projects: React.FC = () => {
 
   const mapApiProjectToUI = (p: any) => ({
     id: p.project.id,
-    title: p.project.title ?? p.project.name ?? "Sin título",
+    name: p.project.title ?? p.project.name ?? "Sin título",
     description: p.project.description ?? "",
     status: (p.project.status ?? "pending") as "active" | "pending" | "completed",
     role: p.role,
@@ -130,7 +130,7 @@ const Projects: React.FC = () => {
         {items.map((p, i) => (
           <ProjectCard
             key={i}
-            title={p.title}
+            title={p.name}
             description={p.description}
             status={p.status as "active" | "pending" | "completed"}
             role={p.role}

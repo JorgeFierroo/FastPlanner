@@ -12,7 +12,7 @@ type member = {
 };
 type ProjectInfo = {
     id: number;
-    title: string;
+    name: string;
     description: string;
     startDate: string;
     endDate: string;
@@ -22,7 +22,7 @@ type ProjectInfo = {
 
 const defaultProject = (): ProjectInfo => ({
     id: 0,
-    title: "Nuevo Proyecto",
+    name: "Nuevo Proyecto",
     description: "Sin descripción",
     startDate: new Date().toISOString().split("T")[0],
     endDate: new Date().toISOString().split("T")[0],
@@ -50,6 +50,7 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
 
     async function CreateProject(projectData: Omit<ProjectInfo, "id">) {
         try {
+
             const response = await apiFetch("/projects", {
                 method: "POST",
                 body: JSON.stringify(projectData),
@@ -150,7 +151,7 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                                 <input
                                     ref={nameRef}
                                     type="text"
-                                    defaultValue={projectData.title}
+                                    defaultValue={projectData.name}
                                     className="flex-1 border border-gray-300 rounded-md p-2"
                                     autoFocus
                                 />
@@ -166,7 +167,7 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                                 />
                             </div>
                         ) : (
-                            <span className="flex-1">{projectData.title}</span>
+                            <span className="flex-1">{projectData.name}</span>
                         )}
                         {!editingFields.name && (
                             <SquarePen
@@ -366,12 +367,12 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                         disabled={!newProject && !isProjectEdited}
                         className="mr-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
                         onClick={newProject ? () => CreateProject({
-                            title: projectData.title,
+                            name: projectData.name,
                             description: projectData.description,
                             startDate: toISO(projectData.startDate),
                             endDate: toISO(projectData.endDate),
                         }) : () => UpdateProject(projectData.id, {
-                            title: projectData.title,
+                            name: projectData.name,
                             description: projectData.description,
                             startDate: toISO(projectData.startDate),
                             endDate: toISO(projectData.endDate),
