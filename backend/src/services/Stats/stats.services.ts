@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 export const getSystemStats = async () => {
-    const prisma = new PrismaClient();
     // ---------- TOTALES GENERALES ----------
     const totalUsers = await prisma.user.count();
     const totalProjects = await prisma.project.count();
