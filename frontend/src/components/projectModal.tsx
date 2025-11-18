@@ -142,7 +142,7 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 w-3/5">
+            <div className="bg-[#EFE0B4] rounded-lg shadow-lg p-6 w-3/5">
                 <div className="flex">
                 <div className={Array.isArray(projectData.members) && projectData.members.length > 0 ? "w-3/4" : "w-full"}>
                     <h2 className="text-xl font-bold mb-4 flex items-center">
@@ -193,7 +193,7 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                                 <textarea
                                     ref={descriptionRef}
                                     defaultValue={projectData.description}
-                                    className="w-full border border-gray-300 rounded-md p-2"
+                                    className="w-full bg-[#D1BA7B] border border-[#7F724B] rounded-md p-2"
                                     autoFocus
                                     rows={3}
                                 />
@@ -211,7 +211,7 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                                 </div>
                             </div>
                         ) : (
-                            <p className="mt-1 p-2 bg-gray-50 rounded-md border">
+                            <p className="mt-1 p-2 bg-[#D1BA7B] rounded-md border border-[#7F724B]">
                                 {projectData.description || "Sin descripción"}
                             </p>
                         )}
@@ -233,7 +233,7 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                                     ref={startDateRef}
                                     type="date"
                                     defaultValue={projectData.startDate}
-                                    className="w-full border border-gray-300 rounded-md p-2"
+                                    className="w-full border bg-[#D1BA7B] border border-[#7F724B] rounded-md p-2"
                                     autoFocus
                                 />
                                 <div className="flex gap-2 mt-2">
@@ -250,7 +250,7 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                                 </div>
                             </div>
                         ) : (
-                            <p className="mt-1 p-2 bg-gray-50 rounded-md border">
+                            <p className="mt-1 p-2 bg-[#D1BA7B] rounded-md border border-[#7F724B]">
                                 {projectData.startDate}
                             </p>
                         )}
@@ -272,7 +272,7 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                                     ref={endDateRef}
                                     type="date"
                                     defaultValue={projectData.endDate}
-                                    className="w-full border border-gray-300 rounded-md p-2"
+                                    className="w-full bg-[#D1BA7B] border border-[#7F724B] rounded-md p-2"
                                     autoFocus
                                 />
                                 <div className="flex gap-2 mt-2">
@@ -289,7 +289,7 @@ const ProjectModal = ({ isOpen, projectInfo, onClose, newProject }: ProjectModal
                                 </div>
                             </div>
                         ) : (
-                            <p className="mt-1 p-2 bg-gray-50 rounded-md border">
+                            <p className="mt-1 p-2 bg-[#D1BA7B] rounded-md border border-[#7F724B]">
                                 {projectData.endDate}
                             </p>
                         )}
